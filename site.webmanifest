@@ -1,0 +1,18 @@
+{
+  "name": "光栅衍射交互实验",
+  "short_name": "光栅衍射",
+  "description": "面向大学物理实验教学的光栅衍射交互网页，包含实验操作、原理讲解、光强分布和学生动手实验。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#071018",
+  "theme_color": "#08121d",
+  "icons": [
+    {
+      "src": "./assets/icons/site-icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

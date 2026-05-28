@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="光栅衍射交互实验图标">
+  <rect width="512" height="512" rx="96" fill="#08121d"/>
+  <path d="M78 256h136" stroke="#ff3854" stroke-width="20" stroke-linecap="round"/>
+  <path d="M232 88v336M260 88v336M288 88v336M316 88v336" stroke="#d9ecff" stroke-width="12" stroke-linecap="round" opacity=".88"/>
+  <path d="M334 256 446 134M334 256h134M334 256l112 122" stroke="#70d7ef" stroke-width="14" stroke-linecap="round" opacity=".92"/>
+  <circle cx="78" cy="256" r="18" fill="#ff3854"/>
+  <circle cx="456" cy="134" r="16" fill="#8fd8ff"/>
+  <circle cx="468" cy="256" r="20" fill="#8fd8ff"/>
+  <circle cx="446" cy="378" r="16" fill="#8fd8ff"/>
+</svg>
