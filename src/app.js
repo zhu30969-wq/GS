@@ -359,6 +359,11 @@ function $(id) {
   return document.getElementById(id);
 }
 
+function setText(id, value) {
+  const element = $(id);
+  if (element) element.textContent = value;
+}
+
 function cssVar(name) {
   return getComputedStyle(document.body).getPropertyValue(name).trim();
 }
@@ -418,9 +423,9 @@ function bindControls() {
   });
 
   $("resetParams").addEventListener("click", resetParameters);
-  $("resetExperiment").addEventListener("click", resetExperiment);
-  $("startButton").addEventListener("click", startExperiment);
-  $("pauseButton").addEventListener("click", pauseExperiment);
+  $("resetExperiment")?.addEventListener("click", resetExperiment);
+  $("startButton")?.addEventListener("click", startExperiment);
+  $("pauseButton")?.addEventListener("click", pauseExperiment);
   $("exportData").addEventListener("click", exportData);
   $("diffractionToggle").addEventListener("change", () => {
     state.params.diffractionEnabled = $("diffractionToggle").checked;
@@ -528,9 +533,9 @@ function resetExperiment() {
   state.running = false;
   state.elapsedSeconds = 0;
   state.lastTick = null;
-  $("experimentStatus").textContent = "就绪";
-  $("statusTime").textContent = "00:00:00";
-  $("statusSaved").textContent = "已保存";
+  setText("experimentStatus", "就绪");
+  setText("statusTime", "00:00:00");
+  setText("statusSaved", "已保存");
   renderAll();
 }
 
@@ -538,8 +543,8 @@ function startExperiment() {
   if (!state.running) {
     state.running = true;
     state.lastTick = performance.now();
-    $("experimentStatus").textContent = "运行中";
-    $("statusSaved").textContent = "记录中";
+    setText("experimentStatus", "运行中");
+    setText("statusSaved", "记录中");
     updateTip();
   }
 }
@@ -548,8 +553,8 @@ function pauseExperiment() {
   if (state.running) {
     state.running = false;
     state.lastTick = null;
-    $("experimentStatus").textContent = "已暂停";
-    $("statusSaved").textContent = "已保存";
+    setText("experimentStatus", "已暂停");
+    setText("statusSaved", "已保存");
   }
 }
 
@@ -557,7 +562,7 @@ function tick(now) {
   if (state.running) {
     if (state.lastTick !== null) {
       state.elapsedSeconds += (now - state.lastTick) / 1000;
-      $("statusTime").textContent = formatTime(state.elapsedSeconds);
+      setText("statusTime", formatTime(state.elapsedSeconds));
     }
     state.lastTick = now;
   }
