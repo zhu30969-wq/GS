@@ -1080,6 +1080,70 @@ input[type="range"]::-moz-range-thumb {
   display: none;
 }
 
+.zoom2d-controls {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 34px minmax(112px, 150px) 34px 58px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(124, 179, 229, 0.42);
+  border-radius: 8px;
+  background: rgba(5, 11, 17, 0.78);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
+}
+
+.zoom2d-controls[hidden] {
+  display: none;
+}
+
+.zoom2d-controls button {
+  min-width: 0;
+  min-height: 30px;
+  border: 1px solid rgba(157, 193, 229, 0.34);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #e7f2ff;
+  font-family: var(--font-number);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.zoom2d-controls button:hover {
+  border-color: rgba(123, 190, 235, 0.82);
+  background: rgba(66, 118, 171, 0.38);
+}
+
+.zoom2d-controls button:disabled {
+  color: rgba(211, 225, 242, 0.36);
+  border-color: rgba(157, 193, 229, 0.14);
+  background: rgba(255, 255, 255, 0.025);
+  cursor: not-allowed;
+}
+
+.zoom2d-controls .zoom2d-reset {
+  font-size: 13px;
+}
+
+.zoom2d-controls input[type="range"] {
+  height: 3px;
+}
+
+.zoom2d-controls input[type="range"]::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+}
+
+.zoom2d-controls input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+}
+
 .scene-readout {
   position: absolute;
   top: 20px;
@@ -2091,6 +2155,13 @@ input[type="range"]::-moz-range-thumb {
     gap: 10px;
     transform: none;
     text-align: left;
+  }
+
+  .zoom2d-controls {
+    right: 14px;
+    left: 14px;
+    bottom: 12px;
+    grid-template-columns: 34px minmax(0, 1fr) 34px 58px;
   }
 
   .range-limits {
