@@ -486,14 +486,14 @@ function setModule(module) {
 
   if (showTheory) {
     setTheorySlide(state.theorySlide);
-    $("currentTip").textContent = "原理讲解已接入 Word 文件中的 7 页图片内容，公式说明默认正入射条件；斜入射请使用含入射角的光栅方程。";
+    setText("currentTip", "原理讲解已接入 Word 文件中的 7 页图片内容，公式说明默认正入射条件；斜入射请使用含入射角的光栅方程。");
     return;
   }
 
   if (module === "operation") {
     renderAll();
   } else {
-    $("currentTip").textContent = "当前仅完成“实验操作”和“原理讲解”部分；数据分析与实验报告保留入口，等待后续内容接入。";
+    setText("currentTip", "当前仅完成“实验操作”和“原理讲解”部分；数据分析与实验报告保留入口，等待后续内容接入。");
   }
 }
 
@@ -600,7 +600,7 @@ function set2dZoom(value, options = {}) {
   sync2dZoomControls();
 
   if (!options.silent && state.view === "2d") {
-    $("currentTip").textContent = `2D 视图缩放为 ${Math.round(state.zoom2d * 100)}%。可用滚轮、按钮或滑块查看光栅到 CCD 屏幕的俯视光路细节。`;
+    setText("currentTip", `2D 视图缩放为 ${Math.round(state.zoom2d * 100)}%。可用滚轮、按钮或滑块查看光栅到 CCD 屏幕的俯视光路细节。`);
   }
 }
 
@@ -623,7 +623,7 @@ function bind2dZoomControls() {
     state.zoom2d = clamp2dZoom(event.detail?.zoom);
     sync2dZoomControls();
     if (state.view === "2d") {
-      $("currentTip").textContent = `2D 视图缩放为 ${Math.round(state.zoom2d * 100)}%。`;
+      setText("currentTip", `2D 视图缩放为 ${Math.round(state.zoom2d * 100)}%。`);
     }
   });
 
@@ -637,10 +637,10 @@ function setView(view) {
   scene.setView(view);
   scene.set2dZoom?.(state.zoom2d);
   update2dZoomVisibility();
-  $("currentTip").textContent =
+  setText("currentTip",
     view === "3d"
       ? "3D 视图显示激光器、准直镜、光栅架、CCD 屏幕和衍射光束的空间关系。"
-      : "2D 视图从上方查看光路，便于判断不同级次在 CCD 屏幕上的横向位置；可用滚轮、按钮或滑块放大缩小。";
+      : "2D 视图从上方查看光路，便于判断不同级次在 CCD 屏幕上的横向位置；可用滚轮、按钮或滑块放大缩小。");
 }
 
 function drawFastScene(params) {
@@ -783,7 +783,7 @@ async function initDeferredScene() {
     sceneOverlay.classList.add("hidden");
   } catch (error) {
     state.sceneLoading = false;
-    $("currentTip").textContent = `3D 场景加载失败：${error.message}`;
+    setText("currentTip", `3D 场景加载失败：${error.message}`);
   }
 }
 
@@ -838,24 +838,24 @@ function updateReadouts() {
 function updateTip() {
   const warnings = geometryWarnings(state.params);
   if (warnings.length) {
-    $("currentTip").textContent = warnings[0];
+    setText("currentTip", warnings[0]);
     return;
   }
 
   if (state.params.diffractionEnabled === false) {
-    $("currentTip").textContent = "当前关闭单缝衍射包络，仅显示 N 缝干涉项；主极大位置仍由光栅方程确定。";
+    setText("currentTip", "当前关闭单缝衍射包络，仅显示 N 缝干涉项；主极大位置仍由光栅方程确定。");
     return;
   }
 
   if (state.mode === "intensity") {
-    $("currentTip").textContent = "光强曲线采用单缝包络与 N 缝干涉项相乘；N 增大时主极大变窄，但主极大位置不变。";
+    setText("currentTip", "光强曲线采用单缝包络与 N 缝干涉项相乘；N 增大时主极大变窄，但主极大位置不变。");
   } else if (state.mode === "info") {
     const selected = diffractionAngle(state.params, state.params.order);
-    $("currentTip").textContent = selected.valid
+    setText("currentTip", selected.valid
       ? `当前 j=${state.params.order} 的衍射角 θ_j=${selected.thetaDeg.toFixed(2)}°，屏上位置 x=${selected.screenCm.toFixed(2)} cm。`
-      : `当前 j=${state.params.order} 不存在实衍射角。`;
+      : `当前 j=${state.params.order} 不存在实衍射角。`);
   } else {
-    $("currentTip").textContent = "调整左侧参数，观察中央衍射图样和右侧数据的变化。";
+    setText("currentTip", "调整左侧参数，观察中央衍射图样和右侧数据的变化。");
   }
 }
 
@@ -937,7 +937,7 @@ function fillStudentDbFromCurrent() {
 
   updateStudentLabCalculators();
   if (Math.abs(state.params.incidenceDeg) > 0.01) {
-    $("currentTip").textContent = "学生动手实验按正入射设计；当前填入数据已按 θ_i=0 重新生成，避免把斜入射误差混进反演结果。";
+    setText("currentTip", "学生动手实验按正入射设计；当前填入数据已按 θ_i=0 重新生成，避免把斜入射误差混进反演结果。");
   }
 }
 
@@ -957,7 +957,7 @@ function fillStudentLambdaFromCurrent() {
 
   updateStudentLabCalculators();
   if (Math.abs(state.params.incidenceDeg) > 0.01) {
-    $("currentTip").textContent = "学生动手实验按正入射设计；当前填入数据已按 θ_i=0 重新生成，避免把斜入射误差混进反演结果。";
+    setText("currentTip", "学生动手实验按正入射设计；当前填入数据已按 θ_i=0 重新生成，避免把斜入射误差混进反演结果。");
   }
 }
 
@@ -1341,7 +1341,7 @@ function exportData() {
   link.click();
   URL.revokeObjectURL(link.href);
   $("statusSaved").textContent = "已保存";
-  $("currentTip").textContent = "已导出当前参数和光强分布采样数据。";
+  setText("currentTip", "已导出当前参数和光强分布采样数据。");
 }
 
 function renderAll() {
