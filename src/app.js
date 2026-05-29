@@ -456,7 +456,7 @@ function bindControls() {
   $("theoryPrev").addEventListener("click", () => setTheorySlide(state.theorySlide - 1));
   $("theoryNext").addEventListener("click", () => setTheorySlide(state.theorySlide + 1));
 
-  $("themeToggle").addEventListener("click", () => {
+  $("themeToggle")?.addEventListener("click", () => {
     document.body.classList.toggle("light-mode");
     const light = document.body.classList.contains("light-mode");
     $("themeToggle").setAttribute("aria-pressed", String(!light));
@@ -466,8 +466,8 @@ function bindControls() {
     drawIntensityChart();
   });
 
-  $("helpButton").addEventListener("click", () => {
-    $("currentTip").textContent = "拖动 3D 视图可旋转观察，滚轮可缩放；切换 2D 视图可查看俯视光路。所有角度和屏上位置均由光栅方程实时计算。";
+  $("helpButton")?.addEventListener("click", () => {
+    setText("currentTip", "拖动 3D 视图可旋转观察，滚轮可缩放；切换 2D 视图可查看俯视光路。所有角度和屏上位置均由光栅方程实时计算。");
   });
 
   bindStudentLab();
