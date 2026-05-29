@@ -5,6 +5,9 @@ const LASER_COLOR = 0xff2f46;
 const CYAN = 0x79cfff;
 const OPTICAL_AXIS_Y = 0;
 const LASER_EXIT_LOCAL_X = 0.66;
+const MIN_2D_ZOOM = 0.6;
+const MAX_2D_ZOOM = 3;
+const ORTHO_BASE_HALF_HEIGHT = 4.2;
 
 function makeTextSprite(text, options = {}) {
   const {
@@ -123,6 +126,7 @@ export class DiffractionScene {
     this.time = 0;
     this.drag = { active: false, x: 0, y: 0 };
     this.cameraState = { azimuth: 0.78, elevation: 0.48, radius: 8.4 };
+    this.orthoZoom = 1;
 
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.Fog(0x071017, 8, 18);
@@ -219,6 +223,13 @@ export class DiffractionScene {
     });
 
     this.renderer.domElement.addEventListener("wheel", (event) => {
+      if (this.view === "2d") {
+        event.preventDefault();
+        const wheelScale = Math.exp(-event.deltaY * 0.0012);
+        this.set2dZoom(this.orthoZoom * wheelScale);
+        return;
+      }
+
       if (this.view !== "3d") return;
       event.preventDefault();
       this.cameraState.radius = Math.max(6.1, Math.min(11.5, this.cameraState.radius + event.deltaY * 0.006));
@@ -234,12 +245,30 @@ export class DiffractionScene {
     this.camera.updateProjectionMatrix();
 
     const aspect = width / height;
-    this.orthoCamera.left = -5.8 * aspect;
-    this.orthoCamera.right = 5.8 * aspect;
-    this.orthoCamera.top = 4.2;
-    this.orthoCamera.bottom = -4.2;
-    this.orthoCamera.updateProjectionMatrix();
+    this.updateOrthoProjection(aspect);
     this.updateCamera();
+  }
+
+  updateOrthoProjection(aspect = this.container.clientWidth / Math.max(1, this.container.clientHeight)) {
+    // 2D 视图使用正交相机。缩放时只改变可视范围，不移动物体坐标，
+    // 因此光栅常数、屏距和衍射级次的位置关系不会被视觉交互破坏。
+    const halfHeight = ORTHO_BASE_HALF_HEIGHT / this.orthoZoom;
+    this.orthoCamera.left = -halfHeight * aspect;
+    this.orthoCamera.right = halfHeight * aspect;
+    this.orthoCamera.top = halfHeight;
+    this.orthoCamera.bottom = -halfHeight;
+    this.orthoCamera.updateProjectionMatrix();
+  }
+
+  set2dZoom(value) {
+    const numeric = Number(value);
+    const nextZoom = Math.max(MIN_2D_ZOOM, Math.min(MAX_2D_ZOOM, Number.isFinite(numeric) ? numeric : 1));
+    if (Math.abs(nextZoom - this.orthoZoom) < 0.001) return this.orthoZoom;
+
+    this.orthoZoom = nextZoom;
+    this.updateOrthoProjection();
+    this.container.dispatchEvent(new CustomEvent("scene2dzoomchange", { detail: { zoom: this.orthoZoom } }));
+    return this.orthoZoom;
   }
 
   setView(view) {
