@@ -21,6 +21,9 @@ import {
 
 const UI_FONT_STACK = '"HarmonyOS Sans SC", "MiSans", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif';
 const NUMBER_FONT_STACK = '"Bahnschrift", "DIN Alternate", "Segoe UI", "Microsoft YaHei UI", sans-serif';
+const MIN_2D_ZOOM = 0.6;
+const MAX_2D_ZOOM = 3;
+const STEP_2D_ZOOM = 0.1;
 
 const state = {
   params: { ...DEFAULT_PARAMS },
@@ -34,6 +37,7 @@ const state = {
   renderPending: false,
   sceneReady: false,
   sceneLoading: false,
+  zoom2d: 1,
 };
 
 const controls = {
@@ -343,6 +347,9 @@ function hydrateTheoryVisuals() {
 let scene = {
   setView() {},
   setDisplayMode() {},
+  set2dZoom() {
+    return state.zoom2d;
+  },
   update(params) {
     drawFastScene(params);
   },
@@ -422,6 +429,7 @@ function bindControls() {
 
   $("view3d").addEventListener("click", () => setView("3d"));
   $("view2d").addEventListener("click", () => setView("2d"));
+  bind2dZoomControls();
 
   document.querySelectorAll(".mode-buttons button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -556,15 +564,78 @@ function tick(now) {
   requestAnimationFrame(tick);
 }
 
+function clamp2dZoom(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return 1;
+  return Math.max(MIN_2D_ZOOM, Math.min(MAX_2D_ZOOM, numeric));
+}
+
+function sync2dZoomControls() {
+  const range = $("zoom2dRange");
+  if (!range) return;
+
+  const percent = Math.round(state.zoom2d * 100);
+  range.value = String(percent);
+  range.style.setProperty("--range-value", `${((percent - 60) / (300 - 60)) * 100}%`);
+  $("zoom2dReset").textContent = `${percent}%`;
+  $("zoom2dOut").disabled = state.zoom2d <= MIN_2D_ZOOM + 0.001;
+  $("zoom2dIn").disabled = state.zoom2d >= MAX_2D_ZOOM - 0.001;
+}
+
+function update2dZoomVisibility() {
+  const controlsPanel = $("zoom2dControls");
+  if (!controlsPanel) return;
+  controlsPanel.hidden = state.view !== "2d";
+  sync2dZoomControls();
+}
+
+function set2dZoom(value, options = {}) {
+  state.zoom2d = clamp2dZoom(value);
+  scene.set2dZoom?.(state.zoom2d);
+  sync2dZoomControls();
+
+  if (!options.silent && state.view === "2d") {
+    $("currentTip").textContent = `2D 视图缩放为 ${Math.round(state.zoom2d * 100)}%。可用滚轮、按钮或滑块查看光栅到 CCD 屏幕的俯视光路细节。`;
+  }
+}
+
+function adjust2dZoom(delta) {
+  set2dZoom(state.zoom2d + delta);
+}
+
+function bind2dZoomControls() {
+  const range = $("zoom2dRange");
+  if (!range) return;
+
+  $("zoom2dOut").addEventListener("click", () => adjust2dZoom(-STEP_2D_ZOOM));
+  $("zoom2dIn").addEventListener("click", () => adjust2dZoom(STEP_2D_ZOOM));
+  $("zoom2dReset").addEventListener("click", () => set2dZoom(1));
+  range.addEventListener("input", () => set2dZoom(Number(range.value) / 100));
+
+  // 鼠标滚轮直接作用在 Three.js 的正交相机上；这里监听场景派发的事件，
+  // 只负责同步按钮和滑块文字，避免 UI 控件与真实相机缩放状态脱节。
+  sceneRoot.addEventListener("scene2dzoomchange", (event) => {
+    state.zoom2d = clamp2dZoom(event.detail?.zoom);
+    sync2dZoomControls();
+    if (state.view === "2d") {
+      $("currentTip").textContent = `2D 视图缩放为 ${Math.round(state.zoom2d * 100)}%。`;
+    }
+  });
+
+  update2dZoomVisibility();
+}
+
 function setView(view) {
   state.view = view;
   $("view3d").classList.toggle("active", view === "3d");
   $("view2d").classList.toggle("active", view === "2d");
   scene.setView(view);
+  scene.set2dZoom?.(state.zoom2d);
+  update2dZoomVisibility();
   $("currentTip").textContent =
     view === "3d"
       ? "3D 视图显示激光器、准直镜、光栅架、CCD 屏幕和衍射光束的空间关系。"
-      : "2D 视图从上方查看光路，便于判断不同级次在 CCD 屏幕上的横向位置。";
+      : "2D 视图从上方查看光路，便于判断不同级次在 CCD 屏幕上的横向位置；可用滚轮、按钮或滑块放大缩小。";
 }
 
 function drawFastScene(params) {
@@ -700,6 +771,7 @@ async function initDeferredScene() {
     const loadedScene = new DiffractionScene(sceneRoot);
     loadedScene.setView(state.view);
     loadedScene.setDisplayMode(state.mode);
+    loadedScene.set2dZoom(state.zoom2d);
     loadedScene.update(state.params);
     scene = loadedScene;
     state.sceneReady = true;
@@ -1311,6 +1383,11 @@ function applyInitialRouteState() {
   const mode = query.get("mode");
   const module = query.get("module");
   const theorySlide = Number(query.get("theorySlide"));
+  const zoom2d = Number(query.get("zoom2d"));
+
+  if (query.has("zoom2d") && Number.isFinite(zoom2d)) {
+    set2dZoom(zoom2d, { silent: true });
+  }
 
   if (view === "2d") {
     setView("2d");
