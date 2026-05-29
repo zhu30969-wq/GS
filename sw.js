@@ -1,4 +1,4 @@
-const CACHE_VERSION = "diffraction-grating-v2026-05-29-remove-control-panel";
+const CACHE_VERSION = "diffraction-grating-v2026-05-29-remove-top-actions";
 
 const CORE_ASSETS = [
   "./",
