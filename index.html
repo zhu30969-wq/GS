@@ -168,6 +168,12 @@
           <div class="scene-frame">
             <div id="sceneRoot" class="scene-root" aria-label="光栅衍射三维模型"></div>
             <canvas id="sceneOverlay" class="scene-overlay" aria-hidden="true"></canvas>
+            <div id="zoom2dControls" class="zoom2d-controls" hidden aria-label="2D 视图缩放控制">
+              <button id="zoom2dOut" type="button" aria-label="缩小 2D 视图">−</button>
+              <input id="zoom2dRange" type="range" min="60" max="300" step="10" value="100" aria-label="2D 视图缩放比例" />
+              <button id="zoom2dIn" type="button" aria-label="放大 2D 视图">+</button>
+              <button id="zoom2dReset" class="zoom2d-reset" type="button" aria-label="重置 2D 视图缩放">100%</button>
+            </div>
             <div class="scene-readout" aria-live="polite">
               <div>
                 <span>光栅</span>
