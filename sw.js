@@ -1,4 +1,4 @@
-const CACHE_VERSION = "diffraction-grating-v2026-05-28";
+const CACHE_VERSION = "diffraction-grating-v2026-05-29-2d-zoom";
 
 const CORE_ASSETS = [
   "./",
