@@ -474,6 +474,10 @@ function bindControls() {
 }
 
 function setModule(module) {
+  if (!["operation", "theory"].includes(module)) {
+    module = "operation";
+  }
+
   state.module = module;
   document.querySelectorAll(".module-tabs .tab").forEach((item) => {
     item.classList.toggle("active", item.dataset.module === module);
@@ -492,8 +496,6 @@ function setModule(module) {
 
   if (module === "operation") {
     renderAll();
-  } else {
-    setText("currentTip", "当前仅完成“实验操作”和“原理讲解”部分；数据分析与实验报告保留入口，等待后续内容接入。");
   }
 }
 
@@ -1410,7 +1412,7 @@ function applyInitialRouteState() {
     setTheorySlide(theorySlide);
   }
 
-  if (module && ["operation", "theory", "analysis", "report"].includes(module)) {
+  if (module && ["operation", "theory"].includes(module)) {
     setModule(module);
   } else {
     setTheorySlide(state.theorySlide);

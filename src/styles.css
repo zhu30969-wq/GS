@@ -73,7 +73,7 @@ button {
 
 .topbar {
   display: grid;
-  grid-template-columns: minmax(310px, 1fr) minmax(560px, 820px) minmax(285px, 1fr);
+  grid-template-columns: minmax(310px, 1fr) minmax(420px, 560px) minmax(285px, 1fr);
   gap: 26px;
   align-items: center;
   min-height: 68px;
@@ -97,7 +97,9 @@ button {
 
 .module-tabs {
   display: grid;
-  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  justify-self: center;
+  width: min(620px, 100%);
   align-items: stretch;
   border-bottom: 1px solid var(--border-soft);
 }
