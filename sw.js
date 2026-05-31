@@ -1,4 +1,4 @@
-const CACHE_VERSION = "diffraction-grating-v2026-05-29-remove-current-tip";
+const CACHE_VERSION = "diffraction-grating-v2026-05-31-qr-entry-card";
 
 const CORE_ASSETS = [
   "./",
@@ -12,6 +12,7 @@ const CORE_ASSETS = [
   "./src/scene3d.js",
   "./src/pwa.js",
   "./vendor/three.module.js",
+  "./assets/gs-entry-qr-card.png",
   "./assets/icons/site-icon.svg",
   "./assets/theory/slides/theory-slide-01.webp",
   "./assets/theory/slides/theory-slide-02.webp",

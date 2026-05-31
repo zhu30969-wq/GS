@@ -201,18 +201,21 @@
 
         </section>
 
-        <aside class="right-rail" aria-label="实验结果、光路示意图与学生动手实验">
-          <section class="panel result-panel">
+        <aside class="right-rail" aria-label="扫码访问、光路示意图与学生动手实验">
+          <section class="panel result-panel qr-access-panel">
             <div class="panel-heading">
-              <h2><span class="line-icon">╬</span>实验结果</h2>
+              <h2><span class="line-icon">╬</span>扫码访问</h2>
             </div>
-            <dl class="result-list">
+            <figure class="qr-access-card">
+              <img src="./assets/gs-entry-qr-card.png" alt="光栅衍射交互实验网页二维码，微信或 QQ 扫码进入网页" loading="lazy" decoding="async" />
+            </figure>
+            <dl class="result-list result-data-cache" aria-hidden="true">
               <div><dt>测得包络中央宽度 (mm)</dt><dd id="centralWidth">--</dd></div>
               <div><dt>反算缝宽 b (μm)</dt><dd id="calculatedA">--</dd></div>
               <div><dt>理论缝宽 b (μm)</dt><dd id="theoryA">--</dd></div>
               <div><dt>相对误差</dt><dd id="relativeError">--</dd></div>
             </dl>
-            <p class="conclusion">实验结论：<span id="conclusionText">符合理论值</span><span id="conclusionIcon">✓</span></p>
+            <p class="conclusion result-data-cache" aria-hidden="true">实验结论：<span id="conclusionText">符合理论值</span><span id="conclusionIcon">✓</span></p>
           </section>
 
           <section class="panel diagram-panel">
