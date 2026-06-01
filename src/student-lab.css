@@ -32,7 +32,8 @@ body {
 body {
   color: var(--text);
   font-family: var(--font);
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.48;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   font-variant-numeric: tabular-nums;
@@ -124,13 +125,14 @@ button {
 .top-tools button,
 .measurement-actions button,
 .bottom-actions button {
-  min-height: 36px;
+  min-height: 38px;
   border: 1px solid var(--line-strong);
   border-radius: 7px;
   background: #ffffff;
   color: var(--blue-2);
   font-family: var(--font-display);
-  font-weight: 750;
+  font-size: 14px;
+  font-weight: 780;
   text-decoration: none;
 }
 
@@ -176,7 +178,7 @@ main {
 
 .hero-panel {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(480px, 0.9fr) minmax(620px, 1.1fr);
   align-items: center;
   min-height: 188px;
   overflow: hidden;
@@ -189,7 +191,7 @@ main {
 }
 
 .hero-copy {
-  padding: 28px 52px 30px 88px;
+  padding: 28px 42px 30px 88px;
 }
 
 .hero-copy h1 {
@@ -231,7 +233,10 @@ main {
 }
 
 .hero-panel .apparatus-figure {
-  display: none;
+  display: block;
+  height: 220px;
+  min-width: 0;
+  margin-right: 26px;
 }
 
 .apparatus-figure {
@@ -276,11 +281,14 @@ main {
 }
 
 .lab-model-figure > svg {
-  display: none;
+  position: relative;
+  z-index: 1;
+  display: block;
 }
 
 .student-hero-scene,
 .student-hero-fallback {
+  display: none;
   position: absolute;
   inset: 0;
   width: 100%;
@@ -330,16 +338,17 @@ main {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
 }
 
+/* 步骤条用于快速定位实验流程。序号统一为白色，和各实验卡片标题中的序号保持一致。 */
 .stepper {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin: 10px 0;
-  padding: 11px 46px;
+  gap: 12px;
+  margin: 12px 0 10px;
+  padding: 10px 38px;
   border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: #ffffff;
-  box-shadow: var(--shadow);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 26px rgba(29, 77, 153, 0.08);
   list-style: none;
 }
 
@@ -351,10 +360,10 @@ main {
   flex: 1 1 0;
   min-width: 0;
   min-height: 42px;
-  color: #314569;
+  color: #183160;
   font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 820;
   white-space: nowrap;
 }
 
@@ -374,19 +383,25 @@ main {
 
 .stepper span:first-child {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   place-items: center;
   border-radius: 50%;
-  background: #dce6f5;
-  color: #1e3358;
+  border: 1px solid #bcd0f3;
+  background: linear-gradient(180deg, #eef5ff, #dbe9ff);
+  color: #ffffff !important;
   font-family: var(--font-number);
-  font-size: 20px;
+  font-size: 19px;
+  font-weight: 900;
+  text-shadow: 0 1px 2px rgba(12, 31, 66, 0.35);
+  box-shadow: inset 0 0 0 999px rgba(31, 91, 234, 0.78);
 }
 
 .stepper .active span:first-child {
-  background: var(--blue);
-  color: #ffffff;
+  border-color: var(--blue);
+  background: linear-gradient(180deg, #2f68f1, #1550df);
+  color: #ffffff !important;
+  box-shadow: 0 8px 18px rgba(31, 91, 234, 0.22);
 }
 
 .stepper b {
@@ -423,7 +438,7 @@ main {
 .white-card {
   min-width: 0;
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: 9px;
   background: rgba(255, 255, 255, 0.95);
   box-shadow: var(--shadow);
 }
@@ -432,12 +447,12 @@ main {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 46px;
+  min-height: 44px;
   margin: 0;
-  padding: 0 24px;
+  padding: 0 22px;
   color: #0f2b6d;
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.1;
   font-weight: 850;
   border-bottom: 1px solid var(--line);
@@ -450,8 +465,11 @@ main {
   place-items: center;
   border-radius: 6px;
   background: var(--blue);
-  color: #ffffff;
-  font-size: 16px;
+  color: #ffffff !important;
+  font-family: var(--font-number);
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .principle-card,
@@ -470,7 +488,7 @@ main {
   margin: 14px 28px 10px;
   padding-left: 22px;
   color: #1b3157;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.9;
 }
 
@@ -513,14 +531,14 @@ main {
 .principle-card li {
   position: relative;
   display: grid;
-  grid-template-columns: 54px minmax(0, 1fr);
+  grid-template-columns: 56px minmax(0, 1fr);
   gap: 8px;
   align-items: start;
   min-height: 24px;
   padding-left: 18px;
   color: #1d335a;
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: 15px;
+  line-height: 1.72;
 }
 
 .principle-card li::before {
@@ -548,6 +566,7 @@ main {
 .principle-card .formula-row span {
   font-family: var(--font-math);
   color: #142345;
+  font-size: 15px;
   font-weight: 700;
 }
 
@@ -622,7 +641,7 @@ main {
   min-height: 30px;
   padding: 2px 0 0 42px;
   color: #17325e;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.72;
 }
 
@@ -691,11 +710,12 @@ main {
 .field-grid label,
 .readout-grid label {
   display: grid;
-  grid-template-columns: 128px minmax(0, 1fr) 48px;
+  grid-template-columns: 118px minmax(0, 1fr) 42px;
   align-items: center;
-  min-height: 38px;
+  min-height: 36px;
   color: #314466;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 620;
 }
 
 .field-grid input,
@@ -703,15 +723,15 @@ main {
 .readout-grid input,
 .readout-grid output {
   width: 100%;
-  min-height: 34px;
+  min-height: 36px;
   padding: 0 12px;
   border: 1px solid #cbd8ec;
   border-radius: 5px;
   background: #fbfdff;
   color: #0c1f42;
   font-family: var(--font-number);
-  font-size: 17px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 700;
   text-align: center;
 }
 
@@ -726,7 +746,8 @@ main {
 .field-grid b,
 .readout-grid b {
   color: #394b68;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   text-align: center;
 }
 
@@ -756,7 +777,7 @@ main {
 }
 
 .measurement-actions button {
-  min-width: 130px;
+  min-width: 122px;
   padding: 0 14px;
 }
 
@@ -768,7 +789,7 @@ main {
 }
 
 .readout-grid label {
-  grid-template-columns: 92px minmax(0, 1fr) 42px;
+  grid-template-columns: 86px minmax(0, 1fr) 38px;
 }
 
 .ccd-detail-grid {
@@ -781,7 +802,7 @@ main {
 .ccd-detail-grid div {
   display: grid;
   gap: 5px;
-  min-height: 58px;
+  min-height: 56px;
   padding: 9px 12px;
   border: 1px solid #d7e4f5;
   border-radius: 7px;
@@ -790,13 +811,13 @@ main {
 
 .ccd-detail-grid span {
   color: #667895;
-  font-size: 13px;
+  font-size: 12.5px;
 }
 
 .ccd-detail-grid strong {
   color: #123d94;
   font-family: var(--font-number);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -813,15 +834,16 @@ main {
   gap: 9px;
   color: #162747;
   font-family: var(--font-math);
-  font-size: 17px;
-  line-height: 1.65;
+  font-size: 16px;
+  line-height: 1.58;
 }
 
 .formula-stack p {
   display: grid;
-  grid-template-columns: 74px auto 1fr;
+  grid-template-columns: 66px auto 1fr;
   gap: 9px;
   align-items: center;
+  min-height: 30px;
   margin: 0;
   white-space: nowrap;
 }
@@ -844,7 +866,7 @@ main {
   display: grid;
   align-items: center;
   justify-items: center;
-  min-height: 92px;
+  min-height: 88px;
   border: 1px solid #a9c2fb;
   border-radius: 7px;
   background: linear-gradient(180deg, #f9fbff, #eef5ff);
@@ -853,7 +875,7 @@ main {
 .big-result strong {
   color: var(--blue);
   font-family: var(--font-number);
-  font-size: 36px;
+  font-size: 34px;
   font-weight: 800;
   text-align: center;
 }
@@ -861,7 +883,7 @@ main {
 .result-strip span,
 .analysis-grid span {
   color: #536681;
-  font-size: 15px;
+  font-size: 14px;
   text-align: center;
 }
 
@@ -886,7 +908,7 @@ main {
 .analysis-grid strong {
   color: var(--blue);
   font-family: var(--font-number);
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 800;
 }
 
@@ -910,7 +932,7 @@ main {
 
 #lambdaResult {
   font-family: var(--font-number);
-  font-size: 34px;
+  font-size: 32px;
   font-weight: 800;
 }
 
@@ -950,7 +972,7 @@ main {
 .error-source p {
   margin: 0;
   color: #334765;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.55;
 }
 
@@ -1032,6 +1054,10 @@ main {
 
   .hero-copy {
     padding: 28px 34px;
+  }
+
+  .hero-panel .apparatus-figure {
+    display: none;
   }
 
   .apparatus-figure {
