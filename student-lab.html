@@ -27,9 +27,9 @@
         </nav>
 
         <div class="top-tools" aria-label="辅助入口">
-          <a href="./index.html">返回主实验</a>
+          <a href="./index.html">返回首页</a>
           <button id="openGuide" type="button">实验说明</button>
-          <span class="student-chip">学生</span>
+          <button id="finishReport" class="top-primary-action" type="button">结束实验报告</button>
         </div>
       </header>
 
@@ -167,14 +167,15 @@
               <span>同步参数</span>
             </div>
           </figure>
+          <div id="heroFormulaBadge" class="hero-formula-badge" aria-label="核心反演公式">d sin θⱼ = jλ</div>
         </section>
 
         <ol class="stepper" aria-label="实验步骤">
-          <li class="active"><span>1</span>选择参数</li>
-          <li><span>2</span>测量亮纹</li>
-          <li><span>3</span>计算 θⱼ</li>
-          <li><span>4</span><b id="stepInvertLabel">反演 λ</b></li>
-          <li><span>5</span>结果分析</li>
+          <li class="active"><span>1</span><b>设定参数</b><em>设置实验条件</em></li>
+          <li><span>2</span><b>测量条纹</b><em>采集条纹位置</em></li>
+          <li><span>3</span><b>计算角度</b><em>求解衍射角 θⱼ</em></li>
+          <li><span>4</span><b id="stepInvertLabel">反演波长</b><em id="stepInvertSub">计算入射波长 λ</em></li>
+          <li><span>5</span><b>结果分析</b><em>评估实验结果</em></li>
         </ol>
 
         <section class="intro-grid">
@@ -200,7 +201,7 @@
 
         <section class="work-grid">
           <article class="white-card params-card">
-            <h2><span>1</span>选择参数</h2>
+            <h2><span>01</span>实验参数设置</h2>
             <div class="field-grid">
               <label class="mode-db-only"><span>已知波长 λ</span><input id="knownLambda" type="number" min="400" max="700" step="1" value="650" /><b>nm</b></label>
               <label class="mode-lambda-only"><span>光栅常数 d</span><input id="knownD" type="number" min="0.1" step="0.001" value="5.519" /><b>μm</b></label>
@@ -214,7 +215,7 @@
           </article>
 
           <article class="white-card measurement-card">
-            <h2><span>2</span>测量亮纹位置</h2>
+            <h2><span>02</span>CCD 衍射图样测量区 <button class="zoom-button" type="button" aria-label="放大 CCD 图样视图">放大视图</button></h2>
             <canvas id="fringeCanvas" width="1120" height="170" aria-label="CCD 屏幕衍射条纹"></canvas>
             <div class="measurement-actions">
               <button id="fillTheory" type="button">填入理论读数</button>
@@ -225,6 +226,8 @@
               <label><span>x<sub>+j</sub></span><input id="xPlus" type="number" step="0.01" value="16.8" /><b>cm</b></label>
               <label><span>x<sub>-j</sub></span><input id="xMinus" type="number" step="0.01" value="-16.6" /><b>cm</b></label>
               <label><span>平均 x<sub>j</sub></span><output id="xMean">--</output><b>cm</b></label>
+              <div class="readout-info mode-lambda-only"><span>左右对称误差</span><output id="symmetryReadout">--</output></div>
+              <div class="readout-info mode-lambda-only"><span>当前级次 j</span><output id="orderReadout">--</output></div>
               <label class="mode-db-only"><span>中央包络宽度 W<sub>0</sub></span><input id="centralWidth" type="number" min="0" step="0.01" value="687.31" /><b>mm</b></label>
             </div>
             <div class="ccd-detail-grid" aria-label="CCD 采样细节">
@@ -238,7 +241,7 @@
 
         <section class="calc-grid">
           <article class="white-card angle-card">
-            <h2><span>3</span>计算 θⱼ</h2>
+            <h2><span>03</span>计算 θⱼ</h2>
             <div class="calc-pair">
               <div id="thetaFormula" class="formula-stack"></div>
               <div class="big-result"><strong id="thetaResult">--</strong></div>
@@ -247,7 +250,7 @@
           </article>
 
           <article class="white-card inversion-card">
-            <h2><span>4</span><b id="inversionTitle">反演 λ</b></h2>
+            <h2><span>04</span><b id="inversionTitle">反演 λ</b></h2>
             <div class="calc-pair">
               <div id="inversionFormula" class="formula-stack"></div>
               <div class="result-strip">
@@ -260,10 +263,19 @@
               </div>
             </div>
           </article>
+
+          <article class="white-card suggestion-card">
+            <h2><span>!</span>实验建议</h2>
+            <p id="adviceText" class="advice-box">优先选取最亮的一级条纹，并保证左右同级亮纹关于零级亮纹近似对称。</p>
+            <ul id="adviceBullets">
+              <li>优先选取最亮的一级条纹。</li>
+              <li>左右同级亮纹应关于零级亮纹近似对称。</li>
+            </ul>
+          </article>
         </section>
 
         <section class="white-card analysis-card">
-          <h2><span>5</span>结果分析</h2>
+          <h2><span>05</span>结果分析</h2>
           <div class="analysis-grid">
             <div><span>反演结果</span><strong id="analysisMain">--</strong></div>
             <div><span>参考值</span><strong id="analysisReference">--</strong></div>
