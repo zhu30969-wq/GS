@@ -513,11 +513,23 @@ button:disabled {
   white-space: normal;
   word-break: normal;
   overflow-wrap: normal;
+  overflow-x: auto;
+  text-wrap: balance;
 }
 
 .inline-formula {
   color: #ffffff;
   font-size: 1.08em;
+}
+
+.formula-large sub,
+.inline-formula sub,
+.symbol-list dt sub,
+.compact-list dt sub {
+  display: inline;
+  line-height: 0;
+  vertical-align: sub;
+  font-size: 0.62em;
 }
 
 .symbol-list,
@@ -687,6 +699,10 @@ button:disabled {
   color: #f5f7ff;
   font-size: clamp(24px, 2.2vw, 34px);
   font-weight: 500;
+  line-height: 1.25;
+  text-align: center;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .workflow-row {
@@ -698,6 +714,12 @@ button:disabled {
 
 .workflow-row .visual-card {
   padding: 16px;
+}
+
+.workflow-row .formula-large {
+  min-height: 84px;
+  padding: 14px 10px;
+  font-size: clamp(22px, 1.55vw, 28px);
 }
 
 .workflow-row b {

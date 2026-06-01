@@ -143,7 +143,7 @@ const theoryVisuals = [
             <div><dt>L</dt><dd>屏距，光栅到屏幕的距离</dd></div>
             <div><dt>λ</dt><dd>入射光波长</dd></div>
             <div><dt>j</dt><dd>衍射级次，j = 0, ±1, ±2, ...</dd></div>
-            <div><dt>θ<sub>j</sub></dt><dd>第 j 级明纹对应的衍射角</dd></div>
+            <div><dt>θⱼ</dt><dd>第 j 级明纹对应的衍射角</dd></div>
           </dl>
         </article>
         <article class="visual-card">
@@ -214,15 +214,15 @@ const theoryVisuals = [
           <b>Step 3</b><h3>屏幕上的条纹位置</h3>
           <div class="visual-grid two tight">
             <div>
-              <p>屏距为 L 时，第 j 级明纹在屏幕上的位移为 y<sub>j</sub>。</p>
-              <p>几何关系：<span class="inline-formula">y<sub>j</sub> = L tan θ<sub>j</sub></span></p>
+              <p>屏距为 L 时，第 j 级明纹在屏幕上的位移为 yⱼ。</p>
+              <p>几何关系：<span class="inline-formula">yⱼ = L tan θⱼ</span></p>
             </div>
             <div>
               <p>小角度近似：</p>
-              <div class="formula-large">y<sub>j</sub> ≈ jλL / d</div>
+              <div class="formula-large">yⱼ ≈ jλL / d</div>
             </div>
           </div>
-          <p class="visual-tip">角度较大时，应先由几何关系求 θ<sub>j</sub>，再计算屏幕位置。</p>
+          <p class="visual-tip">角度较大时，应先由几何关系求 θⱼ，再计算屏幕位置。</p>
         </article>
       </div>
     </div>
@@ -236,7 +236,7 @@ const theoryVisuals = [
           <span>j = -3</span><span>j = -2</span><span>j = -1</span><strong>j = 0</strong><span>j = 1</span><span>j = 2</span><span>j = 3</span>
         </div>
         <p>正入射条件下，衍射条纹关于中央主极大对称：</p>
-        <div class="formula-large">I<sub>j</sub> = I<sub>-j</sub>， y<sub>j</sub> = -y<sub>-j</sub></div>
+        <div class="formula-large">Iⱼ = I₋ⱼ， yⱼ = -y₋ⱼ</div>
       </article>
       <div class="visual-grid four">
         <article class="visual-card"><h3>改变 d</h3><p>d 增大，条纹间距减小；d 减小，条纹间距增大。</p></article>
@@ -246,7 +246,7 @@ const theoryVisuals = [
       </div>
       <article class="visual-card">
         <h3>条纹位置公式（小角度）</h3>
-        <div class="formula-large">y<sub>j</sub> ≈ jλL / d</div>
+        <div class="formula-large">yⱼ ≈ jλL / d</div>
       </article>
     </div>
   `,
@@ -257,7 +257,7 @@ const theoryVisuals = [
         <article class="visual-card">
           <h3>单缝暗纹条件</h3>
           <div class="formula-large">b sin θ = kλ</div>
-          <p>靠近中心的第一对暗纹满足 <span class="inline-formula">b sin θ<sub>1</sub> = λ</span>。</p>
+          <p>靠近中心的第一对暗纹满足 <span class="inline-formula">b sin θ₁ = λ</span>。</p>
           <svg class="curve-sketch" viewBox="0 0 520 230" role="img" aria-label="中央明纹宽度由一阶暗纹确定">
             <path d="M40 180 C120 170 150 60 260 60 C370 60 400 170 480 180" fill="none" stroke="#8c80ff" stroke-width="3" stroke-dasharray="8 8"/>
             <g stroke="#dfefff" stroke-width="2">
@@ -274,9 +274,9 @@ const theoryVisuals = [
           <h3>中央明纹宽度</h3>
           <p>小角度近似下，sin θ ≈ tan θ ≈ θ：</p>
           <div class="formula-stack">
-            <span>θ<sub>1</sub> ≈ λ / b</span>
-            <span>y<sub>1</sub> ≈ Lθ<sub>1</sub> ≈ λL / b</span>
-            <strong>Δy ≈ 2y<sub>1</sub> ≈ 2λL / b</strong>
+            <span>θ₁ ≈ λ / b</span>
+            <span>y₁ ≈ Lθ₁ ≈ λL / b</span>
+            <strong>Δy ≈ 2y₁ ≈ 2λL / b</strong>
           </div>
           <h3>反推缝宽 b</h3>
           <div class="formula-large">b ≈ 2λL / Δy</div>
@@ -291,13 +291,13 @@ const theoryVisuals = [
       <div class="workflow-row">
         <article class="visual-card"><b>1</b><h3>设置波长 λ</h3><p>采用单色光源，并记录波长。</p></article>
         <article class="visual-card"><b>2</b><h3>测量屏距 L</h3><p>测量光栅到屏幕的距离。</p></article>
-        <article class="visual-card"><b>3</b><h3>记录第 j 级明纹位置 y<sub>j</sub></h3><p>读取中央明纹到第 j 级明纹的横向位移。</p></article>
-        <article class="visual-card"><b>4</b><h3>计算 θ<sub>j</sub></h3><p>θ<sub>j</sub> = arctan(y<sub>j</sub> / L)</p></article>
-        <article class="visual-card"><b>5</b><h3>反推光栅常数 d</h3><div class="formula-large">d = jλ / sin θ<sub>j</sub></div></article>
+        <article class="visual-card"><b>3</b><h3>记录第 j 级明纹位置 yⱼ</h3><p>读取中央明纹到第 j 级明纹的横向位移。</p></article>
+        <article class="visual-card"><b>4</b><h3>计算 θⱼ</h3><p>θⱼ = arctan(yⱼ / L)</p></article>
+        <article class="visual-card"><b>5</b><h3>反推光栅常数 d</h3><div class="formula-large">d = jλ / sin θⱼ</div></article>
       </div>
       <div class="visual-grid two">
-        <article class="visual-card"><h3>推荐计算</h3><div class="formula-large">θ<sub>j</sub> = arctan(y<sub>j</sub> / L)</div><div class="formula-large">d = jλ / sin θ<sub>j</sub></div></article>
-        <article class="visual-card"><h3>数据记录表</h3><table class="visual-table"><tr><th>j</th><th>y<sub>j</sub> / mm</th><th>θ<sub>j</sub> / °</th><th>d / μm</th></tr><tr><td>1</td><td>15.2</td><td>0.87</td><td>42.8</td></tr><tr><td>2</td><td>30.4</td><td>1.74</td><td>42.8</td></tr><tr><td>3</td><td>45.6</td><td>2.61</td><td>42.8</td></tr></table></article>
+        <article class="visual-card"><h3>推荐计算</h3><div class="formula-large">θⱼ = arctan(yⱼ / L)</div><div class="formula-large">d = jλ / sin θⱼ</div></article>
+        <article class="visual-card"><h3>数据记录表</h3><table class="visual-table"><tr><th>j</th><th>yⱼ / mm</th><th>θⱼ / °</th><th>d / μm</th></tr><tr><td>1</td><td>15.2</td><td>0.87</td><td>42.8</td></tr><tr><td>2</td><td>30.4</td><td>1.74</td><td>42.8</td></tr><tr><td>3</td><td>45.6</td><td>2.61</td><td>42.8</td></tr></table></article>
       </div>
     </div>
   `,
@@ -308,10 +308,10 @@ const theoryVisuals = [
         <article class="visual-card">
           <h3>误差来源</h3>
           <ul class="check-list">
-            <li>条纹位置读数误差会直接影响 y<sub>j</sub>。</li>
-            <li>屏距 L 测量误差会影响 θ<sub>j</sub>。</li>
-            <li>入射角偏差应使用斜入射公式：<span class="inline-formula">d(sin θ<sub>j</sub> - sin θ<sub>i</sub>) = jλ</span>。</li>
-            <li>小角度近似 <span class="inline-formula">y<sub>j</sub> ≈ jλL / d</span> 只适合 θ 较小时。</li>
+            <li>条纹位置读数误差会直接影响 yⱼ。</li>
+            <li>屏距 L 测量误差会影响 θⱼ。</li>
+            <li>入射角偏差应使用斜入射公式：<span class="inline-formula">d(sin θⱼ - sin θᵢ) = jλ</span>。</li>
+            <li>小角度近似 <span class="inline-formula">yⱼ ≈ jλL / d</span> 只适合 θ 较小时。</li>
           </ul>
         </article>
         <article class="visual-card">
@@ -322,7 +322,7 @@ const theoryVisuals = [
             <div><dt>入射角偏差</dt><dd>1.0°</dd></div>
             <div><dt>是否使用小角度近似</dt><dd>按 θ 大小判断</dd></div>
           </dl>
-          <div class="formula-large">相对误差 = |d<sub>实验</sub> - d<sub>理论</sub>| / d<sub>理论</sub> × 100%</div>
+          <div class="formula-large">相对误差 = |d实验 - d理论| / d理论 × 100%</div>
           <p class="visual-tip">若入射光不垂直于光栅，仍用正入射公式会产生系统误差。</p>
         </article>
       </div>
