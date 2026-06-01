@@ -1,4 +1,4 @@
-const CACHE_VERSION = "diffraction-grating-v2026-05-31-two-module-nav";
+const CACHE_VERSION = "diffraction-grating-v2026-06-01-export-theory-fix";
 
 const CORE_ASSETS = [
   "./",

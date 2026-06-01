@@ -416,7 +416,7 @@ function niceDomainCm(raw) {
 
 export function buildExportRows(params, samples = 220) {
   const domain = chartDomainCm(params);
-  const rows = [["position_cm", "relative_intensity", "single_slit_envelope"]];
+  const rows = [["屏幕位置 x (cm)", "相对光强 I/I0", "单缝包络 sinc²"]];
   for (let i = 0; i < samples; i += 1) {
     const t = i / (samples - 1);
     const x = -domain + 2 * domain * t;

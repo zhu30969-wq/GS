@@ -536,7 +536,6 @@ function resetExperiment() {
   state.elapsedSeconds = 0;
   state.lastTick = null;
   setText("experimentStatus", "就绪");
-  setText("statusTime", "00:00:00");
   setText("statusSaved", "已保存");
   renderAll();
 }
@@ -564,7 +563,6 @@ function tick(now) {
   if (state.running) {
     if (state.lastTick !== null) {
       state.elapsedSeconds += (now - state.lastTick) / 1000;
-      setText("statusTime", formatTime(state.elapsedSeconds));
     }
     state.lastTick = now;
   }
@@ -1324,26 +1322,46 @@ function drawRayDiagram() {
 
 function exportData() {
   const rows = buildExportRows(state.params);
+  const measurement = simulatedMeasurement(state.params);
   const metadata = [
-    ["lambda_nm", state.params.lambdaNm],
-    ["grating_um", state.params.gratingUm],
-    ["distance_cm", state.params.distanceCm],
-    ["slit_b_um", state.params.slitUm],
-    ["slit_count", state.params.slitCount],
-    ["diffraction_envelope_enabled", state.params.diffractionEnabled !== false],
-    ["incidence_deg", state.params.incidenceDeg],
-    ["selected_j", state.params.order],
+    ["光栅衍射交互实验导出数据"],
+    ["导出时间", new Date().toLocaleString("zh-CN", { hour12: false })],
     [],
+    ["左侧实验参数", "数值", "单位", "说明"],
+    ["激光波长 λ", state.params.lambdaNm.toFixed(0), "nm", "可见光范围 400-700 nm"],
+    ["光栅常数 d", state.params.gratingUm.toFixed(3), "μm", "相邻狭缝中心间距"],
+    ["屏距 L", state.params.distanceCm.toFixed(1), "cm", "光栅到 CCD 屏幕距离"],
+    ["衍射级次 j", state.params.order, "", "当前选中的主极大级次"],
+    ["缝宽 b", state.params.slitUm.toFixed(1), "μm", "单个狭缝宽度"],
+    ["有效缝数 N", Math.round(state.params.slitCount), "缝", "参与干涉的狭缝数量"],
+    ["是否考虑衍射", state.params.diffractionEnabled !== false ? "是" : "否", "", "是：光强包含单缝 sinc² 包络"],
+    ["入射角 θ_i", state.params.incidenceDeg.toFixed(1), "°", "正入射为 0°"],
+    [],
+    ["实验结果", "数值", "单位", "说明"],
+    ["测得包络中央宽度", measurement.measuredWidthMm === null ? "" : measurement.measuredWidthMm.toFixed(2), "mm", "由单缝包络一阶暗纹间距得到"],
+    ["反算缝宽 b", measurement.calculatedSlitUm === null ? "" : measurement.calculatedSlitUm.toFixed(2), "μm", "由中央包络宽度反演"],
+    ["理论缝宽 b", state.params.slitUm.toFixed(1), "μm", "左侧参数设定值"],
+    ["相对误差", measurement.relativeError === null ? "" : (measurement.relativeError * 100).toFixed(2), "%", "|b_实验-b_理论|/b_理论×100%"],
+    [],
+    ["光强分布采样数据"],
   ];
-  const csv = [...metadata, ...rows].map((row) => row.join(",")).join("\n");
+  // Windows Excel 直接打开 CSV 时可能按本地 ANSI 编码解析；BOM 能明确标识 UTF-8，避免中文乱码。
+  const csv = `\uFEFF${[...metadata, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n")}`;
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = `diffraction-data-${Date.now()}.csv`;
+  link.download = `光栅衍射实验数据-${Date.now()}.csv`;
   link.click();
   URL.revokeObjectURL(link.href);
   $("statusSaved").textContent = "已保存";
-  setText("currentTip", "已导出当前参数和光强分布采样数据。");
+  setText("currentTip", "已导出 UTF-8 编码数据，文件包含左侧参数、实验结果和光强分布采样。");
+}
+
+function csvCell(value) {
+  if (value === null || value === undefined) return "";
+  const text = String(value);
+  // CSV 单元格含逗号、双引号或换行时必须用双引号包裹，并把内部双引号写成两个双引号。
+  return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 }
 
 function renderAll() {

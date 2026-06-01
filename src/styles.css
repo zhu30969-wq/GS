@@ -499,18 +499,20 @@ button:disabled {
 }
 
 .formula-large {
-  display: grid;
+  display: block;
   min-height: 62px;
-  place-items: center;
   margin: 14px 0;
-  padding: 12px 16px;
+  padding: 18px 16px;
   border: 1px solid rgba(139, 128, 255, 0.32);
   border-radius: 8px;
   background: rgba(9, 18, 30, 0.58);
   color: #f5f7ff;
-  font-size: clamp(28px, 2.8vw, 44px);
+  font-size: clamp(22px, 2.1vw, 34px);
   line-height: 1.25;
   text-align: center;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .inline-formula {
@@ -1884,7 +1886,7 @@ input[type="range"]::-moz-range-thumb {
 
 .bottom-status {
   display: grid;
-  grid-template-columns: minmax(700px, 1fr) 200px;
+  grid-template-columns: minmax(620px, 1fr) 200px;
   gap: 18px;
   align-items: center;
   min-height: 82px;
@@ -1894,7 +1896,7 @@ input[type="range"]::-moz-range-thumb {
 
 .status-metrics {
   display: grid;
-  grid-template-columns: repeat(7, minmax(82px, 1fr));
+  grid-template-columns: repeat(6, minmax(82px, 1fr));
   align-items: stretch;
 }
 
