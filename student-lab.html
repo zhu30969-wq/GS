@@ -226,8 +226,6 @@
               <label><span>x<sub>+j</sub></span><input id="xPlus" type="number" step="0.01" value="16.8" /><b>cm</b></label>
               <label><span>x<sub>-j</sub></span><input id="xMinus" type="number" step="0.01" value="-16.6" /><b>cm</b></label>
               <label><span>平均 x<sub>j</sub></span><output id="xMean">--</output><b>cm</b></label>
-              <div class="readout-info mode-lambda-only"><span>左右对称误差</span><output id="symmetryReadout">--</output></div>
-              <div class="readout-info mode-lambda-only"><span>当前级次 j</span><output id="orderReadout">--</output></div>
               <label class="mode-db-only"><span>中央包络宽度 W<sub>0</sub></span><input id="centralWidth" type="number" min="0" step="0.01" value="687.31" /><b>mm</b></label>
             </div>
             <div class="ccd-detail-grid" aria-label="CCD 采样细节">
@@ -279,7 +277,7 @@
           <div class="analysis-grid">
             <div><span>反演结果</span><strong id="analysisMain">--</strong></div>
             <div><span>参考值</span><strong id="analysisReference">--</strong></div>
-            <div><span>相对误差</span><strong id="analysisError">--</strong></div>
+            <div class="analysis-error-card"><span>相对误差</span><strong id="analysisError">--</strong></div>
             <div><span>实验结论</span><strong id="analysisConclusion">--</strong></div>
             <div class="error-source"><span>误差来源</span><p>系统定位、读数误差、屏距测量误差、入射角未调零和光屏零点偏移。</p></div>
           </div>

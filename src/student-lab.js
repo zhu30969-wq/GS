@@ -984,8 +984,6 @@ function render() {
   drawIntroApparatus(params);
   const pair = symmetricPairDisplacementCm(readNumber("xMinus"), readNumber("xPlus"));
   $("xMean").textContent = Number.isFinite(pair.meanCm) ? pair.meanCm.toFixed(2) : "--";
-  $("symmetryReadout").textContent = pair.asymmetry === null ? "--" : `${(pair.asymmetry * 100).toFixed(2)}%`;
-  $("orderReadout").textContent = `±${Math.abs(Math.round(readNumber("order")))} 级`;
   $("ccdWindow").textContent = `±${displayExtentCm(params).toFixed(1)} cm`;
   $("symmetryDetail").textContent = pair.asymmetry === null ? "--" : `${(pair.asymmetry * 100).toFixed(2)}%`;
   $("selectedFringe").textContent = `±${Math.abs(Math.round(readNumber("order")))} 级`;

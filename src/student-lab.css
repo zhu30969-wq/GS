@@ -1561,8 +1561,7 @@ main {
   padding: 18px 27px 0;
 }
 
-.readout-grid label,
-.readout-grid .readout-info {
+.readout-grid label {
   grid-template-columns: 1fr;
   gap: 8px;
   min-height: 98px;
@@ -1572,24 +1571,11 @@ main {
   background: linear-gradient(180deg, #ffffff, #f8fbff);
 }
 
-.readout-grid label span,
-.readout-grid .readout-info span {
+.readout-grid label span {
   color: #61708f;
   font-size: 14px;
   font-weight: 760;
   text-align: center;
-}
-
-.readout-grid .readout-info {
-  display: grid;
-  place-items: center;
-}
-
-.readout-grid .readout-info output {
-  color: #06194d;
-  font-family: var(--font-number);
-  font-size: 20px;
-  font-weight: 900;
 }
 
 .readout-grid b {
@@ -1688,7 +1674,7 @@ main {
 }
 
 .analysis-grid {
-  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  grid-template-columns: minmax(160px, 1fr) minmax(160px, 1fr) minmax(280px, 1.45fr) minmax(190px, 1fr) minmax(260px, 1.15fr);
   gap: 18px;
   padding: 18px 24px 0;
 }
@@ -1709,6 +1695,55 @@ main {
   color: #0b5cff;
   font-size: 25px;
   font-weight: 900;
+}
+
+.analysis-grid .analysis-error-card {
+  position: relative;
+  min-height: 138px;
+  border-color: #ff9a3d;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(255, 160, 64, 0.22), transparent 34%),
+    linear-gradient(180deg, #fff9f2, #fff2e4);
+  box-shadow: 0 18px 38px rgba(255, 116, 31, 0.18);
+}
+
+.analysis-grid .analysis-error-card::before {
+  content: "重点";
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  display: inline-grid;
+  min-width: 44px;
+  min-height: 24px;
+  place-items: center;
+  border-radius: 999px;
+  background: #ff4b21;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.analysis-grid .analysis-error-card span {
+  color: #a94600;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.analysis-grid .analysis-error-card strong {
+  color: #ff3b1f;
+  font-size: clamp(36px, 2.8vw, 48px);
+  line-height: 1;
+  text-shadow: 0 8px 20px rgba(255, 88, 32, 0.16);
+}
+
+.lab-shell[data-mode="lambda"] .readout-grid {
+  grid-template-columns: repeat(3, minmax(170px, 1fr));
+  max-width: 760px;
+}
+
+.lab-shell[data-mode="db"] .readout-grid {
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  max-width: 920px;
 }
 
 .analysis-grid .error-source {
