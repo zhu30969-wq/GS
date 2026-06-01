@@ -322,7 +322,8 @@ const theoryVisuals = [
             <div><dt>入射角偏差</dt><dd>1.0°</dd></div>
             <div><dt>是否使用小角度近似</dt><dd>按 θ 大小判断</dd></div>
           </dl>
-          <div class="formula-large">相对误差 = |d实验 - d理论| / d理论 × 100%</div>
+          <div class="formula-large">δ = |d测 - d理| / d理 × 100%</div>
+          <p class="muted-line">d测为实验测得值，d理为理论参考值。</p>
           <p class="visual-tip">若入射光不垂直于光栅，仍用正入射公式会产生系统误差。</p>
         </article>
       </div>

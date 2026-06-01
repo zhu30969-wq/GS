@@ -1,4 +1,4 @@
-const CACHE_VERSION = "diffraction-grating-v2026-06-01-theory-formula-polish";
+const CACHE_VERSION = "diffraction-grating-v2026-06-01-theory-formula-polish-2";
 
 const CORE_ASSETS = [
   "./",
