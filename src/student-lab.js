@@ -1044,9 +1044,7 @@ function render() {
     $("analysisReference").textContent = `d=${refD.toFixed(3)} μm，b=${refB.toFixed(2)} μm`;
     $("analysisError").textContent =
       dError === null || bError === null ? "--" : `d:${(dError * 100).toFixed(2)}%，b:${(bError * 100).toFixed(2)}%`;
-    $("analysisConclusion").textContent = maxError <= 0.05 ? "符合理论值" : "需复查读数";
     renderWarning(result.warnings);
-    renderAdvice(result.warnings, result.asymmetry, mode);
   } else {
     const gratingUm = readNumber("knownD");
     const distanceCm = readNumber("distance");
@@ -1086,9 +1084,7 @@ function render() {
     $("analysisMain").textContent = result.lambdaNm === null ? "--" : `λ=${result.lambdaNm.toFixed(0)} nm`;
     $("analysisReference").textContent = `${reference.toFixed(0)} nm`;
     $("analysisError").textContent = relError === null ? "--" : `${(relError * 100).toFixed(2)}%`;
-    $("analysisConclusion").textContent = relError !== null && relError <= 0.05 ? "符合理论值" : "需复查读数";
     renderWarning(result.warnings);
-    renderAdvice(result.warnings, result.asymmetry, mode);
   }
 }
 
@@ -1103,39 +1099,6 @@ function renderWarning(warnings) {
   }
 }
 
-function renderAdvice(warnings, asymmetry, mode) {
-  const adviceText = $("adviceText");
-  const adviceBullets = $("adviceBullets");
-  if (!adviceText || !adviceBullets) return;
-
-  const asymmetryTooLarge = Number.isFinite(asymmetry) && asymmetry > 0.04;
-  if (asymmetryTooLarge) {
-    adviceText.textContent = "左右亮纹不够对称，建议重新校准零级亮纹后再次测量。";
-  } else if (warnings.length) {
-    adviceText.textContent = warnings[0];
-  } else {
-    adviceText.textContent =
-      mode === "db"
-        ? "读数和包络宽度均处在合理范围内，可继续比较反演 d、b 与标称值。"
-        : "读数对称性良好，反演波长处于可见光范围内，可继续生成实验报告。";
-  }
-
-  // 建议条目只列出当前模式必须检查的实验动作，避免混入无关公式。
-  const bullets =
-    mode === "db"
-      ? [
-          "优先选取清晰、对称的同级亮纹来求 d。",
-          "中央包络宽度 W0 需要对应单缝衍射第一暗纹间距。",
-          "若 b>d，需复查 W0 或确认样品是否为真实透射光栅。",
-        ]
-      : [
-          "优先选取最亮的一级条纹；高级次只在条纹清晰时使用。",
-          "左右同级亮纹应关于零级亮纹近似对称。",
-          "λ = d sinθj / j，d、L 与 xj 的单位必须在计算中一致。",
-        ];
-  adviceBullets.innerHTML = bullets.map((item) => `<li>${item}</li>`).join("");
-}
-
 function generateReport() {
   const mode = currentMode();
   const resultText =
@@ -1145,14 +1108,12 @@ function generateReport() {
 测量数据：x(+j)=${readNumber("xPlus").toFixed(2)} cm，x(-j)=${readNumber("xMinus").toFixed(2)} cm，W0=${readNumber("centralWidth").toFixed(2)} mm
 计算结果：${$("analysisMain").textContent}
 相对误差：${$("analysisError").textContent}
-结论：${$("analysisConclusion").textContent}
 说明：计算采用正入射光栅方程 d sinθ_j = jλ，并用 sinθ=x/sqrt(x²+L²) 处理屏幕几何关系。`
       : `实验类型：由衍射图样反演激光波长 λ
 已知条件：d=${readNumber("knownD").toFixed(3)} μm，L=${readNumber("distance").toFixed(1)} cm，j=${Math.round(readNumber("order"))}
 测量数据：x(+j)=${readNumber("xPlus").toFixed(2)} cm，x(-j)=${readNumber("xMinus").toFixed(2)} cm
 计算结果：${$("analysisMain").textContent}
 相对误差：${$("analysisError").textContent}
-结论：${$("analysisConclusion").textContent}
 说明：计算采用正入射光栅方程 d sinθ_j = jλ，并用 sinθ=x/sqrt(x²+L²) 处理屏幕几何关系。`;
 
   $("reportText").value = resultText;
