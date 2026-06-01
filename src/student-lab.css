@@ -959,9 +959,25 @@ main {
 
 .analysis-grid {
   display: grid;
-  grid-template-columns: minmax(220px, 0.9fr) minmax(320px, 1.55fr) minmax(220px, 0.9fr);
+  grid-template-columns: minmax(220px, 0.86fr) minmax(360px, 1.36fr);
+  grid-template-rows: minmax(86px, auto) minmax(86px, auto);
   gap: 16px;
   padding: 16px 28px 0;
+}
+
+.analysis-main-card {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.analysis-reference-card {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.analysis-error-card {
+  grid-column: 2;
+  grid-row: 1 / span 2;
 }
 
 .warning-line {
@@ -1628,9 +1644,10 @@ main {
 }
 
 .analysis-grid {
-  grid-template-columns: minmax(210px, 0.9fr) minmax(360px, 1.65fr) minmax(210px, 0.9fr);
-  gap: 18px;
-  padding: 18px 24px 0;
+  grid-template-columns: minmax(260px, 0.82fr) minmax(430px, 1.48fr);
+  grid-template-rows: minmax(112px, auto) minmax(112px, auto);
+  gap: 18px 22px;
+  padding: 20px 24px 0;
 }
 
 .analysis-grid > div {
@@ -1653,12 +1670,26 @@ main {
 
 .analysis-grid .analysis-error-card {
   position: relative;
-  min-height: 138px;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  min-height: 242px;
   border-color: #ff9a3d;
   background:
-    radial-gradient(circle at 85% 20%, rgba(255, 160, 64, 0.22), transparent 34%),
-    linear-gradient(180deg, #fff9f2, #fff2e4);
-  box-shadow: 0 18px 38px rgba(255, 116, 31, 0.18);
+    radial-gradient(circle at 88% 16%, rgba(255, 94, 32, 0.18), transparent 30%),
+    linear-gradient(135deg, #fffaf5 0%, #fff0df 52%, #ffe2c7 100%);
+  box-shadow: 0 24px 48px rgba(255, 116, 31, 0.22);
+}
+
+.analysis-grid .analysis-main-card,
+.analysis-grid .analysis-reference-card {
+  justify-items: start;
+  padding: 18px 22px;
+}
+
+.analysis-grid .analysis-main-card strong,
+.analysis-grid .analysis-reference-card strong {
+  justify-self: end;
+  font-size: clamp(24px, 1.8vw, 32px);
 }
 
 .analysis-grid .analysis-error-card::before {
@@ -1679,13 +1710,13 @@ main {
 
 .analysis-grid .analysis-error-card span {
   color: #a94600;
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 900;
 }
 
 .analysis-grid .analysis-error-card strong {
   color: #ff3b1f;
-  font-size: clamp(36px, 2.8vw, 48px);
+  font-size: clamp(56px, 5vw, 86px);
   line-height: 1;
   text-shadow: 0 8px 20px rgba(255, 88, 32, 0.16);
 }
@@ -1763,6 +1794,21 @@ main {
   .calc-grid,
   .analysis-grid {
     grid-template-columns: 1fr;
+  }
+
+  .analysis-grid {
+    grid-template-rows: auto;
+  }
+
+  .analysis-main-card,
+  .analysis-reference-card,
+  .analysis-grid .analysis-error-card {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .analysis-grid .analysis-error-card {
+    min-height: 190px;
   }
 
   .params-card {
@@ -1926,6 +1972,14 @@ main {
   .analysis-grid {
     grid-template-columns: 1fr;
     padding: 14px;
+  }
+
+  .analysis-grid .analysis-error-card {
+    min-height: 210px;
+  }
+
+  .analysis-grid .analysis-error-card strong {
+    font-size: clamp(50px, 16vw, 72px);
   }
 
   .bottom-actions {
