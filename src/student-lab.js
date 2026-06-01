@@ -1175,6 +1175,12 @@ function bindEvents() {
   $("fillTheory").addEventListener("click", fillTheoryReadings);
   $("addError").addEventListener("click", addReadingError);
   $("resetMode").addEventListener("click", () => setMode(currentMode()));
+  $("zoomFringe").addEventListener("click", () => {
+    const card = document.querySelector(".measurement-card");
+    card.classList.toggle("zoomed");
+    $("zoomFringe").textContent = card.classList.contains("zoomed") ? "退出放大" : "放大视图";
+    drawFringes();
+  });
   $("fringeCanvas").addEventListener("click", updateReadingFromCanvas);
   $("generateReport").addEventListener("click", generateReport);
   $("finishReport").addEventListener("click", generateReport);

@@ -1,4 +1,4 @@
-const CACHE_VERSION = "diffraction-grating-v2026-06-01-student-lab-reference-layout";
+const CACHE_VERSION = "diffraction-grating-v2026-06-01-student-lab-reference-layout-zoom";
 
 const CORE_ASSETS = [
   "./",

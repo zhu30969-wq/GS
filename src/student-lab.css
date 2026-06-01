@@ -1511,6 +1511,28 @@ main {
   position: relative;
 }
 
+.measurement-card.zoomed {
+  position: fixed;
+  inset: 24px;
+  z-index: 50;
+  overflow: auto;
+  border-color: #9ec0fb;
+  box-shadow: 0 30px 90px rgba(6, 20, 46, 0.28);
+}
+
+.measurement-card.zoomed #fringeCanvas {
+  height: min(52vh, 520px);
+}
+
+.measurement-card.zoomed::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(9, 20, 49, 0.2);
+  backdrop-filter: blur(4px);
+}
+
 #fringeCanvas {
   width: calc(100% - 54px);
   height: 230px;
