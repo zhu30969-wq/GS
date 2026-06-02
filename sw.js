@@ -1,4 +1,4 @@
-const CACHE_VERSION = "diffraction-grating-v2026-06-01-student-lab-bottom-error";
+const CACHE_VERSION = "diffraction-grating-v2026-06-02-student-lab-measurement-balance";
 
 const CORE_ASSETS = [
   "./",

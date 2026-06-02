@@ -771,13 +771,17 @@ main {
 }
 
 .measurement-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
-  padding: 12px 24px 0;
+  width: calc(100% - 48px);
+  margin: 12px auto 0;
+  padding: 0;
 }
 
 .measurement-actions button {
-  min-width: 122px;
+  width: 100%;
+  min-width: 0;
   padding: 0 14px;
 }
 
@@ -785,7 +789,9 @@ main {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px 22px;
-  padding: 12px 24px 0;
+  width: calc(100% - 48px);
+  margin: 12px auto 0;
+  padding: 0;
 }
 
 .readout-grid label {
@@ -1547,12 +1553,15 @@ main {
 }
 
 .measurement-actions {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  padding: 16px 27px 0;
+  width: calc(100% - 54px);
+  margin-top: 16px;
+  padding: 0;
 }
 
 .measurement-actions button {
-  min-width: 150px;
+  min-width: 0;
   min-height: 42px;
   border-radius: 8px;
   color: #0f4fd8;
@@ -1562,7 +1571,9 @@ main {
 .readout-grid {
   grid-template-columns: repeat(5, minmax(150px, 1fr));
   gap: 16px;
-  padding: 18px 27px 0;
+  width: calc(100% - 54px);
+  margin-top: 18px;
+  padding: 0;
 }
 
 .readout-grid label {
@@ -1723,12 +1734,12 @@ main {
 
 .lab-shell[data-mode="lambda"] .readout-grid {
   grid-template-columns: repeat(3, minmax(170px, 1fr));
-  max-width: 760px;
+  max-width: none;
 }
 
 .lab-shell[data-mode="db"] .readout-grid {
   grid-template-columns: repeat(4, minmax(160px, 1fr));
-  max-width: 920px;
+  max-width: none;
 }
 
 .warning-line {
@@ -1940,6 +1951,15 @@ main {
   }
 
   .readout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .measurement-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .lab-shell[data-mode="lambda"] .readout-grid,
+  .lab-shell[data-mode="db"] .readout-grid {
     grid-template-columns: 1fr;
   }
 
