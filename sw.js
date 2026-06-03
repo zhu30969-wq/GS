@@ -1,18 +1,18 @@
-const CACHE_VERSION = "diffraction-grating-v2026-06-03-desktop-fit";
+const CACHE_VERSION = "diffraction-grating-v2026-06-03-sampling-restore";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
-  "./src/styles.css?v=desktop-fit-20260603",
+  "./src/styles.css?v=sampling-restore-20260603",
   "./src/student-lab.css",
   "./src/physics.js",
-  "./src/app.js?v=desktop-fit-20260603",
+  "./src/app.js?v=sampling-restore-20260603",
   "./src/student-lab.js",
   "./src/scene3d.js",
-  "./src/pwa.js?v=desktop-fit-20260603",
+  "./src/pwa.js?v=sampling-restore-20260603",
   "./vendor/three.module.js",
-  "./assets/gs-entry-qr-card.png?v=desktop-fit-20260603",
+  "./assets/gs-entry-qr-card.png?v=sampling-restore-20260603",
   "./assets/icons/site-icon.svg",
   "./assets/theory/slides/theory-slide-01.webp",
   "./assets/theory/slides/theory-slide-02.webp",

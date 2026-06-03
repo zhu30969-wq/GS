@@ -3176,27 +3176,33 @@ html.force-desktop-layout .scene-readout {
 }
 
 html.force-desktop-layout .matlab-simulation {
-  grid-template-columns: 1fr 1fr !important;
+  /* 这里必须与 HTML 中三个卡片的 grid-area 名称保持一致。
+     上一版误写为 diffraction/intensity，浏览器会把卡片自动流式排布，导致仿真采样区出现大空白和图层错位。 */
+  /* 列宽回到早期版本的弹性比例：左侧用于屏幕图样和 CCD 采样，右侧留给光强曲线；
+     最小宽度控制在中心实验区内，避免挤压到右侧栏。 */
+  grid-template-columns: minmax(280px, 0.92fr) minmax(430px, 1.42fr) !important;
   grid-template-areas:
-    "diffraction intensity"
-    "ccd intensity" !important;
-  gap: 14px !important;
-  padding: 0 14px 14px !important;
+    "pattern chart"
+    "ccd chart" !important;
+  align-items: stretch !important;
+  gap: 12px !important;
+  padding: 0 16px 14px !important;
 }
 
 html.force-desktop-layout #diffractionPattern,
 html.force-desktop-layout #ccdView,
 html.force-desktop-layout #intensityChart {
-  width: calc(100% - 18px) !important;
+  width: calc(100% - 20px) !important;
+  margin: 8px auto 10px !important;
 }
 
 html.force-desktop-layout #diffractionPattern,
 html.force-desktop-layout #ccdView {
-  height: 178px !important;
+  height: 168px !important;
 }
 
 html.force-desktop-layout #intensityChart {
-  height: 430px !important;
+  height: 388px !important;
 }
 
 html.force-desktop-layout .bottom-status {
