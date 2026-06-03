@@ -3,12 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (() => {
+        const query = new URLSearchParams(window.location.search);
+        const forceDesktop = query.get("layout") === "desktop" || query.get("desktop") === "1";
+        if (!forceDesktop) return;
+
+        /*
+          二维码入口需要让手机看到与电脑一致的三栏交互界面。
+          这里只改变视口和布局标记，不改变任何光栅方程、衍射强度或读数计算逻辑。
+        */
+        const desktopWidth = 1560;
+        const viewport = document.querySelector('meta[name="viewport"]');
+        const deviceWidth = Math.max(320, window.screen?.width || window.innerWidth || 390);
+        /*
+          手机浏览器的可视宽度会受地址栏和 WebView 安全区影响。
+          手机浏览器通常不允许初始缩放无限小，0.25 左右是常见下限。
+          因此这里采用 1560px 电脑同版宽度，既保留三栏交互，也尽量避免扫码首屏横向裁切。
+        */
+        const scale = Math.min(1, Math.max(0.16, deviceWidth / (desktopWidth + 80)));
+        document.documentElement.classList.add("force-desktop-layout");
+        viewport?.setAttribute("content", `width=${desktopWidth}, initial-scale=${scale.toFixed(3)}, maximum-scale=5, user-scalable=yes`);
+      })();
+    </script>
     <title>光栅衍射交互实验</title>
     <meta name="description" content="面向大学物理实验教学的光栅衍射交互网页，聚焦实验操作与原理讲解，包含 3D/2D 仿真、光强分布和学生动手实验。" />
     <meta name="keywords" content="光栅衍射,大学物理实验,实验操作,原理讲解,光强分布,衍射光栅,学生动手实验,交互网页" />
     <meta name="theme-color" content="#08121d" />
     <meta name="robots" content="index,follow" />
-    <link rel="stylesheet" href="./src/styles.css" />
+    <link rel="stylesheet" href="./src/styles.css?v=desktop-fit-20260603" />
     <link rel="manifest" href="./site.webmanifest" />
     <link rel="icon" href="./assets/icons/site-icon.svg" type="image/svg+xml" />
     <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%23081218"/%3E%3Cpath d="M10 32h44M32 10v44" stroke="%237dc7ff" stroke-width="6" stroke-linecap="round"/%3E%3C/svg%3E' />
@@ -199,7 +222,7 @@
               <h2><span class="line-icon">╬</span>扫码访问</h2>
             </div>
             <figure class="qr-access-card">
-              <img src="./assets/gs-entry-qr-card.png" alt="光栅衍射交互实验网页二维码，微信或 QQ 扫码进入网页" loading="lazy" decoding="async" />
+              <img src="./assets/gs-entry-qr-card.png?v=desktop-fit-20260603" alt="光栅衍射交互实验电脑同版网页二维码，微信或 QQ 扫码进入网页" loading="lazy" decoding="async" />
             </figure>
             <dl class="result-list result-data-cache" aria-hidden="true">
               <div><dt>测得包络中央宽度 (mm)</dt><dd id="centralWidth">--</dd></div>
@@ -335,13 +358,11 @@
           <div><span>屏距</span><strong id="statusL">100.0 cm</strong></div>
           <div><span>有效缝数</span><strong id="statusN">40 缝</strong></div>
           <div><span>衍射级次</span><strong id="statusM">j = 1</strong></div>
-          <div><span>数据记录</span><strong id="statusSaved">已保存</strong></div>
         </div>
-        <button id="exportData" class="export-button" type="button">⇩ 导出数据</button>
       </footer>
     </div>
 
-    <script type="module" src="./src/app.js"></script>
-    <script type="module" src="./src/pwa.js"></script>
+    <script type="module" src="./src/app.js?v=desktop-fit-20260603"></script>
+    <script type="module" src="./src/pwa.js?v=desktop-fit-20260603"></script>
   </body>
 </html>

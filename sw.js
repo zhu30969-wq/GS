@@ -1,18 +1,18 @@
-const CACHE_VERSION = "diffraction-grating-v2026-06-02-student-lab-measurement-balance";
+const CACHE_VERSION = "diffraction-grating-v2026-06-03-desktop-fit";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
-  "./src/styles.css",
+  "./src/styles.css?v=desktop-fit-20260603",
   "./src/student-lab.css",
   "./src/physics.js",
-  "./src/app.js",
+  "./src/app.js?v=desktop-fit-20260603",
   "./src/student-lab.js",
   "./src/scene3d.js",
-  "./src/pwa.js",
+  "./src/pwa.js?v=desktop-fit-20260603",
   "./vendor/three.module.js",
-  "./assets/gs-entry-qr-card.png",
+  "./assets/gs-entry-qr-card.png?v=desktop-fit-20260603",
   "./assets/icons/site-icon.svg",
   "./assets/theory/slides/theory-slide-01.webp",
   "./assets/theory/slides/theory-slide-02.webp",
@@ -21,6 +21,9 @@ const CORE_ASSETS = [
   "./assets/theory/slides/theory-slide-05.webp",
   "./assets/theory/slides/theory-slide-06.webp",
   "./assets/theory/slides/theory-slide-07.webp",
+  "./assets/theory/simulations/single_slit_envelope_multislit_cn.png",
+  "./assets/theory/simulations/central_maximum_width_cn.png",
+  "./assets/theory/matlab/generate_theory_matlab_plots.m",
 ];
 
 self.addEventListener("install", (event) => {
