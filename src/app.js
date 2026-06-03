@@ -91,48 +91,156 @@ const theoryVisuals = [
   `
     <div class="theory-visual">
       <header class="visual-title"><strong>01</strong><span>光栅的基本概念</span></header>
+      <article class="visual-card grating-definition">
+        <h3>光栅的定义</h3>
+        <p>光栅是一种具有大量等间距、相互平行狭缝或刻线的周期性光学元件。它会使入射光发生衍射，并使不同狭缝或刻线产生的光波相干叠加，从而在屏幕上形成按级次 j 分布的明暗条纹。</p>
+        <p class="muted-line">本实验采用透射光栅的多缝模型：光栅常数 d 表示相邻狭缝中心间距，单缝宽度 b 决定单缝衍射包络。</p>
+      </article>
       <div class="visual-grid three">
-        <article class="visual-card wide">
+        <article class="visual-card wide apparatus-detail-card">
           <h3>光栅结构示意图</h3>
-          <svg class="ray-sketch" viewBox="0 0 560 280" role="img" aria-label="激光通过光栅后在屏幕上形成 j 级明纹">
+          <svg class="ray-sketch apparatus-sketch" viewBox="0 0 820 380" role="img" aria-label="激光通过准直镜和光栅后在屏幕上形成 j 级明纹">
             <defs>
-              <linearGradient id="screenGlowA" x1="0" x2="1"><stop stop-color="#263447"/><stop offset="1" stop-color="#dfefff"/></linearGradient>
+              <pattern id="cadGridA" width="26" height="26" patternUnits="userSpaceOnUse">
+                <path d="M26 0H0V26" fill="none" stroke="#5f7890" stroke-opacity=".16" stroke-width="1"/>
+              </pattern>
+              <linearGradient id="tableA" x1="0" y1="0" x2="1" y2="1">
+                <stop stop-color="#182a3a"/><stop offset=".56" stop-color="#0f1c2a"/><stop offset="1" stop-color="#09131f"/>
+              </linearGradient>
+              <linearGradient id="laserBodyA" x1="0" y1="0" x2="1" y2="1">
+                <stop stop-color="#27364a"/><stop offset=".48" stop-color="#0f1724"/><stop offset="1" stop-color="#050b12"/>
+              </linearGradient>
+              <linearGradient id="lensA" x1="0" x2="1">
+                <stop stop-color="#42b7ff" stop-opacity=".12"/><stop offset=".48" stop-color="#dff8ff" stop-opacity=".68"/><stop offset="1" stop-color="#42b7ff" stop-opacity=".18"/>
+              </linearGradient>
+              <linearGradient id="metalA" x1="0" y1="0" x2="1" y2="0">
+                <stop stop-color="#23364b"/><stop offset=".45" stop-color="#aec4d8"/><stop offset="1" stop-color="#40566d"/>
+              </linearGradient>
+              <linearGradient id="screenFaceA" x1="0" y1="0" x2="1" y2="1">
+                <stop stop-color="#162235"/><stop offset=".58" stop-color="#08111c"/><stop offset="1" stop-color="#1e2e43"/>
+              </linearGradient>
+              <radialGradient id="spotA" cx="50%" cy="50%" r="62%">
+                <stop stop-color="#ffffff"/><stop offset=".18" stop-color="#ffd5d2"/><stop offset=".46" stop-color="#ff3140" stop-opacity=".9"/><stop offset="1" stop-color="#ff3140" stop-opacity="0"/>
+              </radialGradient>
+              <filter id="redGlowA" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="3.2" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="softShadowA" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000814" flood-opacity=".42"/>
+              </filter>
+              <marker id="arrowA" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 Z" fill="#9fc8ff"/>
+              </marker>
             </defs>
-            <rect x="22" y="126" width="82" height="30" rx="8" fill="#202a35" stroke="#657487"/>
-            <text x="63" y="184">激光器</text>
-            <line x1="104" y1="141" x2="250" y2="141" stroke="#ff334c" stroke-width="4"/>
-            <g transform="translate(250 72)">
-              <rect x="-6" y="0" width="12" height="138" fill="#b8c8dc" opacity=".28"/>
-              <g stroke="#d9e8ff" stroke-width="2">
-                <line x1="-32" y1="5" x2="-32" y2="133"/><line x1="-22" y1="5" x2="-22" y2="133"/>
-                <line x1="-12" y1="5" x2="-12" y2="133"/><line x1="0" y1="5" x2="0" y2="133"/>
-                <line x1="12" y1="5" x2="12" y2="133"/><line x1="24" y1="5" x2="24" y2="133"/>
+
+            <rect x="0" y="0" width="820" height="380" rx="12" fill="#08131f"/>
+            <rect x="0" y="0" width="820" height="380" fill="url(#cadGridA)" opacity=".82"/>
+
+            <g class="optical-table" filter="url(#softShadowA)">
+              <polygon points="54,250 700,250 766,324 110,324" fill="url(#tableA)" stroke="#3c5873"/>
+              <g stroke="#607d99" stroke-opacity=".28" stroke-width="1">
+                <path d="M84 258H710"/><path d="M106 278H728"/><path d="M128 300H748"/>
+                <path d="M104 250L160 324"/><path d="M164 250L218 324"/><path d="M224 250L277 324"/>
+                <path d="M284 250L336 324"/><path d="M344 250L394 324"/><path d="M404 250L453 324"/>
+                <path d="M464 250L512 324"/><path d="M524 250L570 324"/><path d="M584 250L630 324"/>
+                <path d="M644 250L690 324"/>
               </g>
-              <text x="0" y="164">光栅</text>
+              <g fill="#7f9db7" opacity=".62">
+                <circle cx="122" cy="270" r="2"/><circle cx="178" cy="270" r="2"/><circle cx="234" cy="270" r="2"/>
+                <circle cx="290" cy="270" r="2"/><circle cx="346" cy="270" r="2"/><circle cx="402" cy="270" r="2"/>
+                <circle cx="458" cy="270" r="2"/><circle cx="514" cy="270" r="2"/><circle cx="570" cy="270" r="2"/>
+                <circle cx="626" cy="270" r="2"/><circle cx="682" cy="270" r="2"/>
+                <circle cx="154" cy="300" r="2"/><circle cx="214" cy="300" r="2"/><circle cx="274" cy="300" r="2"/>
+                <circle cx="334" cy="300" r="2"/><circle cx="394" cy="300" r="2"/><circle cx="454" cy="300" r="2"/>
+                <circle cx="514" cy="300" r="2"/><circle cx="574" cy="300" r="2"/><circle cx="634" cy="300" r="2"/>
+                <circle cx="694" cy="300" r="2"/>
+              </g>
             </g>
-            <rect x="456" y="48" width="14" height="186" fill="url(#screenGlowA)"/>
-            <text x="462" y="260">屏幕</text>
-            <g stroke="#ff5c6c" stroke-width="2">
-              <line x1="250" y1="141" x2="456" y2="72"/><line x1="250" y1="141" x2="456" y2="106"/>
-              <line x1="250" y1="141" x2="456" y2="141"/><line x1="250" y1="141" x2="456" y2="176"/>
-              <line x1="250" y1="141" x2="456" y2="210"/>
+
+            <g class="apparatus-part" transform="translate(70 135)" filter="url(#softShadowA)">
+              <rect x="8" y="90" width="118" height="16" rx="4" fill="#0b1220" stroke="#39516b"/>
+              <rect x="38" y="54" width="52" height="40" rx="5" fill="#18263a" stroke="#4d6883"/>
+              <path d="M0 18H96L116 34V66H14L0 54Z" fill="url(#laserBodyA)" stroke="#60758c"/>
+              <rect x="68" y="4" width="58" height="42" rx="7" fill="#0b111b" stroke="#4d647c"/>
+              <rect x="98" y="12" width="34" height="26" rx="5" fill="#111b28" stroke="#7c91a5"/>
+              <circle cx="136" cy="25" r="10" fill="#ff2634" filter="url(#redGlowA)"/>
+              <circle cx="136" cy="25" r="4" fill="#fff4f4"/>
+              <text x="48" y="-12">激光器</text>
+              <text x="18" y="10" class="small-label">单色平行光源</text>
             </g>
-            <g fill="#f2f5ff" font-size="18" font-style="italic">
-              <text x="480" y="78">j = 2</text><text x="480" y="112">j = 1</text>
-              <text x="480" y="147">j = 0</text><text x="480" y="182">j = -1</text><text x="480" y="216">j = -2</text>
+
+            <g class="apparatus-part" transform="translate(266 114)" filter="url(#softShadowA)">
+              <rect x="-32" y="118" width="82" height="14" rx="4" fill="#0b1220" stroke="#39516b"/>
+              <rect x="-6" y="88" width="28" height="34" rx="5" fill="#18263a" stroke="#4d6883"/>
+              <ellipse cx="8" cy="52" rx="23" ry="62" fill="url(#lensA)" stroke="#8bd7ff" stroke-width="3"/>
+              <ellipse cx="8" cy="52" rx="13" ry="52" fill="none" stroke="#dff7ff" stroke-opacity=".48"/>
+              <line x1="8" y1="-8" x2="8" y2="112" stroke="#dff7ff" stroke-opacity=".36"/>
+              <text x="8" y="-26">准直镜</text>
             </g>
-            <line x1="268" y1="226" x2="440" y2="226" stroke="#d6e8ff"/>
-            <text x="354" y="218" class="math">L</text>
-            <g class="inset">
-              <rect x="65" y="222" width="160" height="44" rx="8"/>
-              <line x1="112" y1="246" x2="166" y2="246"/><text x="135" y="239" class="math">d</text>
-              <text x="78" y="258">相邻狭缝中心间距</text>
+
+            <g class="apparatus-part" transform="translate(432 88)" filter="url(#softShadowA)">
+              <rect x="-36" y="172" width="76" height="14" rx="4" fill="#0b1220" stroke="#39516b"/>
+              <rect x="-12" y="142" width="28" height="34" rx="5" fill="#18263a" stroke="#4d6883"/>
+              <rect x="-28" y="0" width="56" height="154" rx="8" fill="#142238" stroke="#63809c"/>
+              <rect x="-15" y="12" width="30" height="130" rx="3" fill="#09131f" stroke="#9fb7ce"/>
+              <g stroke="#e9f4ff" stroke-width="1.8" opacity=".92">
+                <line x1="-10" y1="20" x2="-10" y2="134"/><line x1="-5" y1="20" x2="-5" y2="134"/>
+                <line x1="0" y1="20" x2="0" y2="134"/><line x1="5" y1="20" x2="5" y2="134"/><line x1="10" y1="20" x2="10" y2="134"/>
+              </g>
+              <text x="0" y="-18">光栅架</text>
+              <text x="0" y="212">光栅</text>
             </g>
-            <g class="inset">
-              <rect x="250" y="222" width="160" height="44" rx="8"/>
-              <line x1="304" y1="246" x2="334" y2="246"/><text x="316" y="239" class="math">b</text>
-              <text x="268" y="258">单个狭缝宽度</text>
+
+            <g class="screen-model" transform="translate(650 54)" filter="url(#softShadowA)">
+              <polygon points="0,0 88,18 88,268 0,244" fill="#101b2a" stroke="#48647d"/>
+              <polygon points="10,18 76,30 76,236 10,224" fill="url(#screenFaceA)" stroke="#7c93aa"/>
+              <g stroke="#4d6680" stroke-opacity=".48" stroke-width="1">
+                <path d="M10 52L76 64"/><path d="M10 86L76 98"/><path d="M10 120L76 132"/>
+                <path d="M10 154L76 166"/><path d="M10 188L76 200"/><path d="M10 222L76 234"/>
+                <path d="M24 20L24 229"/><path d="M38 23L38 232"/><path d="M52 25L52 235"/><path d="M66 28L66 238"/>
+              </g>
+              <ellipse cx="42" cy="56" rx="30" ry="11" fill="url(#spotA)" transform="rotate(10 42 56)"/>
+              <ellipse cx="42" cy="98" rx="38" ry="13" fill="url(#spotA)" transform="rotate(10 42 98)"/>
+              <ellipse cx="42" cy="139" rx="48" ry="16" fill="url(#spotA)" transform="rotate(10 42 139)"/>
+              <ellipse cx="42" cy="181" rx="38" ry="13" fill="url(#spotA)" transform="rotate(10 42 181)"/>
+              <ellipse cx="42" cy="223" rx="30" ry="11" fill="url(#spotA)" transform="rotate(10 42 223)"/>
+              <text x="44" y="-16">CCD 屏幕</text>
             </g>
+
+            <g stroke="#ff2634" stroke-linecap="round" filter="url(#redGlowA)">
+              <line x1="206" y1="160" x2="274" y2="166" stroke-width="4"/>
+              <line x1="296" y1="168" x2="432" y2="166" stroke-width="4"/>
+              <line x1="432" y1="166" x2="650" y2="110" stroke-width="2.2"/>
+              <line x1="432" y1="166" x2="650" y2="151" stroke-width="2.2"/>
+              <line x1="432" y1="166" x2="650" y2="194" stroke-width="3.2"/>
+              <line x1="432" y1="166" x2="650" y2="236" stroke-width="2.2"/>
+              <line x1="432" y1="166" x2="650" y2="278" stroke-width="2.2"/>
+            </g>
+            <g stroke="#ff8790" stroke-width="1.2" stroke-dasharray="7 6" opacity=".72">
+              <line x1="432" y1="166" x2="650" y2="88"/><line x1="432" y1="166" x2="650" y2="300"/>
+            </g>
+
+            <g fill="#f2f7ff" font-size="15" font-style="italic">
+              <text x="743" y="115">j = 2</text><text x="743" y="156">j = 1</text>
+              <text x="743" y="199">j = 0</text><text x="743" y="241">j = -1</text><text x="743" y="283">j = -2</text>
+            </g>
+
+            <line x1="432" y1="336" x2="650" y2="336" stroke="#9fc8ff" marker-start="url(#arrowA)" marker-end="url(#arrowA)"/>
+            <text x="541" y="327" class="math">L</text>
+            <g class="inset" transform="translate(360 315)">
+              <rect x="-88" y="-28" width="164" height="42" rx="8"/>
+              <line x1="-50" y1="-8" x2="-16" y2="-8" marker-start="url(#arrowA)" marker-end="url(#arrowA)"/>
+              <text x="-34" y="-15" class="math">d</text>
+              <text x="-78" y="7">相邻狭缝中心间距</text>
+            </g>
+            <g class="inset" transform="translate(504 315)">
+              <rect x="-58" y="-28" width="140" height="42" rx="8"/>
+              <line x1="-16" y1="-8" x2="2" y2="-8" marker-start="url(#arrowA)" marker-end="url(#arrowA)"/>
+              <text x="-8" y="-15" class="math">b</text>
+              <text x="-42" y="7">单个狭缝宽度</text>
+            </g>
+            <text x="420" y="56" class="small-label">正入射：d sinθⱼ = jλ</text>
           </svg>
         </article>
         <article class="visual-card">
@@ -176,19 +284,8 @@ const theoryVisuals = [
         </article>
         <article class="visual-card">
           <h3>单缝衍射决定整体包络</h3>
-          <svg class="curve-sketch" viewBox="0 0 520 250" role="img" aria-label="单缝包络与多缝主极大">
-            <path d="M30 210 C110 150 150 55 260 55 C370 55 410 150 490 210" fill="none" stroke="#8c80ff" stroke-width="3" stroke-dasharray="8 8"/>
-            <g stroke="#dfefff" stroke-width="2">
-              <path d="M110 210 C118 150 126 110 134 210"/>
-              <path d="M185 210 C195 110 205 75 215 210"/>
-              <path d="M250 210 C258 70 266 70 274 210"/>
-              <path d="M315 210 C325 110 335 75 345 210"/>
-              <path d="M386 210 C394 150 402 110 410 210"/>
-            </g>
-            <line x1="30" y1="210" x2="500" y2="210" stroke="#dce8f8"/>
-            <line x1="260" y1="220" x2="260" y2="36" stroke="#dce8f8"/>
-            <text x="250" y="236">0</text><text x="498" y="228">θ</text><text x="28" y="42">强度 I</text>
-          </svg>
+          <img class="matlab-theory-plot" src="./assets/theory/simulations/single_slit_envelope_multislit_cn.png" alt="MATLAB 仿真：单缝 sinc 平方包络限制有限多缝光栅主极大，并显示缺级条件" loading="lazy" />
+          <p class="matlab-plot-note">MATLAB 仿真参数：λ = 650 nm，b = 2.0 μm，d = 6.0 μm，N = 12；图中采用完整强度公式 I(θ) = sinc²β · [sin(Nα)/(N sinα)]²。</p>
           <p>暗纹条件为 <span class="inline-formula">b sin θ = kλ</span>，其中 k = ±1, ±2, ...。当某一 j 级主极大落在单缝暗纹处，会出现缺级。</p>
           <p class="visual-tip">条纹位置由 d、λ、θ 决定；整体亮度包络由单缝宽度 b 决定。</p>
         </article>
@@ -258,17 +355,8 @@ const theoryVisuals = [
           <h3>单缝暗纹条件</h3>
           <div class="formula-large">b sin θ = kλ</div>
           <p>靠近中心的第一对暗纹满足 <span class="inline-formula">b sin θ₁ = λ</span>。</p>
-          <svg class="curve-sketch" viewBox="0 0 520 230" role="img" aria-label="中央明纹宽度由一阶暗纹确定">
-            <path d="M40 180 C120 170 150 60 260 60 C370 60 400 170 480 180" fill="none" stroke="#8c80ff" stroke-width="3" stroke-dasharray="8 8"/>
-            <g stroke="#dfefff" stroke-width="2">
-              <line x1="150" y1="80" x2="150" y2="190" stroke-dasharray="6 6"/>
-              <line x1="370" y1="80" x2="370" y2="190" stroke-dasharray="6 6"/>
-              <line x1="40" y1="180" x2="500" y2="180"/>
-              <path d="M245 180 C255 55 265 55 275 180"/>
-            </g>
-            <text x="128" y="210">-y₁</text><text x="254" y="210">0</text><text x="355" y="210">+y₁</text>
-            <text x="210" y="225">Δy</text>
-          </svg>
+          <img class="matlab-theory-plot" src="./assets/theory/simulations/central_maximum_width_cn.png" alt="MATLAB 仿真：单缝 sinc 平方衍射强度与一阶暗纹确定中央明纹宽度" loading="lazy" />
+          <p class="matlab-plot-note">MATLAB 仿真参数：λ = 650 nm，b = 100 μm，L = 1.0 m；一阶暗纹满足 b sinθ₁ = λ，中央明纹宽度 Δy = 2L tanθ₁。</p>
         </article>
         <article class="visual-card">
           <h3>中央明纹宽度</h3>
@@ -427,7 +515,7 @@ function bindControls() {
   $("resetExperiment")?.addEventListener("click", resetExperiment);
   $("startButton")?.addEventListener("click", startExperiment);
   $("pauseButton")?.addEventListener("click", pauseExperiment);
-  $("exportData").addEventListener("click", exportData);
+  $("exportData")?.addEventListener("click", exportData);
   $("diffractionToggle").addEventListener("change", () => {
     state.params.diffractionEnabled = $("diffractionToggle").checked;
     renderAll();
@@ -1354,7 +1442,7 @@ function exportData() {
   link.download = `光栅衍射实验数据-${Date.now()}.csv`;
   link.click();
   URL.revokeObjectURL(link.href);
-  $("statusSaved").textContent = "已保存";
+  setText("statusSaved", "已保存");
   setText("currentTip", "已导出 UTF-8 编码数据，文件包含左侧参数、实验结果和光强分布采样。");
 }
 

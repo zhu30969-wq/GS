@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="631" viewBox="0 0 1280 631">
+  <defs>
+    <marker id="arrowCyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#58d7ff"/>
+    </marker>
+    <marker id="arrowWhite" viewBox="0 0 10 10" refX="5" refY="1" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M0,10 L5,0 L10,10 Z" fill="#f6f8ff"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#ffbd55"/>
+    </marker>
+    <marker id="dimStart" viewBox="0 0 8 8" refX="1" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M7,0 L0,4 L7,8" fill="none" stroke="#f6f8ff" stroke-width="1.6"/>
+    </marker>
+    <marker id="dimEnd" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M1,0 L8,4 L1,8" fill="none" stroke="#f6f8ff" stroke-width="1.6"/>
+    </marker>
+    <style>
+      .title { fill: #f6f8ff; font: 800 34px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; letter-spacing: 0; }
+      .note { fill: #b9eaff; font: 400 20px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; letter-spacing: 0; }
+      .small { fill: #f6f8ff; font: 400 17px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; letter-spacing: 0; }
+      .caption { fill: #d8e6ef; font: 400 18px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; letter-spacing: 0; }
+      .boxTitle { font: 800 20px "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; letter-spacing: 0; }
+      .cyan { fill: #58d7ff; }
+      .green { fill: #8ff26d; }
+      .amber { fill: #ffbd55; }
+      .amberText { fill: #ffcf84; }
+      .axis { stroke: #58d7ff; stroke-width: 2.8; }
+      .spike { stroke: #f6f8ff; stroke-width: 3.6; stroke-linecap: round; }
+      .dim { stroke: #f6f8ff; stroke-width: 1.8; }
+      .softBox { fill: rgba(0, 12, 16, 0.58); stroke: rgba(120, 230, 255, 0.42); stroke-width: 1.6; }
+      .phasorCircle { fill: rgba(0, 10, 14, 0.40); stroke: rgba(88, 215, 255, 0.42); stroke-width: 1.6; }
+      .phasorAxis { stroke: rgba(150, 225, 255, 0.33); stroke-width: 1.3; }
+      .phasor { stroke: #ffbd55; stroke-width: 2.7; stroke-linecap: round; }
+      .formula { color: #f6f8ff; font: 500 24px/1.2 "Cambria Math", "Times New Roman", "Microsoft YaHei", serif; letter-spacing: 0; white-space: nowrap; }
+      .mainFormula { font-size: 25px; }
+      .ruleFormula { font-size: 28px; }
+      .sumFormula { font-size: 25px; }
+      .formula sub, .formula sup { font-size: 0.62em; line-height: 0; }
+    </style>
+  </defs>
+  <text x="58" y="72" class="title">多缝透过函数</text>
+<text x="60" y="104" class="note">把每条极窄缝看成一个 δ 函数</text>
+
+    <foreignObject x="60" y="124" width="480" height="42">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="formula mainFormula">
+        t<sub>N</sub>(x) = δ(x) + δ(x−d) + … + δ(x−(N−1)d)
+      </div>
+    </foreignObject>
+  
+<line x1="54" y1="238" x2="500" y2="238" class="axis" marker-end="url(#arrowCyan)"/>
+<text x="506" y="244" class="small cyan">x</text>
+<line x1="84" y1="238" x2="84" y2="198" class="spike"/>
+<polygon points="84,184 72,202 96,202" fill="#f6f8ff"/>
+<circle cx="84" cy="238" r="3.4" fill="#f6f8ff"/>
+<text x="78" y="266" class="small">0</text>
+<line x1="142" y1="238" x2="142" y2="184" class="spike"/>
+<polygon points="142,170 130,188 154,188" fill="#f6f8ff"/>
+<circle cx="142" cy="238" r="3.4" fill="#f6f8ff"/>
+<text x="136" y="266" class="small">d</text>
+<line x1="200" y1="238" x2="200" y2="184" class="spike"/>
+<polygon points="200,170 188,188 212,188" fill="#f6f8ff"/>
+<circle cx="200" cy="238" r="3.4" fill="#f6f8ff"/>
+<text x="194" y="266" class="small">2d</text>
+<line x1="258" y1="238" x2="258" y2="184" class="spike"/>
+<polygon points="258,170 246,188 270,188" fill="#f6f8ff"/>
+<circle cx="258" cy="238" r="3.4" fill="#f6f8ff"/>
+<text x="252" y="266" class="small">3d</text>
+<line x1="316" y1="238" x2="316" y2="184" class="spike"/>
+<polygon points="316,170 304,188 328,188" fill="#f6f8ff"/>
+<circle cx="316" cy="238" r="3.4" fill="#f6f8ff"/>
+<text x="310" y="266" class="small">4d</text>
+<line x1="374" y1="238" x2="374" y2="198" class="spike"/>
+<polygon points="374,184 362,202 386,202" fill="#f6f8ff"/>
+<circle cx="374" cy="238" r="3.4" fill="#f6f8ff"/>
+<text x="350" y="266" class="small">(N−1)d</text>
+<line x1="84" y1="286" x2="142" y2="286" class="dim" marker-start="url(#dimStart)" marker-end="url(#dimEnd)"/>
+<text x="108" y="308" class="small">d</text>
+<text x="60" y="322" class="caption">关键含义：位置 nd 只改变傅里叶域相位。</text>
+  <rect x="60" y="352" width="488" height="72" rx="8" class="softBox"/>
+<text x="78" y="380" class="boxTitle green">平移定理</text>
+
+    <foreignObject x="78" y="386" width="452" height="34">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="formula ruleFormula">
+        δ(x−nd)  ⟶  e<sup>−iqnd</sup>
+      </div>
+    </foreignObject>
+  
+<rect x="60" y="450" width="488" height="92" rx="8" class="softBox"/>
+<text x="78" y="478" class="boxTitle amber">相干叠加</text>
+
+    <foreignObject x="78" y="484" width="452" height="44">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="formula sumFormula">
+        A(q) ∝ Σ(n=0→N−1) e<sup>−iqnd</sup>
+      </div>
+    </foreignObject>
+  
+<text x="78" y="528" class="caption">相邻两缝的相位差：Δφ = qd</text>
+<circle cx="460" cy="258" r="58" class="phasorCircle"/>
+<line x1="394" y1="258" x2="526" y2="258" class="phasorAxis"/>
+<line x1="460" y1="322" x2="460" y2="194" class="phasorAxis"/>
+<line x1="460" y1="258" x2="498.0" y2="258.0" class="phasor" opacity="1.00" marker-end="url(#arrowAmber)"/>
+<line x1="460" y1="258" x2="490.5" y2="235.3" class="phasor" opacity="0.93" marker-end="url(#arrowAmber)"/>
+<line x1="460" y1="258" x2="470.9" y2="221.6" class="phasor" opacity="0.86" marker-end="url(#arrowAmber)"/>
+<line x1="460" y1="258" x2="447.0" y2="222.3" class="phasor" opacity="0.79" marker-end="url(#arrowAmber)"/>
+<line x1="460" y1="258" x2="428.2" y2="237.1" class="phasor" opacity="0.72" marker-end="url(#arrowAmber)"/>
+<line x1="460" y1="258" x2="422.1" y2="260.2" class="phasor" opacity="0.65" marker-end="url(#arrowAmber)"/>
+<line x1="460" y1="258" x2="430.9" y2="282.4" class="phasor" opacity="0.58" marker-end="url(#arrowAmber)"/>
+<text x="396" y="186" class="caption amberText">复振幅相量</text>
+<text x="482" y="216" class="small amberText">间隔 qd</text>
+</svg>
