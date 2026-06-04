@@ -1283,24 +1283,26 @@ function worksheetCell(value, rowIndex, columnIndex, styleId = 0) {
 }
 
 function buildWorksheetXml(report) {
+  // 导出的 Excel 按用户要求只保留四列表格：
+  // 类别、项目、数值、单位。右侧长“说明”列不再写入工作表，
+  // 公式和结论仍作为普通数据行保留，避免信息缺失。
   const rows = [
-    { height: 34, cells: [{ value: report.title, style: 1, mergeAcross: 4 }] },
+    { height: 34, cells: [{ value: report.title, style: 1, mergeAcross: 3 }] },
     {
       height: 26,
       cells: [
         { value: "导出时间", style: 4 },
-        { value: report.generatedAt.toLocaleString("zh-CN", { hour12: false }), style: 0, mergeAcross: 3 },
+        { value: report.generatedAt.toLocaleString("zh-CN", { hour12: false }), style: 0, mergeAcross: 2 },
       ],
     },
-    { height: 28, cells: ["类别", "项目", "数值", "单位", "说明"].map((value) => ({ value, style: 2 })) },
+    { height: 28, cells: ["类别", "项目", "数值", "单位"].map((value) => ({ value, style: 2 })) },
     ...report.rows.map((row) => ({
-      height: Math.max(28, String(row[4] ?? "").length > 24 ? 42 : 30),
+      height: 30,
       cells: [
         { value: row[0], style: 3 },
         { value: row[1], style: 4 },
         { value: row[2], style: 5 },
         { value: row[3], style: 0 },
-        { value: row[4], style: row[0] === "实验结论" ? 6 : 0 },
       ],
     })),
   ];
@@ -1331,15 +1333,14 @@ function buildWorksheetXml(report) {
 
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-  <dimension ref="A1:E${rows.length}"/>
+  <dimension ref="A1:D${rows.length}"/>
   <sheetViews><sheetView workbookViewId="0"/></sheetViews>
   <sheetFormatPr defaultRowHeight="24"/>
   <cols>
-    <col min="1" max="1" width="16" customWidth="1"/>
-    <col min="2" max="2" width="24" customWidth="1"/>
-    <col min="3" max="3" width="28" customWidth="1"/>
+    <col min="1" max="1" width="18" customWidth="1"/>
+    <col min="2" max="2" width="28" customWidth="1"/>
+    <col min="3" max="3" width="36" customWidth="1"/>
     <col min="4" max="4" width="12" customWidth="1"/>
-    <col min="5" max="5" width="72" customWidth="1"/>
   </cols>
   <sheetData>${rowXml}</sheetData>
   ${mergeXml}
@@ -1415,7 +1416,7 @@ function buildWorkbookParts(report) {
   <fonts count="5">
     <font><sz val="11"/><name val="Microsoft YaHei UI"/></font>
     <font><b/><sz val="18"/><color rgb="FF0F2B6D"/><name val="Microsoft YaHei UI"/></font>
-    <font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Microsoft YaHei UI"/></font>
+    <font><b/><sz val="11"/><color rgb="FF0F2B6D"/><name val="Microsoft YaHei UI"/></font>
     <font><b/><sz val="11"/><color rgb="FF0F2B6D"/><name val="Microsoft YaHei UI"/></font>
     <font><b/><sz val="12"/><color rgb="FF0B5CFF"/><name val="Microsoft YaHei UI"/></font>
   </fonts>
@@ -1423,9 +1424,9 @@ function buildWorkbookParts(report) {
     <fill><patternFill patternType="none"/></fill>
     <fill><patternFill patternType="gray125"/></fill>
     <fill><patternFill patternType="solid"><fgColor rgb="FFEAF2FF"/><bgColor indexed="64"/></patternFill></fill>
-    <fill><patternFill patternType="solid"><fgColor rgb="FF1F5BEA"/><bgColor indexed="64"/></patternFill></fill>
-    <fill><patternFill patternType="solid"><fgColor rgb="FFF4F8FF"/><bgColor indexed="64"/></patternFill></fill>
-    <fill><patternFill patternType="solid"><fgColor rgb="FFFFF3E8"/><bgColor indexed="64"/></patternFill></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FFD6E8FF"/><bgColor indexed="64"/></patternFill></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FFF1F7FF"/><bgColor indexed="64"/></patternFill></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FFEAF6FF"/><bgColor indexed="64"/></patternFill></fill>
   </fills>
   <borders count="2">
     <border><left/><right/><top/><bottom/><diagonal/></border>
@@ -1433,13 +1434,13 @@ function buildWorkbookParts(report) {
   </borders>
   <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
   <cellXfs count="7">
-    <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
     <xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
     <xf numFmtId="0" fontId="2" fillId="3" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
     <xf numFmtId="0" fontId="3" fillId="4" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
-    <xf numFmtId="0" fontId="3" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="3" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
     <xf numFmtId="0" fontId="4" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
-    <xf numFmtId="0" fontId="3" fillId="5" borderId="1" xfId="0" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="3" fillId="5" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
   </cellXfs>
   <cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
 </styleSheet>`,
