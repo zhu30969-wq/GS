@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>学生动手实验平台</title>
+    <meta name="description" content="光栅衍射学生动手实验平台，支持由衍射图样反演光栅常数 d、缝宽 b 和激光波长 λ。" />
+    <meta name="keywords" content="光栅衍射,学生实验,反演光栅常数,反演波长,CCD采样,大学物理实验" />
+    <meta name="theme-color" content="#2155e8" />
+    <meta name="robots" content="index,follow" />
+    <link rel="stylesheet" href="./src/student-lab.css?v=student-excel-export-20260604" />
+    <link rel="manifest" href="./site.webmanifest" />
+    <link rel="icon" href="./assets/icons/site-icon.svg" type="image/svg+xml" />
+    <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%232155e8"/%3E%3Cpath d="M32 8v48M8 32h48M17 17c11 9 19 9 30 0M17 47c11-9 19-9 30 0" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/%3E%3C/svg%3E' />
+  </head>
+  <body>
+    <div class="lab-shell" data-mode="lambda">
+      <header class="lab-topbar">
+        <a class="brand-link" href="./index.html" aria-label="返回主实验页面">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <strong>学生动手实验平台</strong>
+        </a>
+
+        <nav class="mode-switch" aria-label="实验类型">
+          <button class="active" type="button" data-mode-button="lambda">求 λ</button>
+          <button type="button" data-mode-button="db">求 d、b</button>
+        </nav>
+
+        <div class="top-tools" aria-label="辅助入口">
+          <a href="./index.html">返回首页</a>
+          <button id="openGuide" type="button">实验说明</button>
+          <button id="finishReport" class="top-primary-action" type="button">结束实验报告</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero-panel">
+          <div class="hero-copy">
+            <h1 id="heroTitle">由衍射图样反演激光波长 λ</h1>
+            <p id="heroSubtitle">已知光栅常数 d、屏距 L 与亮纹位置 x<sub>j</sub>，反推出激光波长 λ。</p>
+            <div class="hero-metrics" aria-label="实验方法摘要">
+              <span>正入射</span>
+              <span>CCD 采样</span>
+              <span>精确几何反演</span>
+            </div>
+          </div>
+          <figure class="apparatus-figure lab-model-figure" aria-label="激光器、准直镜、光栅架、CCD 屏幕三维建模视图">
+            <svg viewBox="0 0 900 240" role="img">
+              <defs>
+                <linearGradient id="benchTop" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#f7fbff" />
+                  <stop offset="1" stop-color="#dce8f6" />
+                </linearGradient>
+                <linearGradient id="metalSide" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#f4f8ff" />
+                  <stop offset="1" stop-color="#cfd9e9" />
+                </linearGradient>
+                <linearGradient id="deviceBlack" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#2d3748" />
+                  <stop offset="0.55" stop-color="#121826" />
+                  <stop offset="1" stop-color="#05070c" />
+                </linearGradient>
+                <linearGradient id="screenDark" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#182235" />
+                  <stop offset="1" stop-color="#05070b" />
+                </linearGradient>
+                <filter id="redGlow">
+                  <feGaussianBlur stdDeviation="3.6" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <pattern id="holeGrid" width="28" height="20" patternUnits="userSpaceOnUse">
+                  <circle cx="8" cy="8" r="1.8" fill="#9aaec8" opacity=".72" />
+                  <circle cx="22" cy="18" r="1.8" fill="#9aaec8" opacity=".46" />
+                </pattern>
+              </defs>
+              <path d="M64 165h744l-78 47H0z" fill="url(#benchTop)" stroke="#c3d3e8" />
+              <path d="M0 212h730l78-47v13l-78 49H0z" fill="url(#metalSide)" opacity=".96" />
+              <path d="M48 168h724" stroke="#c7d5e8" />
+              <path d="M12 210h708" stroke="#c0cce0" />
+              <path d="M70 166h700l-58 38H12z" fill="url(#holeGrid)" opacity=".9" />
+              <g stroke="#b6c5d9" stroke-width="1" opacity=".72">
+                <path d="M95 166l-53 38M151 166l-50 38M207 166l-46 38M263 166l-42 38M319 166l-38 38M375 166l-34 38M431 166l-30 38M487 166l-26 38M543 166l-22 38M599 166l-18 38M655 166l-14 38M711 166l-10 38" />
+                <path d="M82 176h666M62 190h650M42 204h636" />
+              </g>
+
+              <g transform="translate(102 92)">
+                <rect x="-8" y="88" width="120" height="14" rx="3" fill="#0f172a" opacity=".88" />
+                <rect x="14" y="62" width="56" height="32" rx="5" fill="#283449" />
+                <rect x="-10" y="16" width="108" height="48" rx="9" fill="url(#deviceBlack)" />
+                <rect x="66" y="27" width="42" height="26" rx="5" fill="#1f2937" />
+                <rect x="76" y="33" width="20" height="14" rx="2" fill="#0b1020" stroke="#344155" />
+                <circle cx="111" cy="40" r="8" fill="#ff2525" filter="url(#redGlow)" />
+                <circle cx="111" cy="40" r="3" fill="#fff2f0" />
+                <rect x="2" y="4" width="58" height="10" rx="2" fill="#243246" />
+                <text x="44" y="-5" text-anchor="middle">激光器</text>
+                <text id="heroLaserLabel" x="17" y="42" fill="#718096" font-size="8">650 nm</text>
+              </g>
+
+              <g transform="translate(292 78)">
+                <rect x="4" y="92" width="44" height="16" rx="3" fill="#0f172a" />
+                <rect x="16" y="68" width="20" height="30" rx="3" fill="#4b5d75" />
+                <ellipse cx="26" cy="44" rx="14" ry="46" fill="#e2f4ff" stroke="#155bd8" stroke-width="4" />
+                <ellipse cx="26" cy="44" rx="7" ry="38" fill="rgba(113,194,255,.22)" />
+                <path d="M11 44h30" stroke="#8bc9ff" stroke-width="1" opacity=".7" />
+                <text x="26" y="-6" text-anchor="middle">准直镜</text>
+              </g>
+
+              <g transform="translate(468 50)">
+                <rect x="-8" y="132" width="74" height="17" rx="3" fill="#0f172a" />
+                <rect x="14" y="104" width="28" height="34" rx="3" fill="#4b5d75" />
+                <rect x="-4" y="40" width="64" height="92" rx="6" fill="#151d2b" />
+                <rect x="15" y="16" width="26" height="137" fill="#f8fafc" stroke="#111827" />
+                <rect x="19" y="20" width="18" height="129" fill="#e5edf7" />
+                <g stroke="#111827" stroke-width="1">
+                  <path d="M22 22v124M25 22v124M28 22v124M31 22v124M34 22v124" />
+                </g>
+                <path d="M14 16h28M14 153h28" stroke="#8da2bd" stroke-width="3" />
+                <text x="28" y="-6" text-anchor="middle">光栅架</text>
+                <text id="heroDLabel" x="28" y="168" text-anchor="middle" fill="#52637b" font-size="10">d = 5.519 μm</text>
+              </g>
+
+              <g transform="translate(676 36)">
+                <path d="M0 0h150v150H0z" fill="url(#screenDark)" stroke="#2b3b52" stroke-width="2" />
+                <path d="M0 150h150v14H0z" fill="#111827" />
+                <g stroke="#2e3c50" stroke-width="1">
+                  <path d="M25 0v150M50 0v150M75 0v150M100 0v150M125 0v150M0 25h150M0 50h150M0 75h150M0 100h150M0 125h150" />
+                </g>
+                <g fill="#ff2525" filter="url(#redGlow)">
+                  <ellipse cx="25" cy="76" rx="4" ry="19" opacity=".48" />
+                  <ellipse cx="44" cy="76" rx="5" ry="28" opacity=".62" />
+                  <ellipse cx="62" cy="76" rx="6" ry="37" opacity=".82" />
+                  <ellipse cx="75" cy="76" rx="8" ry="45" />
+                  <ellipse cx="88" cy="76" rx="6" ry="37" opacity=".82" />
+                  <ellipse cx="106" cy="76" rx="5" ry="28" opacity=".62" />
+                  <ellipse cx="125" cy="76" rx="4" ry="19" opacity=".48" />
+                </g>
+                <g stroke="#ff5b4b" stroke-width="1" opacity=".82">
+                  <path d="M75 18v116M18 76h114" />
+                </g>
+                <text x="75" y="-12" text-anchor="middle">CCD 屏幕</text>
+                <text x="75" y="181" text-anchor="middle" fill="#52637b" font-size="10">采样面 L</text>
+              </g>
+
+              <g stroke="#ff2525" stroke-width="2.2" fill="none" filter="url(#redGlow)">
+                <path d="M213 132H292M333 122H483" />
+                <path d="M510 119L676 84M510 119L676 105M510 119L676 119M510 119L676 133M510 119L676 154" />
+              </g>
+              <g stroke="#ff2525" stroke-width="1.2" stroke-dasharray="6 6" fill="none" opacity=".72">
+                <path d="M510 119L676 64M510 119L676 174" />
+              </g>
+              <g fill="#1f5bea">
+                <circle cx="213" cy="132" r="3" />
+                <circle cx="333" cy="122" r="3" />
+                <circle cx="510" cy="119" r="3" />
+              </g>
+              <path d="M514 178h158" stroke="#536883" stroke-width="1.4" />
+              <text id="heroLLabel" x="592" y="192" text-anchor="middle" fill="#52637b" font-size="12">L = 142.4 cm</text>
+            </svg>
+            <div id="studentHeroScene" class="student-hero-scene" aria-label="与主实验一致的三维实验仪器建模视图"></div>
+            <canvas id="studentHeroFallback" class="student-hero-fallback" aria-hidden="true"></canvas>
+            <div class="hero-model-badge" aria-hidden="true">
+              <span>3D 建模</span>
+              <span>CCD 采样</span>
+              <span>同步参数</span>
+            </div>
+          </figure>
+          <div id="heroFormulaBadge" class="hero-formula-badge" aria-label="核心反演公式">d sin θⱼ = jλ</div>
+        </section>
+
+        <ol class="stepper" aria-label="实验步骤">
+          <li class="active"><span>1</span><b>设定参数</b><em>设置实验条件</em></li>
+          <li><span>2</span><b>测量条纹</b><em>采集条纹位置</em></li>
+          <li><span>3</span><b>计算角度</b><em>求解衍射角 θⱼ</em></li>
+          <li><span>4</span><b id="stepInvertLabel">反演波长</b><em id="stepInvertSub">计算入射波长 λ</em></li>
+          <li><span>5</span><b>结果分析</b><em>评估实验结果</em></li>
+        </ol>
+
+        <section class="intro-grid">
+          <article class="white-card principle-card">
+            <h2><span>◎</span>实验目标与原理</h2>
+            <ul id="principleList"></ul>
+            <div class="principle-diagram" aria-hidden="true">
+              <span>激光器</span><i></i><span>准直镜</span><i></i><span>光栅</span><i class="split"></i><span>CCD</span>
+            </div>
+            <p id="principleFormula" class="formula-text"></p>
+          </article>
+
+          <figure class="white-card intro-apparatus-card" aria-label="激光器、准直镜、光栅和 CCD 屏幕实验装置示意图">
+            <canvas id="introApparatusCanvas" width="920" height="220"></canvas>
+            <figcaption id="introApparatusCaption">d sinθⱼ = jλ</figcaption>
+          </figure>
+
+          <article class="white-card guide-card">
+            <h2><span>i</span>操作引导</h2>
+            <ol id="guideList"></ol>
+          </article>
+        </section>
+
+        <section class="work-grid">
+          <article class="white-card params-card">
+            <h2><span>01</span>实验参数设置</h2>
+            <div class="field-grid">
+              <label class="mode-db-only"><span>已知波长 λ</span><input id="knownLambda" type="number" min="400" max="700" step="1" value="650" /><b>nm</b></label>
+              <label class="mode-lambda-only"><span>光栅常数 d</span><input id="knownD" type="number" min="0.1" step="0.001" value="5.519" /><b>μm</b></label>
+              <label><span>屏距 L</span><input id="distance" type="number" min="1" step="0.1" value="142.4" /><b>cm</b></label>
+              <label><span>衍射级次 j</span><select id="order"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select><b></b></label>
+              <label class="mode-lambda-only"><span>参考波长</span><input id="referenceLambda" type="number" min="400" max="700" step="1" value="650" /><b>nm</b></label>
+              <label class="mode-db-only"><span>仿真标称 d</span><input id="referenceD" type="number" min="0.1" step="0.001" value="5.000" /><b>μm</b></label>
+              <label class="mode-db-only"><span>仿真标称 b</span><input id="referenceB" type="number" min="0.1" step="0.01" value="2.00" /><b>μm</b></label>
+            </div>
+            <p class="field-note">标称值只用于生成仿真条纹和误差核验，反演计算只使用实验读数。</p>
+          </article>
+
+          <article class="white-card measurement-card">
+            <h2><span>02</span>CCD 衍射图样测量区 <button id="zoomFringe" class="zoom-button" type="button" aria-label="放大 CCD 图样视图">放大视图</button></h2>
+            <canvas id="fringeCanvas" width="1120" height="170" aria-label="CCD 屏幕衍射条纹"></canvas>
+            <div class="measurement-actions">
+              <button id="fillTheory" type="button">填入理论读数</button>
+              <button id="addError" type="button">加入读数误差</button>
+              <button id="resetMode" type="button">重置本实验</button>
+            </div>
+            <div class="readout-grid">
+              <label><span>x<sub>+j</sub></span><input id="xPlus" type="number" step="0.01" value="16.8" /><b>cm</b></label>
+              <label><span>x<sub>-j</sub></span><input id="xMinus" type="number" step="0.01" value="-16.6" /><b>cm</b></label>
+              <label><span>平均 x<sub>j</sub></span><output id="xMean">--</output><b>cm</b></label>
+              <label class="mode-db-only"><span>中央包络宽度 W<sub>0</sub></span><input id="centralWidth" type="number" min="0" step="0.01" value="687.31" /><b>mm</b></label>
+            </div>
+            <div class="ccd-detail-grid" aria-label="CCD 采样细节">
+              <div><span>采样窗口</span><strong id="ccdWindow">--</strong></div>
+              <div><span>左右对称偏差</span><strong id="symmetryDetail">--</strong></div>
+              <div><span>当前亮纹</span><strong id="selectedFringe">--</strong></div>
+              <div><span>操作提示</span><strong id="measurementHint">点击图样可修正 x 读数</strong></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="calc-grid">
+          <article class="white-card angle-card">
+            <h2><span>03</span>计算 θⱼ</h2>
+            <div class="calc-pair">
+              <div id="thetaFormula" class="formula-stack"></div>
+              <div class="big-result"><strong id="thetaResult">--</strong></div>
+            </div>
+            <p id="darkThetaLine" class="mode-db-only muted-line"></p>
+          </article>
+
+          <article class="white-card inversion-card">
+            <h2><span>04</span><b id="inversionTitle">反演 λ</b></h2>
+            <div class="calc-pair">
+              <div id="inversionFormula" class="formula-stack"></div>
+              <div class="result-strip">
+                <div class="mode-lambda-only lambda-result-panel">
+                  <strong id="lambdaResult">--</strong>
+                  <p><span>颜色判断：</span><b id="colorBand">--</b></p>
+                </div>
+                <div class="mode-db-only"><span>d</span><strong id="dResult">--</strong></div>
+                <div class="mode-db-only"><span>b</span><strong id="bResult">--</strong></div>
+              </div>
+            </div>
+          </article>
+
+        </section>
+
+        <section class="white-card analysis-card">
+          <h2><span>05</span>结果分析</h2>
+          <div class="analysis-grid">
+            <div class="analysis-main-card"><span>反演结果</span><strong id="analysisMain">--</strong></div>
+            <div class="analysis-reference-card"><span>参考值</span><strong id="analysisReference">--</strong></div>
+            <div class="analysis-error-card"><span>相对误差</span><strong id="analysisError">--</strong></div>
+          </div>
+          <p id="warningLine" class="warning-line" aria-live="polite"></p>
+        </section>
+
+        <section class="bottom-actions">
+          <button id="showGuide" type="button">查看步骤说明</button>
+          <button id="generateReport" class="primary-action" type="button">生成实验报告</button>
+          <button id="exportExcel" class="export-excel-action" type="button">导出数据</button>
+          <span id="saveStatus">数据已自动保存</span>
+        </section>
+
+        <section id="reportPanel" class="white-card report-panel" hidden>
+          <h2>实验报告草稿</h2>
+          <textarea id="reportText" readonly></textarea>
+          <div class="report-toolbar">
+            <button id="exportExcelFromReport" class="report-export-button" type="button">导出数据</button>
+            <span id="exportStatus">Excel 表格包含参数、读数、计算结果和公式说明。</span>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./src/student-lab.js?v=student-excel-export-20260604" defer></script>
+    <script type="module" src="./src/pwa.js?v=student-excel-export-20260604"></script>
+  </body>
+</html>

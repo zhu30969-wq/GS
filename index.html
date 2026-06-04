@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (() => {
+        const query = new URLSearchParams(window.location.search);
+        const forceDesktop = query.get("layout") === "desktop" || query.get("desktop") === "1";
+        if (!forceDesktop) return;
+
+        /*
+          二维码入口需要让手机看到与电脑一致的三栏交互界面。
+          这里只改变视口和布局标记，不改变任何光栅方程、衍射强度或读数计算逻辑。
+        */
+        const desktopWidth = 1560;
+        const viewport = document.querySelector('meta[name="viewport"]');
+        const deviceWidth = Math.max(320, window.screen?.width || window.innerWidth || 390);
+        /*
+          手机浏览器的可视宽度会受地址栏和 WebView 安全区影响。
+          手机浏览器通常不允许初始缩放无限小，0.25 左右是常见下限。
+          因此这里采用 1560px 电脑同版宽度，既保留三栏交互，也尽量避免扫码首屏横向裁切。
+        */
+        const scale = Math.min(1, Math.max(0.16, deviceWidth / (desktopWidth + 80)));
+        document.documentElement.classList.add("force-desktop-layout");
+        viewport?.setAttribute("content", `width=${desktopWidth}, initial-scale=${scale.toFixed(3)}, maximum-scale=5, user-scalable=yes`);
+      })();
+    </script>
+    <title>光栅衍射交互实验</title>
+    <meta name="description" content="面向大学物理实验教学的光栅衍射交互网页，聚焦实验操作与原理讲解，包含 3D/2D 仿真、光强分布和学生动手实验。" />
+    <meta name="keywords" content="光栅衍射,大学物理实验,实验操作,原理讲解,光强分布,衍射光栅,学生动手实验,交互网页" />
+    <meta name="theme-color" content="#08121d" />
+    <meta name="robots" content="index,follow" />
+    <link rel="stylesheet" href="./src/styles.css?v=sampling-restore-20260603" />
+    <link rel="manifest" href="./site.webmanifest" />
+    <link rel="icon" href="./assets/icons/site-icon.svg" type="image/svg+xml" />
+    <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%23081218"/%3E%3Cpath d="M10 32h44M32 10v44" stroke="%237dc7ff" stroke-width="6" stroke-linecap="round"/%3E%3C/svg%3E' />
+  </head>
+  <body>
+    <div id="app" class="app-shell">
+      <header class="topbar" aria-label="主导航">
+        <div class="brand">
+          <h1>光栅衍射交互实验</h1>
+          <p>DIFFRACTION GRATING INTERACTIVE SYSTEM</p>
+        </div>
+        <nav class="module-tabs" aria-label="实验模块">
+          <button class="tab active" type="button" data-module="operation">
+            <span class="icon">⌬</span>
+            实验操作
+          </button>
+          <button class="tab" type="button" data-module="theory">
+            <span class="icon">▥</span>
+            原理讲解
+          </button>
+        </nav>
+      </header>
+
+      <main id="operationModule" class="experiment-grid module-view active">
+        <aside class="left-rail" aria-label="实验参数与控制">
+          <section class="panel parameter-panel">
+            <div class="panel-heading">
+              <h2><span class="line-icon">≋</span>实验参数</h2>
+              <button id="resetParams" class="text-button" type="button">⟳ 重置</button>
+            </div>
+
+            <div class="control-stack">
+              <label class="range-control wavelength-control" for="lambda">
+                <span class="control-label">
+                  激光波长 λ (nm)
+                  <span id="wavelengthChip" class="wavelength-chip"><i></i><b>红光</b></span>
+                </span>
+                <span class="control-row">
+                  <input id="lambda" type="range" min="400" max="700" step="1" value="650" />
+                  <input id="lambdaNumber" class="number-input" type="number" min="400" max="700" step="1" value="650" />
+                </span>
+                <span class="range-limits"><span>400</span><span>700</span></span>
+              </label>
+
+              <label class="range-control" for="grating">
+                <span class="control-label">光栅常数 d (μm)</span>
+                <span class="control-row">
+                  <input id="grating" type="range" min="0.5" max="10" step="0.001" value="5" />
+                  <input id="gratingNumber" class="number-input" type="number" min="0.5" max="10" step="0.001" value="5.000" />
+                </span>
+                <span class="range-limits"><span>0.5</span><span>10</span></span>
+              </label>
+
+              <label class="range-control" for="distance">
+                <span class="control-label">屏距 L (cm)</span>
+                <span class="control-row">
+                  <input id="distance" type="range" min="10" max="200" step="0.1" value="100" />
+                  <input id="distanceNumber" class="number-input" type="number" min="10" max="200" step="0.1" value="100.0" />
+                </span>
+                <span class="range-limits"><span>10</span><span>200</span></span>
+              </label>
+
+              <div class="order-control" aria-label="衍射级次选择">
+                <span class="control-label">衍射级次 j</span>
+                <div class="order-buttons" id="orderButtons">
+                  <button type="button" data-order="-2">-2</button>
+                  <button type="button" data-order="-1">-1</button>
+                  <button type="button" data-order="0">0</button>
+                  <button class="active" type="button" data-order="1">1</button>
+                  <button type="button" data-order="2">2</button>
+                </div>
+              </div>
+
+              <label class="range-control" for="slit">
+                <span class="control-label">缝宽 b (μm)</span>
+                <span class="control-row">
+                  <input id="slit" type="range" min="1" max="100" step="0.1" value="2" />
+                  <input id="slitNumber" class="number-input" type="number" min="1" max="100" step="0.1" value="2.0" />
+                </span>
+                <span class="range-limits"><span>1</span><span>100</span></span>
+              </label>
+
+              <label class="range-control" for="slits">
+                <span class="control-label">缝数 N</span>
+                <span class="control-row">
+                  <input id="slits" type="range" min="2" max="200" step="1" value="40" />
+                  <input id="slitsNumber" class="number-input" type="number" min="2" max="200" step="1" value="40" />
+                </span>
+                <span class="range-limits"><span>2</span><span>200</span></span>
+              </label>
+
+              <label class="toggle-control" for="diffractionToggle">
+                <span>
+                  <strong>是否考虑衍射</strong>
+                  <em>启用单缝 sinc² 包络</em>
+                </span>
+                <input id="diffractionToggle" type="checkbox" checked />
+              </label>
+
+              <label class="range-control" for="incidence">
+                <span class="control-label">入射角 θ (°)</span>
+                <span class="control-row">
+                  <input id="incidence" type="range" min="-30" max="30" step="0.1" value="0" />
+                  <input id="incidenceNumber" class="number-input" type="number" min="-30" max="30" step="0.1" value="0.0" />
+                </span>
+                <span class="range-limits"><span>-30</span><span>30</span></span>
+              </label>
+            </div>
+          </section>
+
+        </aside>
+
+        <section class="center-stage panel" aria-label="实验模拟">
+          <div class="stage-heading">
+            <h2><span class="line-icon">✣</span>实验模拟</h2>
+            <div class="view-toggle" role="group" aria-label="视图切换">
+              <button id="view3d" class="active" type="button">◎ 3D视图</button>
+              <button id="view2d" type="button">▧ 2D视图</button>
+            </div>
+          </div>
+
+          <div class="formula-card" aria-label="光栅方程">
+            <h3>光栅方程</h3>
+            <p class="equation">d(sin θⱼ − sin θᵢ) = jλ</p>
+          </div>
+
+          <div class="section-guide scene-guide"><span>实验场景</span><em>激光器 → 准直镜 → 光栅架 → CCD屏幕</em></div>
+          <div class="scene-frame">
+            <div id="sceneRoot" class="scene-root" aria-label="光栅衍射三维模型"></div>
+            <canvas id="sceneOverlay" class="scene-overlay" aria-hidden="true"></canvas>
+            <div id="zoom2dControls" class="zoom2d-controls" hidden aria-label="2D 视图缩放控制">
+              <button id="zoom2dOut" type="button" aria-label="缩小 2D 视图">−</button>
+              <input id="zoom2dRange" type="range" min="60" max="300" step="10" value="100" aria-label="2D 视图缩放比例" />
+              <button id="zoom2dIn" type="button" aria-label="放大 2D 视图">+</button>
+              <button id="zoom2dReset" class="zoom2d-reset" type="button" aria-label="重置 2D 视图缩放">100%</button>
+            </div>
+            <div class="scene-readout" aria-live="polite">
+              <div>
+                <span>光栅</span>
+                <strong id="sceneD">d = 5.000 μm</strong>
+              </div>
+              <div>
+                <span>有效缝数</span>
+                <strong id="sceneN">N = 40</strong>
+              </div>
+              <div>
+                <span>CCD屏幕（采样面）</span>
+                <strong id="sceneL">L = 100.0 cm</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-guide pattern-guide"><span>仿真与采样</span><em>CCD 视角 + 光强分布</em></div>
+          <div class="matlab-simulation" aria-label="MATLAB 公式仿真衍射图样和光强分布">
+            <section class="simulation-card diffraction-card">
+              <div class="simulation-heading">
+                <h3>屏幕衍射图样</h3>
+                <span>理论成像</span>
+              </div>
+              <canvas id="diffractionPattern" width="720" height="178" aria-label="MATLAB 公式仿真衍射图样"></canvas>
+            </section>
+
+            <section class="simulation-card ccd-card">
+              <div class="simulation-heading">
+                <h3>CCD相机视角</h3>
+                <span>灰度采样</span>
+              </div>
+              <canvas id="ccdView" width="720" height="178" aria-label="CCD 相机灰度采样效果"></canvas>
+            </section>
+
+            <section class="simulation-card intensity-card">
+              <div class="simulation-heading">
+                <h3>真实光强分布</h3>
+                <div class="chart-legend">
+                  <span><i class="legend-intensity"></i>理论光强</span>
+                  <span><i class="legend-envelope"></i><b id="envelopeLegendText">单缝包络</b></span>
+                </div>
+              </div>
+              <canvas id="intensityChart" width="720" height="238" aria-label="真实光强分布图"></canvas>
+            </section>
+          </div>
+
+        </section>
+
+        <aside class="right-rail" aria-label="扫码访问、光路示意图与学生动手实验">
+          <section class="panel result-panel qr-access-panel">
+            <div class="panel-heading">
+              <h2><span class="line-icon">╬</span>扫码访问</h2>
+            </div>
+            <figure class="qr-access-card">
+              <img src="./assets/gs-entry-qr-card.png?v=sampling-restore-20260603" alt="光栅衍射交互实验电脑同版网页二维码，微信或 QQ 扫码进入网页" loading="lazy" decoding="async" />
+            </figure>
+            <dl class="result-list result-data-cache" aria-hidden="true">
+              <div><dt>测得包络中央宽度 (mm)</dt><dd id="centralWidth">--</dd></div>
+              <div><dt>反算缝宽 b (μm)</dt><dd id="calculatedA">--</dd></div>
+              <div><dt>理论缝宽 b (μm)</dt><dd id="theoryA">--</dd></div>
+              <div><dt>相对误差</dt><dd id="relativeError">--</dd></div>
+            </dl>
+            <p class="conclusion result-data-cache" aria-hidden="true">实验结论：<span id="conclusionText">符合理论值</span><span id="conclusionIcon">✓</span></p>
+          </section>
+
+          <section class="panel diagram-panel">
+            <div class="panel-heading">
+              <h2><span class="line-icon">⌘</span>光路示意图</h2>
+            </div>
+            <svg id="rayDiagram" viewBox="0 0 420 195" role="img" aria-label="二维光路示意图">
+              <defs>
+                <linearGradient id="screenGlow" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0%" stop-color="#28344b" />
+                  <stop offset="100%" stop-color="#121923" />
+                </linearGradient>
+                <filter id="dotGlow">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <g class="diagram-layer"></g>
+            </svg>
+          </section>
+
+          <section id="studentLabPanel" class="panel student-lab-panel student-lab-entry" aria-label="学生动手实验入口">
+            <div class="panel-heading student-lab-heading">
+              <h2><span class="student-lab-mark" aria-hidden="true"></span>学生动手实验平台</h2>
+              <a id="studentLabLink" class="lab-link" href="./student-lab.html?mode=lambda&v=student-excel-export-20260604">打开独立页面</a>
+            </div>
+
+            <p class="student-lab-intro">
+              按正入射条件读取 CCD 上的 ±j 级条纹位置，完成参数反演、误差分析与实验报告生成。
+            </p>
+
+            <div class="student-lab-highlights" aria-label="学生动手实验能力">
+              <span>步骤引导</span>
+              <span>实时计算</span>
+              <span>报告生成</span>
+            </div>
+
+            <div class="student-lab-entry-actions" aria-label="学生动手实验入口按钮">
+              <a class="student-lab-open primary" href="./student-lab.html?mode=db&v=student-excel-export-20260604"><span>实验一</span>测 d、b</a>
+              <a class="student-lab-open" href="./student-lab.html?mode=lambda&v=student-excel-export-20260604"><span>实验二</span>测 λ</a>
+            </div>
+
+            <p class="student-lab-footnote">适合学生独立读数、即时核算和提交微课实验记录。</p>
+          </section>
+        </aside>
+      </main>
+
+      <main id="theoryModule" class="theory-shell module-view" hidden aria-label="原理讲解">
+        <aside class="theory-rail panel" aria-label="原理目录">
+          <div class="theory-rail-head">
+            <h2>光栅衍射原理</h2>
+            <p>光的干涉与衍射现象</p>
+          </div>
+          <nav class="theory-nav" aria-label="原理讲解目录">
+            <button class="active" type="button" data-theory-slide="0"><span>01</span>光栅的基本概念</button>
+            <button type="button" data-theory-slide="1"><span>02</span>光栅衍射原理</button>
+            <button type="button" data-theory-slide="2"><span>03</span>衍射公式推导</button>
+            <button type="button" data-theory-slide="3"><span>04</span>衍射条纹特征</button>
+            <button type="button" data-theory-slide="4"><span>05</span>中央明纹宽度</button>
+            <button type="button" data-theory-slide="5"><span>06</span>实验测量原理</button>
+            <button type="button" data-theory-slide="6"><span>07</span>误差分析</button>
+          </nav>
+          <div class="theory-progress" aria-live="polite">
+            <span>学习进度</span>
+            <i><b id="theoryProgressBar"></b></i>
+            <strong id="theoryProgressText">1 / 7</strong>
+          </div>
+        </aside>
+
+        <section class="theory-main panel">
+          <div class="theory-heading">
+            <div>
+              <p>PRINCIPLE MODULE</p>
+              <h2 id="theoryTitle">01 光栅的基本概念</h2>
+            </div>
+            <div class="theory-controls" role="group" aria-label="原理页面控制">
+              <button id="theoryPrev" class="secondary-button" type="button">‹ 上一页</button>
+              <button id="theoryNext" class="secondary-button" type="button">下一页 ›</button>
+            </div>
+          </div>
+
+          <div class="theory-note">
+            <strong>公式适用条件</strong>
+            <span>图中 d sinθ = jλ 默认正入射；有入射角时应使用 d(sinθⱼ − sinθᵢ) = jλ。屏幕位置应先用 yⱼ = L tanθⱼ 计算，只有小角度时才近似为 yⱼ ≈ jλL/d。</span>
+          </div>
+
+          <div class="theory-stage">
+            <figure class="theory-slide active" data-theory-panel="0">
+              <img src="./assets/theory/slides/theory-slide-01.webp" alt="光栅的基本概念：光栅结构、关键参数、实物图示、学习目标和重点提示" loading="eager" />
+            </figure>
+            <figure class="theory-slide" data-theory-panel="1">
+              <img src="./assets/theory/slides/theory-slide-02.webp" alt="光栅衍射原理：多缝干涉、单缝衍射包络、缺级现象和本页结论" loading="lazy" />
+            </figure>
+            <figure class="theory-slide" data-theory-panel="2">
+              <img src="./assets/theory/slides/theory-slide-03.webp" alt="衍射公式推导：相邻狭缝光程差、形成明纹条件、屏幕位置和适用条件" loading="lazy" />
+            </figure>
+            <figure class="theory-slide" data-theory-panel="3">
+              <img src="./assets/theory/slides/theory-slide-04.webp" alt="衍射条纹特征：对称性、改变光栅常数、波长、屏距和缝数对条纹的影响" loading="lazy" />
+            </figure>
+            <figure class="theory-slide" data-theory-panel="4">
+              <img src="./assets/theory/slides/theory-slide-05.webp" alt="中央明纹宽度：单缝暗纹条件、中央明纹宽度、物理含义和反推缝宽" loading="lazy" />
+            </figure>
+            <figure class="theory-slide" data-theory-panel="5">
+              <img src="./assets/theory/slides/theory-slide-06.webp" alt="实验测量原理：设置波长、测量屏距、记录明纹位置、计算衍射角和反推光栅常数" loading="lazy" />
+            </figure>
+            <figure class="theory-slide" data-theory-panel="6">
+              <img src="./assets/theory/slides/theory-slide-07.webp" alt="误差分析：条纹读数误差、屏距测量误差、入射角偏差、小角度近似误差和相对误差公式" loading="lazy" />
+            </figure>
+          </div>
+
+          <div class="theory-summary" aria-live="polite">
+            <h3 id="theorySummaryTitle">本页要点</h3>
+            <p id="theorySummaryText">光栅常数 d、单缝宽度 b、屏距 L、波长 λ 和衍射级次 j 是描述光栅衍射的核心参数。</p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="bottom-status panel" aria-label="实验状态栏">
+        <div class="status-metrics">
+          <div><span>当前波长</span><strong id="statusLambda">650 nm</strong></div>
+          <div><span>光栅常数</span><strong id="statusD">5.000 μm</strong></div>
+          <div><span>屏距</span><strong id="statusL">100.0 cm</strong></div>
+          <div><span>有效缝数</span><strong id="statusN">40 缝</strong></div>
+          <div><span>衍射级次</span><strong id="statusM">j = 1</strong></div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="module" src="./src/app.js?v=sampling-restore-20260603"></script>
+    <script type="module" src="./src/pwa.js?v=sampling-restore-20260603"></script>
+  </body>
+</html>
