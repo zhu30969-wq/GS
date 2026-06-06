@@ -1109,6 +1109,38 @@ function formatMaybePercent(value) {
   return Number.isFinite(number) ? `${(number * 100).toFixed(2)}%` : "--";
 }
 
+function formatScientific(value, digits = 4) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number.toExponential(digits) : "--";
+}
+
+function buildMeasurementExportRows({
+  selectedOrder,
+  xMinus,
+  xPlus,
+  xMean,
+  distanceCm,
+  thetaDeg,
+  sinTheta,
+  resultValue,
+}) {
+  // 学生页面一次只采集当前选择级次的一对左右亮纹。
+  // 导出表保留 1、2、3 级记录位置，但只填写当前真实读数，避免把理论值冒充实验测量值。
+  return [1, 2, 3].map((order) => {
+    if (order !== selectedOrder) return [String(order), "", "", "", "", "", "", ""];
+    return [
+      String(order),
+      formatCellNumber(Math.abs(xMinus), 2),
+      formatCellNumber(Math.abs(xPlus), 2),
+      formatCellNumber(xMean, 2),
+      formatCellNumber(distanceCm, 1),
+      thetaDeg === null ? "--" : thetaDeg.toFixed(2),
+      Number.isFinite(sinTheta) ? sinTheta.toFixed(6) : "--",
+      resultValue,
+    ];
+  });
+}
+
 function reportConclusion(warnings) {
   return warnings.length ? "需要复查读数" : "符合理论值";
 }
@@ -1155,6 +1187,7 @@ function collectReportData() {
     const bError = result.bUm ? Math.abs(result.bUm - refB) / refB : null;
     const conclusion = reportConclusion(result.warnings);
     const warningText = reportWarningText(result.warnings);
+    const sinTheta = screenSinFromDisplacement(pair.meanCm, distanceCm);
     const knownLine = `λ=${formatCellNumber(lambdaNm, 0)} nm，L=${formatCellNumber(distanceCm, 1)} cm，j=${order}`;
     const measureLine = `x(+j)=${formatCellNumber(xPlus, 2)} cm，x(-j)=${formatCellNumber(xMinus, 2)} cm，W0=${formatCellNumber(centralWidth, 2)} mm`;
     const resultLine = `d=${result.dUm === null ? "--" : result.dUm.toFixed(3)} μm，b=${result.bUm === null ? "--" : result.bUm.toFixed(2)} μm`;
@@ -1166,6 +1199,29 @@ function collectReportData() {
       experimentType: "由衍射图样反演光栅常数 d 与缝宽 b",
       generatedAt,
       fileName: `光栅衍射实验报告-求d-b-${timestampForFilename(generatedAt)}.xlsx`,
+      exportTable: {
+        caption: "若实验目的是反求光栅常数，最后一列为计算光栅常数 dⱼ：",
+        headers: [
+          "衍射级次\n(j)",
+          "左侧亮纹位置\nx(j左) / cm",
+          "右侧亮纹位置\nx(j右) / cm",
+          "平均位置\nx̄ⱼ / cm",
+          "屏距\nL / cm",
+          "衍射角\nθⱼ / °",
+          "sin θⱼ",
+          "计算光栅常数\ndⱼ / m",
+        ],
+        rows: buildMeasurementExportRows({
+          selectedOrder: order,
+          xMinus,
+          xPlus,
+          xMean: pair.meanCm,
+          distanceCm,
+          thetaDeg: result.thetaDeg,
+          sinTheta,
+          resultValue: result.dUm === null ? "--" : formatScientific(result.dUm * 1e-6, 4),
+        }),
+      },
       text: `实验类型：由衍射图样反演光栅常数 d 与缝宽 b
 已知条件：${knownLine}
 测量数据：${measureLine}
@@ -1210,6 +1266,7 @@ function collectReportData() {
   const relError = result.lambdaNm ? Math.abs(result.lambdaNm - reference) / reference : null;
   const conclusion = reportConclusion(result.warnings);
   const warningText = reportWarningText(result.warnings);
+  const sinTheta = screenSinFromDisplacement(pair.meanCm, distanceCm);
   const knownLine = `d=${formatCellNumber(gratingUm, 3)} μm，L=${formatCellNumber(distanceCm, 1)} cm，j=${order}`;
   const measureLine = `x(+j)=${formatCellNumber(xPlus, 2)} cm，x(-j)=${formatCellNumber(xMinus, 2)} cm`;
   const resultLine = `λ=${result.lambdaNm === null ? "--" : result.lambdaNm.toFixed(0)} nm`;
@@ -1221,6 +1278,29 @@ function collectReportData() {
     experimentType: "由衍射图样反演激光波长 λ",
     generatedAt,
     fileName: `光栅衍射实验报告-求lambda-${timestampForFilename(generatedAt)}.xlsx`,
+    exportTable: {
+      caption: "实验数据可按下表进行记录与处理：",
+      headers: [
+        "衍射级次\n(j)",
+        "左侧亮纹位置\nx(j左) / cm",
+        "右侧亮纹位置\nx(j右) / cm",
+        "平均位置\nx̄ⱼ / cm",
+        "屏距\nL / cm",
+        "衍射角\nθⱼ / °",
+        "sin θⱼ",
+        "计算波长\nλⱼ / nm",
+      ],
+      rows: buildMeasurementExportRows({
+        selectedOrder: order,
+        xMinus,
+        xPlus,
+        xMean: pair.meanCm,
+        distanceCm,
+        thetaDeg: result.thetaDeg,
+        sinTheta,
+        resultValue: result.lambdaNm === null ? "--" : result.lambdaNm.toFixed(0),
+      }),
+    },
     text: `实验类型：由衍射图样反演激光波长 λ
 已知条件：${knownLine}
 测量数据：${measureLine}
@@ -1283,27 +1363,16 @@ function worksheetCell(value, rowIndex, columnIndex, styleId = 0) {
 }
 
 function buildWorksheetXml(report) {
-  // 导出的 Excel 按用户要求只保留四列表格：
-  // 类别、项目、数值、单位。右侧长“说明”列不再写入工作表，
-  // 公式和结论仍作为普通数据行保留，避免信息缺失。
+  // Excel 改为实验教材常用的数据记录表：
+  // 左右同级亮纹取绝对位置后求平均，再列出 θⱼ、sinθⱼ 和反演结果。
+  // 未在页面实际测量的级次保留空行，不填入理论值。
+  const exportTable = report.exportTable;
   const rows = [
-    { height: 34, cells: [{ value: report.title, style: 1, mergeAcross: 3 }] },
-    {
-      height: 30,
-      cells: [
-        { value: "导出时间", style: 7 },
-        { value: report.generatedAt.toLocaleString("zh-CN", { hour12: false }), style: 8, mergeAcross: 2 },
-      ],
-    },
-    { height: 30, cells: ["类别", "项目", "数值", "单位"].map((value) => ({ value, style: 2 })) },
-    ...report.rows.map((row) => ({
-      height: 30,
-      cells: [
-        { value: row[0], style: 3 },
-        { value: row[1], style: 4 },
-        { value: row[2], style: 5 },
-        { value: row[3], style: 6 },
-      ],
+    { height: 32, cells: [{ value: exportTable.caption, style: 9, mergeAcross: 7 }] },
+    { height: 76, cells: exportTable.headers.map((value) => ({ value, style: 10 })) },
+    ...exportTable.rows.map((row) => ({
+      height: 38,
+      cells: row.map((value) => ({ value, style: 11 })),
     })),
   ];
   const mergeRefs = [];
@@ -1333,14 +1402,16 @@ function buildWorksheetXml(report) {
 
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-  <dimension ref="A1:D${rows.length}"/>
+  <dimension ref="A1:H${rows.length}"/>
   <sheetViews><sheetView workbookViewId="0"/></sheetViews>
   <sheetFormatPr defaultRowHeight="24"/>
   <cols>
-    <col min="1" max="1" width="18" customWidth="1"/>
-    <col min="2" max="2" width="28" customWidth="1"/>
-    <col min="3" max="3" width="36" customWidth="1"/>
-    <col min="4" max="4" width="12" customWidth="1"/>
+    <col min="1" max="1" width="14" customWidth="1"/>
+    <col min="2" max="3" width="21" customWidth="1"/>
+    <col min="4" max="4" width="19" customWidth="1"/>
+    <col min="5" max="5" width="15" customWidth="1"/>
+    <col min="6" max="7" width="16" customWidth="1"/>
+    <col min="8" max="8" width="23" customWidth="1"/>
   </cols>
   <sheetData>${rowXml}</sheetData>
   ${mergeXml}
@@ -1437,7 +1508,7 @@ function buildWorkbookParts(report) {
     <border><left style="thin"><color rgb="FFC8DAF2"/></left><right style="thin"><color rgb="FFC8DAF2"/></right><top style="thin"><color rgb="FFC8DAF2"/></top><bottom style="thin"><color rgb="FFC8DAF2"/></bottom><diagonal/></border>
   </borders>
   <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
-  <cellXfs count="9">
+  <cellXfs count="12">
     <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
     <xf numFmtId="0" fontId="1" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
     <xf numFmtId="0" fontId="2" fillId="2" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
@@ -1447,6 +1518,9 @@ function buildWorkbookParts(report) {
     <xf numFmtId="0" fontId="5" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
     <xf numFmtId="0" fontId="2" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
     <xf numFmtId="0" fontId="5" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="5" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="left" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="2" fillId="2" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
   </cellXfs>
   <cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
 </styleSheet>`,
