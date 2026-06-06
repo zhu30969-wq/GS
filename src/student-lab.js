@@ -1289,20 +1289,20 @@ function buildWorksheetXml(report) {
   const rows = [
     { height: 34, cells: [{ value: report.title, style: 1, mergeAcross: 3 }] },
     {
-      height: 26,
+      height: 30,
       cells: [
-        { value: "导出时间", style: 4 },
-        { value: report.generatedAt.toLocaleString("zh-CN", { hour12: false }), style: 0, mergeAcross: 2 },
+        { value: "导出时间", style: 7 },
+        { value: report.generatedAt.toLocaleString("zh-CN", { hour12: false }), style: 8, mergeAcross: 2 },
       ],
     },
-    { height: 28, cells: ["类别", "项目", "数值", "单位"].map((value) => ({ value, style: 2 })) },
+    { height: 30, cells: ["类别", "项目", "数值", "单位"].map((value) => ({ value, style: 2 })) },
     ...report.rows.map((row) => ({
       height: 30,
       cells: [
         { value: row[0], style: 3 },
         { value: row[1], style: 4 },
         { value: row[2], style: 5 },
-        { value: row[3], style: 0 },
+        { value: row[3], style: 6 },
       ],
     })),
   ];
@@ -1413,34 +1413,40 @@ function buildWorkbookParts(report) {
       path: "xl/styles.xml",
       content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-  <fonts count="5">
-    <font><sz val="11"/><name val="Microsoft YaHei UI"/></font>
-    <font><b/><sz val="18"/><color rgb="FF0F2B6D"/><name val="Microsoft YaHei UI"/></font>
-    <font><b/><sz val="11"/><color rgb="FF0F2B6D"/><name val="Microsoft YaHei UI"/></font>
-    <font><b/><sz val="11"/><color rgb="FF0F2B6D"/><name val="Microsoft YaHei UI"/></font>
-    <font><b/><sz val="12"/><color rgb="FF0B5CFF"/><name val="Microsoft YaHei UI"/></font>
+  <!--
+    导出表格样式与课程参考图一致：
+    全表使用宋体；表头和分类列用淡蓝底；数值列用亮蓝色突出；
+    单位列保持黑色，所有单元格居中并使用浅蓝细边框。
+  -->
+  <fonts count="6">
+    <font><sz val="12"/><color rgb="FF000000"/><name val="宋体"/><family val="3"/></font>
+    <font><sz val="16"/><color rgb="FF003B82"/><name val="宋体"/><family val="3"/></font>
+    <font><sz val="13"/><color rgb="FF003B82"/><name val="宋体"/><family val="3"/></font>
+    <font><sz val="12"/><color rgb="FF003B82"/><name val="宋体"/><family val="3"/></font>
+    <font><sz val="12"/><color rgb="FF075BFF"/><name val="宋体"/><family val="3"/></font>
+    <font><sz val="13"/><color rgb="FF000000"/><name val="宋体"/><family val="3"/></font>
   </fonts>
-  <fills count="6">
+  <fills count="4">
     <fill><patternFill patternType="none"/></fill>
     <fill><patternFill patternType="gray125"/></fill>
-    <fill><patternFill patternType="solid"><fgColor rgb="FFEAF2FF"/><bgColor indexed="64"/></patternFill></fill>
-    <fill><patternFill patternType="solid"><fgColor rgb="FFD6E8FF"/><bgColor indexed="64"/></patternFill></fill>
-    <fill><patternFill patternType="solid"><fgColor rgb="FFF1F7FF"/><bgColor indexed="64"/></patternFill></fill>
-    <fill><patternFill patternType="solid"><fgColor rgb="FFEAF6FF"/><bgColor indexed="64"/></patternFill></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FFD9E9FF"/><bgColor indexed="64"/></patternFill></fill>
+    <fill><patternFill patternType="solid"><fgColor rgb="FFF2F7FF"/><bgColor indexed="64"/></patternFill></fill>
   </fills>
   <borders count="2">
     <border><left/><right/><top/><bottom/><diagonal/></border>
-    <border><left style="thin"><color rgb="FFD4E2F6"/></left><right style="thin"><color rgb="FFD4E2F6"/></right><top style="thin"><color rgb="FFD4E2F6"/></top><bottom style="thin"><color rgb="FFD4E2F6"/></bottom><diagonal/></border>
+    <border><left style="thin"><color rgb="FFC8DAF2"/></left><right style="thin"><color rgb="FFC8DAF2"/></right><top style="thin"><color rgb="FFC8DAF2"/></top><bottom style="thin"><color rgb="FFC8DAF2"/></bottom><diagonal/></border>
   </borders>
   <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
-  <cellXfs count="7">
+  <cellXfs count="9">
     <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
-    <xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
-    <xf numFmtId="0" fontId="2" fillId="3" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
-    <xf numFmtId="0" fontId="3" fillId="4" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="1" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="2" fillId="2" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="3" fillId="3" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
     <xf numFmtId="0" fontId="3" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
     <xf numFmtId="0" fontId="4" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
-    <xf numFmtId="0" fontId="3" fillId="5" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="5" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="2" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="5" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
   </cellXfs>
   <cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
 </styleSheet>`,

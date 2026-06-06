@@ -1,16 +1,16 @@
-const CACHE_VERSION = "diffraction-grating-v2026-06-04-student-excel-blue";
+const CACHE_VERSION = "diffraction-grating-v2026-06-06-student-excel-reference";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
   "./src/styles.css?v=sampling-restore-20260603",
-  "./src/student-lab.css?v=student-excel-blue-20260604",
+  "./src/student-lab.css?v=student-excel-reference-20260606",
   "./src/physics.js",
   "./src/app.js?v=sampling-restore-20260603",
-  "./src/student-lab.js?v=student-excel-blue-20260604",
+  "./src/student-lab.js?v=student-excel-reference-20260606",
   "./src/scene3d.js",
-  "./src/pwa.js?v=student-excel-blue-20260604",
+  "./src/pwa.js?v=student-excel-reference-20260606",
   "./vendor/three.module.js",
   "./assets/gs-entry-qr-card.png?v=sampling-restore-20260603",
   "./assets/icons/site-icon.svg",
@@ -86,3 +86,5 @@ async function cacheFirstWithRefresh(request) {
 
   return cached || refresh || fetch(request);
 }
+
+
