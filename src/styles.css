@@ -468,32 +468,28 @@ button:disabled {
 }
 
 .apparatus-sketch {
-  min-height: 330px;
-  padding: 8px;
-  border: 1px solid rgba(74, 150, 255, 0.32);
+  min-height: 280px;
+  padding: 6px;
+  border: 1px solid rgba(125, 187, 255, 0.22);
   border-radius: 8px;
-  background:
-    linear-gradient(rgba(125, 187, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(125, 187, 255, 0.06) 1px, transparent 1px),
-    rgba(6, 18, 30, 0.7);
-  background-size: 18px 18px, 18px 18px, 100% 100%;
+  background: rgba(6, 18, 30, 0.72);
 }
 
 .apparatus-sketch .small-label {
-  fill: #a9c7ea;
-  font-size: 13px;
+  fill: #9bb9da;
+  font-size: 12px;
   font-style: normal;
 }
 
-.apparatus-sketch .inset text {
-  fill: #d8e7fa;
-  font-size: 12px;
-}
-
-.apparatus-sketch .inset .math,
 .apparatus-sketch .math {
   fill: #f2f7ff;
-  font-size: 17px;
+  font-size: 16px;
+}
+
+.apparatus-sketch .order-labels text {
+  fill: #cbdcf0;
+  font-size: 13px;
+  font-style: normal;
 }
 
 /* 第 01 页先给出光栅定义，再进入结构图和参数，符合概念教学顺序。 */

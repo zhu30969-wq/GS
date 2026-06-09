@@ -1,13 +1,13 @@
-const CACHE_VERSION = "diffraction-grating-v2026-06-06-student-excel-record-table";
+const CACHE_VERSION = "diffraction-grating-v2026-06-09-theory-simple-apparatus";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
-  "./src/styles.css?v=sampling-restore-20260603",
+  "./src/styles.css?v=theory-simple-apparatus-20260609",
   "./src/student-lab.css?v=student-excel-record-table-20260606",
   "./src/physics.js",
-  "./src/app.js?v=sampling-restore-20260603",
+  "./src/app.js?v=theory-simple-apparatus-20260609",
   "./src/student-lab.js?v=student-excel-record-table-20260606",
   "./src/scene3d.js",
   "./src/pwa.js?v=student-excel-record-table-20260606",

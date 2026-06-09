@@ -99,148 +99,87 @@ const theoryVisuals = [
       <div class="visual-grid three">
         <article class="visual-card wide apparatus-detail-card">
           <h3>光栅结构示意图</h3>
-          <svg class="ray-sketch apparatus-sketch" viewBox="0 0 820 380" role="img" aria-label="激光通过准直镜和光栅后在屏幕上形成 j 级明纹">
+          <svg class="ray-sketch apparatus-sketch" viewBox="0 0 820 300" role="img" aria-label="激光通过准直镜和光栅后在 CCD 屏幕上形成 j 级明纹">
             <defs>
-              <pattern id="cadGridA" width="26" height="26" patternUnits="userSpaceOnUse">
-                <path d="M26 0H0V26" fill="none" stroke="#5f7890" stroke-opacity=".16" stroke-width="1"/>
-              </pattern>
-              <linearGradient id="tableA" x1="0" y1="0" x2="1" y2="1">
-                <stop stop-color="#182a3a"/><stop offset=".56" stop-color="#0f1c2a"/><stop offset="1" stop-color="#09131f"/>
+              <linearGradient id="simpleLensA" x1="0" x2="1">
+                <stop stop-color="#4bbcff" stop-opacity=".15"/><stop offset=".5" stop-color="#e6fbff" stop-opacity=".78"/><stop offset="1" stop-color="#4bbcff" stop-opacity=".15"/>
               </linearGradient>
-              <linearGradient id="laserBodyA" x1="0" y1="0" x2="1" y2="1">
-                <stop stop-color="#27364a"/><stop offset=".48" stop-color="#0f1724"/><stop offset="1" stop-color="#050b12"/>
-              </linearGradient>
-              <linearGradient id="lensA" x1="0" x2="1">
-                <stop stop-color="#42b7ff" stop-opacity=".12"/><stop offset=".48" stop-color="#dff8ff" stop-opacity=".68"/><stop offset="1" stop-color="#42b7ff" stop-opacity=".18"/>
-              </linearGradient>
-              <linearGradient id="metalA" x1="0" y1="0" x2="1" y2="0">
-                <stop stop-color="#23364b"/><stop offset=".45" stop-color="#aec4d8"/><stop offset="1" stop-color="#40566d"/>
-              </linearGradient>
-              <linearGradient id="screenFaceA" x1="0" y1="0" x2="1" y2="1">
-                <stop stop-color="#162235"/><stop offset=".58" stop-color="#08111c"/><stop offset="1" stop-color="#1e2e43"/>
-              </linearGradient>
-              <radialGradient id="spotA" cx="50%" cy="50%" r="62%">
-                <stop stop-color="#ffffff"/><stop offset=".18" stop-color="#ffd5d2"/><stop offset=".46" stop-color="#ff3140" stop-opacity=".9"/><stop offset="1" stop-color="#ff3140" stop-opacity="0"/>
+              <radialGradient id="simpleSpotA">
+                <stop stop-color="#ffffff"/><stop offset=".22" stop-color="#ffd9d6"/><stop offset=".58" stop-color="#ff3344" stop-opacity=".9"/><stop offset="1" stop-color="#ff3344" stop-opacity="0"/>
               </radialGradient>
-              <filter id="redGlowA" x="-60%" y="-60%" width="220%" height="220%">
-                <feGaussianBlur stdDeviation="3.2" result="blur"/>
+              <filter id="simpleGlowA" x="-80%" y="-80%" width="260%" height="260%">
+                <feGaussianBlur stdDeviation="2.4" result="blur"/>
                 <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
-              <filter id="softShadowA" x="-30%" y="-30%" width="160%" height="160%">
-                <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000814" flood-opacity=".42"/>
-              </filter>
-              <marker id="arrowA" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M0 0 L10 5 L0 10 Z" fill="#9fc8ff"/>
+              <marker id="simpleArrowA" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                <path d="M0 0L10 5L0 10Z" fill="#88bfff"/>
               </marker>
             </defs>
 
-            <rect x="0" y="0" width="820" height="380" rx="12" fill="#08131f"/>
-            <rect x="0" y="0" width="820" height="380" fill="url(#cadGridA)" opacity=".82"/>
+            <rect x="0" y="0" width="820" height="300" rx="12" fill="#07131f"/>
+            <line x1="54" y1="246" x2="750" y2="246" stroke="#294157" stroke-width="2"/>
 
-            <g class="optical-table" filter="url(#softShadowA)">
-              <polygon points="54,250 700,250 766,324 110,324" fill="url(#tableA)" stroke="#3c5873"/>
-              <g stroke="#607d99" stroke-opacity=".28" stroke-width="1">
-                <path d="M84 258H710"/><path d="M106 278H728"/><path d="M128 300H748"/>
-                <path d="M104 250L160 324"/><path d="M164 250L218 324"/><path d="M224 250L277 324"/>
-                <path d="M284 250L336 324"/><path d="M344 250L394 324"/><path d="M404 250L453 324"/>
-                <path d="M464 250L512 324"/><path d="M524 250L570 324"/><path d="M584 250L630 324"/>
-                <path d="M644 250L690 324"/>
+            <g class="simple-apparatus">
+              <g transform="translate(72 125)">
+                <rect x="0" y="0" width="112" height="48" rx="8" fill="#142235" stroke="#57708a"/>
+                <rect x="112" y="11" width="34" height="26" rx="6" fill="#1b2d43" stroke="#7890a7"/>
+                <circle cx="148" cy="24" r="7" fill="#ff3140" filter="url(#simpleGlowA)"/>
+                <rect x="38" y="48" width="36" height="34" rx="4" fill="#17283c" stroke="#4f6b85"/>
+                <rect x="12" y="82" width="92" height="10" rx="4" fill="#111e2e" stroke="#3d5872"/>
+                <text x="58" y="-18" text-anchor="middle">激光器</text>
               </g>
-              <g fill="#7f9db7" opacity=".62">
-                <circle cx="122" cy="270" r="2"/><circle cx="178" cy="270" r="2"/><circle cx="234" cy="270" r="2"/>
-                <circle cx="290" cy="270" r="2"/><circle cx="346" cy="270" r="2"/><circle cx="402" cy="270" r="2"/>
-                <circle cx="458" cy="270" r="2"/><circle cx="514" cy="270" r="2"/><circle cx="570" cy="270" r="2"/>
-                <circle cx="626" cy="270" r="2"/><circle cx="682" cy="270" r="2"/>
-                <circle cx="154" cy="300" r="2"/><circle cx="214" cy="300" r="2"/><circle cx="274" cy="300" r="2"/>
-                <circle cx="334" cy="300" r="2"/><circle cx="394" cy="300" r="2"/><circle cx="454" cy="300" r="2"/>
-                <circle cx="514" cy="300" r="2"/><circle cx="574" cy="300" r="2"/><circle cx="634" cy="300" r="2"/>
-                <circle cx="694" cy="300" r="2"/>
+
+              <g transform="translate(270 74)">
+                <ellipse cx="0" cy="75" rx="22" ry="66" fill="url(#simpleLensA)" stroke="#83d4ff" stroke-width="3"/>
+                <line x1="0" y1="9" x2="0" y2="141" stroke="#dff8ff" stroke-opacity=".44"/>
+                <rect x="-6" y="141" width="12" height="34" rx="3" fill="#17283c"/>
+                <rect x="-34" y="175" width="68" height="10" rx="4" fill="#111e2e" stroke="#3d5872"/>
+                <text x="0" y="-10" text-anchor="middle">准直镜</text>
+              </g>
+
+              <g transform="translate(420 72)">
+                <rect x="-24" y="8" width="48" height="148" rx="7" fill="#142438" stroke="#69839d"/>
+                <rect x="-12" y="20" width="24" height="124" rx="3" fill="#08131f" stroke="#9bb2c8"/>
+                <g stroke="#e6f1fc" stroke-width="1.6">
+                  <line x1="-8" y1="27" x2="-8" y2="137"/><line x1="-4" y1="27" x2="-4" y2="137"/>
+                  <line x1="0" y1="27" x2="0" y2="137"/><line x1="4" y1="27" x2="4" y2="137"/><line x1="8" y1="27" x2="8" y2="137"/>
+                </g>
+                <rect x="-5" y="156" width="10" height="30" rx="3" fill="#17283c"/>
+                <rect x="-34" y="186" width="68" height="10" rx="4" fill="#111e2e" stroke="#3d5872"/>
+                <text x="0" y="-10" text-anchor="middle">光栅</text>
+                <text x="0" y="218" text-anchor="middle" class="small-label">d：周期　b：缝宽</text>
+              </g>
+
+              <g transform="translate(690 38)">
+                <rect x="0" y="0" width="66" height="220" rx="6" fill="#101e2d" stroke="#66829c" stroke-width="2"/>
+                <rect x="9" y="10" width="48" height="200" rx="3" fill="#07111b" stroke="#405b74"/>
+                <g fill="url(#simpleSpotA)">
+                  <ellipse cx="33" cy="42" rx="24" ry="9"/><ellipse cx="33" cy="80" rx="27" ry="10"/>
+                  <ellipse cx="33" cy="110" rx="31" ry="12"/><ellipse cx="33" cy="140" rx="27" ry="10"/>
+                  <ellipse cx="33" cy="178" rx="24" ry="9"/>
+                </g>
+                <text x="33" y="-14" text-anchor="middle">CCD 屏幕</text>
               </g>
             </g>
 
-            <g class="apparatus-part" transform="translate(70 135)" filter="url(#softShadowA)">
-              <rect x="8" y="90" width="118" height="16" rx="4" fill="#0b1220" stroke="#39516b"/>
-              <rect x="38" y="54" width="52" height="40" rx="5" fill="#18263a" stroke="#4d6883"/>
-              <path d="M0 18H96L116 34V66H14L0 54Z" fill="url(#laserBodyA)" stroke="#60758c"/>
-              <rect x="68" y="4" width="58" height="42" rx="7" fill="#0b111b" stroke="#4d647c"/>
-              <rect x="98" y="12" width="34" height="26" rx="5" fill="#111b28" stroke="#7c91a5"/>
-              <circle cx="136" cy="25" r="10" fill="#ff2634" filter="url(#redGlowA)"/>
-              <circle cx="136" cy="25" r="4" fill="#fff4f4"/>
-              <text x="48" y="-12">激光器</text>
-              <text x="18" y="10" class="small-label">单色平行光源</text>
+            <g stroke="#ff3344" stroke-linecap="round" fill="none" filter="url(#simpleGlowA)">
+              <line x1="220" y1="149" x2="248" y2="149" stroke-width="3.5"/>
+              <line x1="292" y1="149" x2="420" y2="149" stroke-width="3.5"/>
+              <line x1="420" y1="149" x2="690" y2="80" stroke-width="1.8"/>
+              <line x1="420" y1="149" x2="690" y2="118" stroke-width="2"/>
+              <line x1="420" y1="149" x2="690" y2="148" stroke-width="3"/>
+              <line x1="420" y1="149" x2="690" y2="178" stroke-width="2"/>
+              <line x1="420" y1="149" x2="690" y2="216" stroke-width="1.8"/>
             </g>
 
-            <g class="apparatus-part" transform="translate(266 114)" filter="url(#softShadowA)">
-              <rect x="-32" y="118" width="82" height="14" rx="4" fill="#0b1220" stroke="#39516b"/>
-              <rect x="-6" y="88" width="28" height="34" rx="5" fill="#18263a" stroke="#4d6883"/>
-              <ellipse cx="8" cy="52" rx="23" ry="62" fill="url(#lensA)" stroke="#8bd7ff" stroke-width="3"/>
-              <ellipse cx="8" cy="52" rx="13" ry="52" fill="none" stroke="#dff7ff" stroke-opacity=".48"/>
-              <line x1="8" y1="-8" x2="8" y2="112" stroke="#dff7ff" stroke-opacity=".36"/>
-              <text x="8" y="-26">准直镜</text>
+            <g class="order-labels" text-anchor="start">
+              <text x="770" y="84">+2</text><text x="770" y="122">+1</text>
+              <text x="770" y="153">0</text><text x="770" y="182">−1</text><text x="770" y="220">−2</text>
             </g>
 
-            <g class="apparatus-part" transform="translate(432 88)" filter="url(#softShadowA)">
-              <rect x="-36" y="172" width="76" height="14" rx="4" fill="#0b1220" stroke="#39516b"/>
-              <rect x="-12" y="142" width="28" height="34" rx="5" fill="#18263a" stroke="#4d6883"/>
-              <rect x="-28" y="0" width="56" height="154" rx="8" fill="#142238" stroke="#63809c"/>
-              <rect x="-15" y="12" width="30" height="130" rx="3" fill="#09131f" stroke="#9fb7ce"/>
-              <g stroke="#e9f4ff" stroke-width="1.8" opacity=".92">
-                <line x1="-10" y1="20" x2="-10" y2="134"/><line x1="-5" y1="20" x2="-5" y2="134"/>
-                <line x1="0" y1="20" x2="0" y2="134"/><line x1="5" y1="20" x2="5" y2="134"/><line x1="10" y1="20" x2="10" y2="134"/>
-              </g>
-              <text x="0" y="-18">光栅架</text>
-              <text x="0" y="212">光栅</text>
-            </g>
-
-            <g class="screen-model" transform="translate(650 54)" filter="url(#softShadowA)">
-              <polygon points="0,0 88,18 88,268 0,244" fill="#101b2a" stroke="#48647d"/>
-              <polygon points="10,18 76,30 76,236 10,224" fill="url(#screenFaceA)" stroke="#7c93aa"/>
-              <g stroke="#4d6680" stroke-opacity=".48" stroke-width="1">
-                <path d="M10 52L76 64"/><path d="M10 86L76 98"/><path d="M10 120L76 132"/>
-                <path d="M10 154L76 166"/><path d="M10 188L76 200"/><path d="M10 222L76 234"/>
-                <path d="M24 20L24 229"/><path d="M38 23L38 232"/><path d="M52 25L52 235"/><path d="M66 28L66 238"/>
-              </g>
-              <ellipse cx="42" cy="56" rx="30" ry="11" fill="url(#spotA)" transform="rotate(10 42 56)"/>
-              <ellipse cx="42" cy="98" rx="38" ry="13" fill="url(#spotA)" transform="rotate(10 42 98)"/>
-              <ellipse cx="42" cy="139" rx="48" ry="16" fill="url(#spotA)" transform="rotate(10 42 139)"/>
-              <ellipse cx="42" cy="181" rx="38" ry="13" fill="url(#spotA)" transform="rotate(10 42 181)"/>
-              <ellipse cx="42" cy="223" rx="30" ry="11" fill="url(#spotA)" transform="rotate(10 42 223)"/>
-              <text x="44" y="-16">CCD 屏幕</text>
-            </g>
-
-            <g stroke="#ff2634" stroke-linecap="round" filter="url(#redGlowA)">
-              <line x1="206" y1="160" x2="274" y2="166" stroke-width="4"/>
-              <line x1="296" y1="168" x2="432" y2="166" stroke-width="4"/>
-              <line x1="432" y1="166" x2="650" y2="110" stroke-width="2.2"/>
-              <line x1="432" y1="166" x2="650" y2="151" stroke-width="2.2"/>
-              <line x1="432" y1="166" x2="650" y2="194" stroke-width="3.2"/>
-              <line x1="432" y1="166" x2="650" y2="236" stroke-width="2.2"/>
-              <line x1="432" y1="166" x2="650" y2="278" stroke-width="2.2"/>
-            </g>
-            <g stroke="#ff8790" stroke-width="1.2" stroke-dasharray="7 6" opacity=".72">
-              <line x1="432" y1="166" x2="650" y2="88"/><line x1="432" y1="166" x2="650" y2="300"/>
-            </g>
-
-            <g fill="#f2f7ff" font-size="15" font-style="italic">
-              <text x="743" y="115">j = 2</text><text x="743" y="156">j = 1</text>
-              <text x="743" y="199">j = 0</text><text x="743" y="241">j = -1</text><text x="743" y="283">j = -2</text>
-            </g>
-
-            <line x1="432" y1="336" x2="650" y2="336" stroke="#9fc8ff" marker-start="url(#arrowA)" marker-end="url(#arrowA)"/>
-            <text x="541" y="327" class="math">L</text>
-            <g class="inset" transform="translate(360 315)">
-              <rect x="-88" y="-28" width="164" height="42" rx="8"/>
-              <line x1="-50" y1="-8" x2="-16" y2="-8" marker-start="url(#arrowA)" marker-end="url(#arrowA)"/>
-              <text x="-34" y="-15" class="math">d</text>
-              <text x="-78" y="7">相邻狭缝中心间距</text>
-            </g>
-            <g class="inset" transform="translate(504 315)">
-              <rect x="-58" y="-28" width="140" height="42" rx="8"/>
-              <line x1="-16" y1="-8" x2="2" y2="-8" marker-start="url(#arrowA)" marker-end="url(#arrowA)"/>
-              <text x="-8" y="-15" class="math">b</text>
-              <text x="-42" y="7">单个狭缝宽度</text>
-            </g>
-            <text x="420" y="56" class="small-label">正入射：d sinθⱼ = jλ</text>
+            <line x1="420" y1="274" x2="690" y2="274" stroke="#88bfff" marker-start="url(#simpleArrowA)" marker-end="url(#simpleArrowA)"/>
+            <text x="555" y="267" text-anchor="middle" class="math">L</text>
+            <text x="420" y="34" text-anchor="middle" class="small-label">正入射　d sinθⱼ = jλ</text>
           </svg>
         </article>
         <article class="visual-card">
