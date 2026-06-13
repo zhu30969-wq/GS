@@ -993,9 +993,10 @@ button:disabled {
   仅作用于左侧参数面板，避免同步放大按钮文字后造成控件拥挤。
 */
 #operationModule .parameter-panel .control-label {
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.35;
-  font-weight: 750;
+  font-weight: 800;
+  margin-bottom: 8px;
 }
 
 #operationModule .number-input,
@@ -3068,7 +3069,7 @@ input[type="range"]::-moz-range-thumb {
     17px 可避免“激光波长 λ (nm)”在常见窄屏上与颜色标签互相挤压。
   */
   #operationModule .parameter-panel .control-label {
-    font-size: 17px;
+    font-size: 19px;
   }
 
   .control-row {
