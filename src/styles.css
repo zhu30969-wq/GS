@@ -893,12 +893,15 @@ button:disabled {
 }
 
 .right-rail {
-  /* 右侧栏按“实时结果 -> 学生练习 -> 光路核对”的教学顺序组织；
-     这里只调整信息层级和可读性，不改变任何物理计算或绘图数据源。 */
+  /*
+    右栏仅保留扫码入口和学生实验入口：
+    第一行按二维码实际高度呈现，第二行自动填满剩余高度，
+    从而与中央实验区底部对齐，消除右栏下方无效空白。
+  */
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-auto-rows: max-content;
-  align-content: start;
+  grid-template-rows: max-content minmax(0, 1fr);
+  align-content: stretch;
   gap: 12px;
 }
 
@@ -911,8 +914,12 @@ button:disabled {
 }
 
 .right-rail .panel-heading {
-  min-height: 50px;
-  padding: 0 18px;
+  min-height: 56px;
+  padding: 0 20px;
+}
+
+.right-rail .panel-heading h2 {
+  font-size: 21px;
 }
 
 .panel {
@@ -958,7 +965,7 @@ button:disabled {
 
 #operationModule .panel-heading h2,
 #operationModule .stage-heading h2 {
-  font-size: 19px;
+  font-size: 21px;
 }
 
 #operationModule .text-button,
@@ -988,13 +995,13 @@ button:disabled {
 }
 
 #operationModule .student-lab-intro {
-  font-size: 15px;
+  font-size: 16px;
 }
 
 #operationModule .student-lab-highlights span,
 #operationModule .student-lab-footnote,
 #operationModule .lab-link {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .line-icon {
@@ -1715,6 +1722,9 @@ input[type="range"]::-moz-range-thumb {
 .student-lab-panel {
   order: 2;
   position: relative;
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
   overflow: hidden;
 }
 
@@ -1757,13 +1767,13 @@ input[type="range"]::-moz-range-thumb {
   position: relative;
   z-index: 1;
   padding-right: 14px;
-  min-height: 56px;
+  min-height: 62px;
   border-bottom-color: rgba(126, 214, 255, 0.22);
 }
 
 .student-lab-heading h2 {
   color: #f6fbff;
-  font-size: 19px;
+  font-size: 21px;
 }
 
 .student-lab-mark {
@@ -1799,13 +1809,13 @@ input[type="range"]::-moz-range-thumb {
   z-index: 1;
   display: inline-flex;
   align-items: center;
-  min-height: 32px;
-  padding: 0 11px;
+  min-height: 36px;
+  padding: 0 13px;
   border: 1px solid rgba(126, 214, 255, 0.52);
   border-radius: 6px;
   color: #c7efff;
   background: rgba(126, 214, 255, 0.11);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
   text-decoration: none;
 }
@@ -1814,10 +1824,11 @@ input[type="range"]::-moz-range-thumb {
   position: relative;
   z-index: 1;
   margin: 0;
-  padding: 13px 18px 10px;
+  padding: 18px 20px 14px;
   color: #d4e8f8;
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.75;
 }
 
 .student-lab-highlights {
@@ -1825,43 +1836,45 @@ input[type="range"]::-moz-range-thumb {
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 7px;
-  padding: 0 16px 12px;
+  gap: 9px;
+  padding: 0 18px 16px;
 }
 
 .student-lab-highlights span {
   display: grid;
-  min-height: 28px;
+  min-height: 34px;
   place-items: center;
   border: 1px solid rgba(126, 214, 255, 0.18);
   border-radius: 999px;
   background: rgba(126, 214, 255, 0.085);
   color: #a9dcff;
-  font-size: 12px;
-  font-weight: 750;
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .student-lab-entry-actions {
   position: relative;
   z-index: 1;
   display: grid;
+  flex: 1 1 auto;
   grid-template-columns: 1fr 1fr;
+  align-items: stretch;
   gap: 12px;
-  padding: 0 16px 14px;
+  padding: 0 18px 16px;
 }
 
 .student-lab-open {
   position: relative;
   display: grid;
   gap: 4px;
-  min-height: 58px;
+  min-height: 76px;
   place-items: center;
   border: 1px solid rgba(176, 196, 216, 0.2);
   border-radius: 7px;
   background: rgba(255, 255, 255, 0.045);
   color: #e8f4ff;
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 850;
   text-decoration: none;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
@@ -1880,7 +1893,7 @@ input[type="range"]::-moz-range-thumb {
 
 .student-lab-open span {
   color: #94c7ff;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0;
 }
@@ -1905,10 +1918,11 @@ input[type="range"]::-moz-range-thumb {
   position: relative;
   z-index: 1;
   margin: 0;
-  padding: 0 18px 16px;
+  padding: 0 20px 20px;
   color: #9fb6ca;
-  font-size: 12px;
-  line-height: 1.55;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.65;
 }
 
 .student-lab-tabs {
@@ -2223,11 +2237,13 @@ input[type="range"]::-moz-range-thumb {
   .right-rail {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    grid-template-rows: max-content;
+    align-items: stretch;
   }
 
   .student-lab-panel {
-    grid-column: 1 / -1;
+    grid-column: auto;
   }
 
   .student-lab-card.active .lab-input-grid {
@@ -2262,6 +2278,10 @@ input[type="range"]::-moz-range-thumb {
   .status-metrics,
   .bottom-status {
     grid-template-columns: 1fr;
+  }
+
+  .right-rail {
+    grid-template-rows: max-content max-content;
   }
 
   .theory-rail {
@@ -2380,6 +2400,19 @@ input[type="range"]::-moz-range-thumb {
 }
 
 @media (max-width: 760px) {
+  .right-rail {
+    /* 手机端仅保留学生实验卡片，单行网格避免隐藏二维码后留下额外空白行。 */
+    grid-template-rows: max-content;
+  }
+
+  .qr-access-panel {
+    /*
+      手机本身已经打开网页，无需再次显示扫码入口。
+      隐藏整个面板，而不是只隐藏二维码图片，避免留下无意义的空白卡片。
+    */
+    display: none;
+  }
+
   body {
     /* 手机端保留桌面版 CAD 暗色气质，但降低网格对比，避免小屏阅读时背景抢占注意力。 */
     background-size: 22px 22px, 22px 22px, 7px 7px, 7px 7px, 100% 100%, 100% 100%;
@@ -3191,7 +3224,13 @@ html.force-desktop-layout .right-rail {
 html.force-desktop-layout .right-rail {
   grid-column: auto !important;
   grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: max-content minmax(0, 1fr) !important;
+  align-items: stretch !important;
   gap: 12px !important;
+}
+
+html.force-desktop-layout .student-lab-panel {
+  grid-column: auto !important;
 }
 
 html.force-desktop-layout .panel {
