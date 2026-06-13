@@ -993,7 +993,7 @@ button:disabled {
   仅作用于左侧参数面板，避免同步放大按钮文字后造成控件拥挤。
 */
 #operationModule .parameter-panel .control-label {
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.35;
   font-weight: 800;
   margin-bottom: 8px;
@@ -3398,17 +3398,17 @@ html.force-desktop-layout .status-metrics {
 }
 
 #operationModule .scene-readout span {
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 750;
 }
 
 #operationModule .scene-readout strong {
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 800;
 }
 
 #operationModule .simulation-heading h3 {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 850;
 }
 
@@ -3541,7 +3541,32 @@ html.force-desktop-layout .bottom-status {
   }
 
   #operationModule .simulation-heading h3 {
+    font-size: 21px;
+  }
+
+  /* 明确覆盖前方窄屏小字号，保证三类重点文字在手机端仍保持醒目。 */
+  #operationModule .parameter-panel .control-label {
+    font-size: 21px;
+  }
+
+  #operationModule .scene-readout span {
+    font-size: 18px;
+  }
+
+  #operationModule .scene-readout strong {
     font-size: 19px;
+  }
+
+  /*
+    大号“CCD屏幕（采样面）”在窄屏的旧 86px 标题列中会被拆成三行。
+    扩大标题列后控制为两行，同时给右侧参数值保留足够宽度。
+  */
+  #operationModule .scene-readout div {
+    grid-template-columns: 170px minmax(0, 1fr);
+  }
+
+  #operationModule .scene-readout span {
+    white-space: nowrap;
   }
 }
 
