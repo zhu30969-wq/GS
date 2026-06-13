@@ -500,7 +500,7 @@ export class DiffractionScene {
 
     const label = makeTextSprite(`激光器\nλ = ${lambdaNm.toFixed(0)} nm`, {
       color: laserColor.hex,
-      fontSize: 34,
+      fontSize: 36,
       width: 270,
       height: 98,
     });
@@ -548,7 +548,7 @@ export class DiffractionScene {
 
     const label = makeTextSprite("准直镜", {
       color: "#cceaff",
-      fontSize: 32,
+      fontSize: 34,
       width: 180,
       height: 72,
     });
@@ -622,7 +622,7 @@ export class DiffractionScene {
 
     const label = makeTextSprite(`光栅架\nd = ${dUm.toFixed(3)} μm`, {
       color: "#9ed2ff",
-      fontSize: 32,
+      fontSize: 34,
       width: 250,
       height: 86,
     });
@@ -696,7 +696,7 @@ export class DiffractionScene {
 
     const label = makeTextSprite(`CCD屏幕\nL = ${distanceCm.toFixed(1)} cm`, {
       color: "#cfe7ff",
-      fontSize: 32,
+      fontSize: 34,
       width: 260,
       height: 86,
     });
@@ -748,7 +748,7 @@ export class DiffractionScene {
 
     const label = makeTextSprite(labelText, {
       color: "#9ed2ff",
-      fontSize: 34,
+      fontSize: 36,
       width: 320,
       height: 76,
     });

@@ -791,7 +791,7 @@ function drawFastScene(params) {
 
   ctx.fillStyle = "#9ed2ff";
   // 主实验画布中的中文路径说明需要与大号界面文字保持一致。
-  ctx.font = `700 17px ${UI_FONT_STACK}`;
+  ctx.font = `700 18px ${UI_FONT_STACK}`;
   ctx.textAlign = "center";
   ctx.fillText("激光器 → 准直镜 → 光栅架 → CCD屏幕", (left + screenX) / 2, height - 20);
 }
@@ -801,7 +801,7 @@ async function initDeferredScene() {
   state.sceneLoading = true;
 
   try {
-    const { DiffractionScene } = await import("./scene3d.js");
+    const { DiffractionScene } = await import("./scene3d.js?v=operation-cn-step-v1-20260613");
     const loadedScene = new DiffractionScene(sceneRoot);
     loadedScene.setView(state.view);
     loadedScene.setDisplayMode(state.mode);
@@ -1135,7 +1135,7 @@ function drawDiffractionPattern() {
 
   ctx.fillStyle = text;
   // 屏幕坐标标题是中文教学信息，字号高于数值刻度以便投屏阅读。
-  ctx.font = `600 16px ${UI_FONT_STACK}`;
+  ctx.font = `600 17px ${UI_FONT_STACK}`;
   ctx.textAlign = "center";
   ctx.fillText("屏幕位置 x (cm)", plot.left + plot.width / 2, height - 9);
 }
@@ -1192,9 +1192,10 @@ function drawCcdView() {
 
   ctx.fillStyle = "#c9d8e8";
   // CCD 采样说明属于实验条件说明，使用大号中文，避免被误认为无关脚注。
-  ctx.font = `600 15px ${UI_FONT_STACK}`;
+  ctx.font = `600 16px ${UI_FONT_STACK}`;
   ctx.textAlign = "center";
-  ctx.fillText("CCD 灰度值：有限像素 + 读出噪声 + 8-bit 量化", width / 2, height - 10);
+  // 保留真实 CCD 采样的三个关键因素，同时压缩措辞，保证大号中文在窄画布中完整显示。
+  ctx.fillText("CCD采样：像素化 · 读出噪声 · 8-bit量化", width / 2, height - 10);
 }
 
 function drawIntensityChart() {
@@ -1283,7 +1284,7 @@ function drawIntensityChart() {
   ctx.textAlign = "center";
   ctx.textBaseline = "bottom";
   // 光强分布横轴标题同步采用大号中文。
-  ctx.font = `600 17px ${UI_FONT_STACK}`;
+  ctx.font = `600 18px ${UI_FONT_STACK}`;
   ctx.fillText("位置 (cm)", plot.left + plotW / 2, height - 3);
 }
 

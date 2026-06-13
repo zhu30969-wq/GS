@@ -3620,6 +3620,129 @@ html.force-desktop-layout .formula-large {
   line-height: 1.35 !important;
 }
 
+/*
+  主实验中文字体统一增加一级。
+  这组规则集中放在文件末尾，覆盖前方桌面端与窄屏旧字号；标题、参数名、场景读数和学生实验入口
+  按信息层级分别放大，避免所有文字使用同一字号后失去视觉主次。
+*/
+.brand h1 {
+  font-size: clamp(27px, 2.15vw, 36px);
+}
+
+.module-tabs .tab {
+  font-size: 21px;
+}
+
+#operationModule .panel-heading h2,
+#operationModule .stage-heading h2,
+#operationModule .student-lab-heading h2 {
+  font-size: 24px;
+}
+
+#operationModule .parameter-panel .control-label {
+  font-size: 23px;
+}
+
+#operationModule .text-button,
+#operationModule .view-toggle button,
+#operationModule .section-guide,
+#operationModule .toggle-control strong {
+  font-size: 19px;
+}
+
+#operationModule .section-guide em {
+  font-size: 18px;
+}
+
+#operationModule .toggle-control em,
+#operationModule .wavelength-chip,
+#operationModule .simulation-heading span,
+#operationModule .chart-legend span,
+#operationModule .formula-card h3,
+#operationModule .student-lab-highlights span,
+#operationModule .student-lab-footnote,
+#operationModule .lab-link,
+#operationModule .student-lab-open span {
+  font-size: 17px;
+}
+
+#operationModule .scene-readout span {
+  font-size: 21px;
+}
+
+#operationModule .scene-readout strong {
+  font-size: 22px;
+}
+
+#operationModule .simulation-heading h3 {
+  font-size: 23px;
+}
+
+#operationModule .student-lab-intro {
+  font-size: 19px;
+}
+
+#operationModule .student-lab-open {
+  font-size: 23px;
+}
+
+.bottom-status .status-metrics span {
+  font-size: 20px;
+}
+
+.bottom-status .status-metrics strong {
+  font-size: 26px;
+}
+
+@media (max-width: 760px) {
+  .brand h1 {
+    font-size: clamp(26px, 8vw, 33px);
+  }
+
+  .module-tabs .tab {
+    font-size: 19px;
+  }
+
+  #operationModule .panel-heading h2,
+  #operationModule .stage-heading h2,
+  #operationModule .student-lab-heading h2,
+  #operationModule .parameter-panel .control-label,
+  #operationModule .simulation-heading h3 {
+    font-size: 22px;
+  }
+
+  #operationModule .text-button,
+  #operationModule .view-toggle button,
+  #operationModule .section-guide,
+  #operationModule .toggle-control strong,
+  #operationModule .student-lab-intro {
+    font-size: 18px;
+  }
+
+  #operationModule .section-guide em,
+  #operationModule .toggle-control em,
+  #operationModule .wavelength-chip,
+  #operationModule .simulation-heading span,
+  #operationModule .chart-legend span,
+  #operationModule .formula-card h3,
+  #operationModule .student-lab-highlights span,
+  #operationModule .student-lab-footnote,
+  #operationModule .lab-link,
+  #operationModule .student-lab-open span {
+    font-size: 17px;
+  }
+
+  #operationModule .scene-readout span,
+  #operationModule .scene-readout strong {
+    font-size: 20px;
+  }
+
+  /* 放大后的“CCD屏幕（采样面）”需要更宽的标签列，避免中文被截断。 */
+  #operationModule .scene-readout div {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   *,
