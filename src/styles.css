@@ -194,7 +194,11 @@ button {
 
 .theory-shell {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  /*
+    原理讲解需要承载较长的章节名称。侧栏加宽后再提高字号，避免目录文字
+    因空间不足换成两行，主内容区仍使用弹性列占据剩余宽度。
+  */
+  grid-template-columns: 300px minmax(0, 1fr);
   gap: 16px;
   margin-top: 12px;
 }
@@ -213,14 +217,14 @@ button {
 
 .theory-rail-head h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: 27px;
   line-height: 1.18;
 }
 
 .theory-rail-head p {
   margin: 8px 0 0;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 17px;
 }
 
 .theory-nav {
@@ -235,12 +239,15 @@ button {
   grid-template-columns: 44px 1fr;
   align-items: center;
   gap: 10px;
-  min-height: 48px;
-  padding: 0 12px;
+  min-height: 54px;
+  padding: 0 14px;
   border: 1px solid transparent;
   border-radius: 8px;
   background: transparent;
   color: #b7c5d5;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
   text-align: left;
   cursor: pointer;
 }
@@ -294,8 +301,13 @@ button {
 
 .theory-progress strong {
   color: var(--text);
+  font-size: 16px;
   font-weight: 600;
   text-align: right;
+}
+
+.theory-progress span {
+  font-size: 15px;
 }
 
 .theory-main {
@@ -316,14 +328,14 @@ button {
 .theory-heading p {
   margin: 0 0 6px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0;
 }
 
 .theory-heading h2 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(24px, 2.1vw, 34px);
+  font-size: clamp(30px, 2.4vw, 40px);
   line-height: 1.18;
 }
 
@@ -334,6 +346,7 @@ button {
 
 .theory-controls .secondary-button {
   min-width: 96px;
+  font-size: 16px;
 }
 
 button:disabled {
@@ -343,7 +356,7 @@ button:disabled {
 
 .theory-note {
   display: grid;
-  grid-template-columns: 118px 1fr;
+  grid-template-columns: 136px 1fr;
   gap: 14px;
   margin: 16px 24px 0;
   padding: 12px 14px;
@@ -354,12 +367,12 @@ button:disabled {
 
 .theory-note strong {
   color: #8bd0ff;
-  font-size: 15px;
+  font-size: 17px;
 }
 
 .theory-note span {
   color: #c4d2e1;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.7;
 }
 
@@ -412,14 +425,14 @@ button:disabled {
 .visual-title strong {
   color: #9b8dff;
   font-family: var(--font-number);
-  font-size: clamp(34px, 3vw, 52px);
+  font-size: clamp(38px, 3.2vw, 56px);
   line-height: 1;
 }
 
 .visual-title span {
   color: #f2f7ff;
   font-family: var(--font-display);
-  font-size: clamp(24px, 2.2vw, 36px);
+  font-size: clamp(28px, 2.45vw, 40px);
   font-weight: 850;
 }
 
@@ -477,18 +490,18 @@ button:disabled {
 
 .apparatus-sketch .small-label {
   fill: #9bb9da;
-  font-size: 12px;
+  font-size: 14px;
   font-style: normal;
 }
 
 .apparatus-sketch .math {
   fill: #f2f7ff;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .apparatus-sketch .order-labels text {
   fill: #cbdcf0;
-  font-size: 13px;
+  font-size: 15px;
   font-style: normal;
 }
 
@@ -504,7 +517,7 @@ button:disabled {
 .grating-definition p {
   max-width: 1180px;
   color: #d9e8fa;
-  font-size: clamp(17px, 1.05vw, 20px);
+  font-size: clamp(19px, 1.18vw, 22px);
   line-height: 1.75;
 }
 
@@ -518,7 +531,7 @@ button:disabled {
   margin: 0 0 14px;
   color: #f2f7ff;
   font-family: var(--font-display);
-  font-size: 21px;
+  font-size: 23px;
   line-height: 1.25;
   font-weight: 850;
 }
@@ -528,7 +541,7 @@ button:disabled {
 .visual-card dd,
 .visual-card dt {
   color: #cdd9e8;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.75;
 }
 
@@ -561,7 +574,7 @@ button:disabled {
   border-radius: 8px;
   background: rgba(9, 18, 30, 0.58);
   color: #f5f7ff;
-  font-size: clamp(22px, 2.1vw, 34px);
+  font-size: clamp(25px, 2.25vw, 38px);
   line-height: 1.25;
   text-align: center;
   white-space: normal;
@@ -625,7 +638,7 @@ button:disabled {
   background: transparent;
   color: #9ed2ff;
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 800;
 }
 
@@ -682,14 +695,14 @@ button:disabled {
   border-radius: 7px;
   background: rgba(17, 34, 52, 0.72);
   color: #b9d6f5 !important;
-  font-size: 14px !important;
+  font-size: 16px !important;
   line-height: 1.55 !important;
 }
 
 .ray-sketch text,
 .curve-sketch text {
   fill: #dfe9f6;
-  font: 16px var(--font);
+  font: 18px var(--font);
 }
 
 .ray-sketch .inset rect {
@@ -724,7 +737,7 @@ button:disabled {
   background: rgba(139, 128, 255, 0.2);
   color: #ffffff;
   font-family: var(--font-number);
-  font-size: 22px;
+  font-size: 24px;
 }
 
 .step-card.wide {
@@ -755,7 +768,7 @@ button:disabled {
 .stripe-row strong {
   color: #eef5ff;
   font-family: var(--font-math);
-  font-size: 20px;
+  font-size: 22px;
   text-align: center;
 }
 
@@ -772,7 +785,7 @@ button:disabled {
   border-radius: 7px;
   background: rgba(9, 18, 30, 0.54);
   color: #f5f7ff;
-  font-size: clamp(24px, 2.2vw, 34px);
+  font-size: clamp(26px, 2.35vw, 38px);
   font-weight: 500;
   line-height: 1.25;
   text-align: center;
@@ -794,11 +807,11 @@ button:disabled {
 .workflow-row .formula-large {
   min-height: 84px;
   padding: 14px 10px;
-  font-size: clamp(22px, 1.55vw, 28px);
+  font-size: clamp(24px, 1.7vw, 30px);
 }
 
 .visual-grid.two > .visual-card .formula-large {
-  font-size: clamp(22px, 1.65vw, 28px);
+  font-size: clamp(24px, 1.8vw, 31px);
 }
 
 .workflow-row b {
@@ -820,7 +833,7 @@ button:disabled {
   border: 1px solid rgba(169, 194, 219, 0.2);
   border-radius: 8px;
   color: #dce8f6;
-  font-size: 17px;
+  font-size: 18px;
 }
 
 .visual-table th,
@@ -849,13 +862,13 @@ button:disabled {
 .theory-summary h3 {
   margin: 0;
   color: #9ed2ff;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .theory-summary p {
   margin: 0;
   color: #cbd7e5;
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.7;
 }
 
@@ -2256,13 +2269,13 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .theory-shell {
-    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-columns: 270px minmax(0, 1fr);
   }
 
   .theory-nav button {
     grid-template-columns: 40px 1fr;
     padding: 0 10px;
-    font-size: 14px;
+    font-size: 16px;
   }
 }
 
@@ -2773,11 +2786,11 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .theory-rail-head h2 {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .theory-rail-head p {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .theory-nav {
@@ -2795,18 +2808,18 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .theory-nav button {
-    flex: 0 0 168px;
+    flex: 0 0 180px;
     grid-template-columns: 34px 1fr;
-    min-height: 44px;
+    min-height: 48px;
     padding: 0 9px;
     scroll-snap-align: start;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .theory-nav button span {
     width: 30px;
     height: 30px;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .theory-progress {
@@ -2831,11 +2844,11 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .theory-heading p {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .theory-heading h2 {
-    font-size: clamp(22px, 6.4vw, 28px);
+    font-size: clamp(25px, 6.8vw, 31px);
   }
 
   .theory-controls .secondary-button {
@@ -2855,12 +2868,12 @@ input[type="range"]::-moz-range-thumb {
 
   .theory-note strong,
   .theory-summary h3 {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .theory-note span,
   .theory-summary p {
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.65;
   }
 
@@ -2876,11 +2889,11 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .visual-title strong {
-    font-size: 34px;
+    font-size: 37px;
   }
 
   .visual-title span {
-    font-size: 24px;
+    font-size: 26px;
   }
 
   .visual-grid,
@@ -2899,7 +2912,7 @@ input[type="range"]::-moz-range-thumb {
 
   .visual-card h3,
   .step-card h3 {
-    font-size: 18px;
+    font-size: 20px;
     line-height: 1.35;
   }
 
@@ -2907,14 +2920,14 @@ input[type="range"]::-moz-range-thumb {
   .visual-card li,
   .visual-card dd,
   .visual-card dt {
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.68;
     word-break: normal;
     overflow-wrap: anywhere;
   }
 
   .grating-definition p {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .apparatus-sketch,
@@ -2969,7 +2982,7 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .theory-heading h2 {
-    font-size: 24px;
+    font-size: 27px;
   }
 }
 
@@ -3098,7 +3111,7 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .theory-nav button {
-    flex-basis: 152px;
+    flex-basis: 168px;
   }
 
   .theory-note,
@@ -3115,7 +3128,7 @@ input[type="range"]::-moz-range-thumb {
   .formula-large {
     min-height: 0;
     padding: 14px 12px;
-    font-size: 21px;
+    font-size: 23px;
     line-height: 1.35;
   }
 
@@ -3208,7 +3221,7 @@ html.force-desktop-layout .experiment-grid {
 html.force-desktop-layout .theory-shell {
   width: auto !important;
   max-width: none !important;
-  grid-template-columns: 280px minmax(0, 1fr) !important;
+  grid-template-columns: 300px minmax(0, 1fr) !important;
   gap: 16px !important;
   margin-top: 12px !important;
 }
