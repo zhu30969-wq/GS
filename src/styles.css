@@ -982,11 +982,20 @@ button:disabled {
 }
 
 #operationModule .text-button,
-#operationModule .control-label,
 #operationModule .toggle-control strong,
 #operationModule .section-guide,
 #operationModule .view-toggle button {
   font-size: 16px;
+}
+
+/*
+  参数名称是学生调整实验条件时最先读取的信息，因此单独提高字号和字重。
+  仅作用于左侧参数面板，避免同步放大按钮文字后造成控件拥挤。
+*/
+#operationModule .parameter-panel .control-label {
+  font-size: 18px;
+  line-height: 1.35;
+  font-weight: 750;
 }
 
 #operationModule .number-input,
@@ -3052,6 +3061,14 @@ input[type="range"]::-moz-range-thumb {
 
   .control-label {
     font-size: 14px;
+  }
+
+  /*
+    手机端保留略小于桌面端的参数名称，但仍明显大于旧版；
+    17px 可避免“激光波长 λ (nm)”在常见窄屏上与颜色标签互相挤压。
+  */
+  #operationModule .parameter-panel .control-label {
+    font-size: 17px;
   }
 
   .control-row {
