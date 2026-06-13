@@ -3358,6 +3358,158 @@ html.force-desktop-layout .status-metrics {
   gap: 0 !important;
 }
 
+/*
+  主实验中文信息统一采用大号排版。
+  参数名称、场景说明和学生实验说明属于主要教学信息，正文不低于 18px；
+  次级图例和补充说明不低于 16px，避免学生在投屏或手机浏览时需要放大页面。
+  这些规则放在文件末尾，以覆盖前方针对窄屏设置的旧小字号。
+*/
+.module-tabs .tab {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+#operationModule {
+  font-size: 18px;
+}
+
+#operationModule .panel-heading h2,
+#operationModule .stage-heading h2,
+#operationModule .student-lab-heading h2 {
+  font-size: 23px;
+}
+
+#operationModule .text-button,
+#operationModule .view-toggle button,
+#operationModule .section-guide,
+#operationModule .toggle-control strong {
+  font-size: 18px;
+  font-weight: 750;
+}
+
+#operationModule .section-guide em {
+  font-size: 17px;
+}
+
+#operationModule .toggle-control em,
+#operationModule .wavelength-chip,
+#operationModule .range-limits {
+  font-size: 16px;
+}
+
+#operationModule .scene-readout span {
+  font-size: 17px;
+  font-weight: 750;
+}
+
+#operationModule .scene-readout strong {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+#operationModule .simulation-heading h3 {
+  font-size: 20px;
+  font-weight: 850;
+}
+
+#operationModule .simulation-heading span,
+#operationModule .chart-legend span {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+#operationModule .formula-card h3 {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+#operationModule .student-lab-intro {
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+#operationModule .student-lab-highlights span,
+#operationModule .student-lab-footnote,
+#operationModule .lab-link {
+  font-size: 16px;
+}
+
+#operationModule .student-lab-open {
+  font-size: 22px;
+}
+
+#operationModule .student-lab-open span {
+  font-size: 16px;
+}
+
+.bottom-status .status-metrics span {
+  font-size: 16px;
+}
+
+.bottom-status .status-metrics strong {
+  font-size: 18px;
+}
+
+/*
+  右侧入口标题与“打开独立页面”按钮上下分层，避免大号标题在窄右栏中被拆成两行短词。
+  链接占满标题区宽度后，文字仍保持大号并且入口更容易点击。
+*/
+#operationModule .student-lab-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  align-content: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#operationModule .student-lab-heading .lab-link {
+  width: 100%;
+  justify-content: center;
+}
+
+@media (max-width: 760px) {
+  /*
+    手机端仍保持大号中文，但相对桌面端降低 1px，给长标题与说明保留换行空间。
+    页面采用纵向布局，因此不通过缩小文字解决空间问题。
+  */
+  .module-tabs .tab {
+    font-size: 18px;
+  }
+
+  #operationModule .panel-heading h2,
+  #operationModule .stage-heading h2,
+  #operationModule .student-lab-heading h2 {
+    font-size: 21px;
+  }
+
+  #operationModule .text-button,
+  #operationModule .view-toggle button,
+  #operationModule .section-guide,
+  #operationModule .toggle-control strong {
+    font-size: 17px;
+  }
+
+  #operationModule .section-guide em,
+  #operationModule .scene-readout span,
+  #operationModule .simulation-heading span,
+  #operationModule .chart-legend span,
+  #operationModule .student-lab-highlights span,
+  #operationModule .student-lab-footnote,
+  #operationModule .lab-link {
+    font-size: 16px;
+  }
+
+  #operationModule .scene-readout strong,
+  #operationModule .student-lab-intro {
+    font-size: 17px;
+  }
+
+  #operationModule .simulation-heading h3 {
+    font-size: 19px;
+  }
+}
+
 html.force-desktop-layout .theory-nav {
   grid-template-columns: 1fr !important;
 }

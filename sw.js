@@ -1,13 +1,13 @@
-const CACHE_VERSION = "diffraction-grating-v2026-06-13-parameter-label-scale-v2";
+const CACHE_VERSION = "diffraction-grating-v2026-06-13-operation-cn-large-v2";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
-  "./src/styles.css?v=parameter-label-scale-v2-20260613",
+  "./src/styles.css?v=operation-cn-large-v2-20260613",
   "./src/student-lab.css?v=layout-font-polish-20260613",
   "./src/physics.js",
-  "./src/app.js?v=parameter-label-scale-v2-20260613",
+  "./src/app.js?v=operation-cn-large-v2-20260613",
   "./src/student-lab.js?v=student-excel-record-table-20260606",
   "./src/scene3d.js",
   "./src/pwa.js?v=student-excel-record-table-20260606",
