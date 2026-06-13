@@ -867,6 +867,31 @@ button:disabled {
   min-width: 0;
 }
 
+/*
+  主实验左栏只保留参数面板后，让面板填满与中央实验区相同的可用高度。
+  控件采用均匀纵向分布，避免参数面板下方留下大块无效空白。
+*/
+.left-rail .parameter-panel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.left-rail .parameter-panel .control-stack {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 12px;
+  padding: 18px 22px 24px;
+}
+
+.left-rail .parameter-panel .range-control,
+.left-rail .parameter-panel .order-control {
+  margin-bottom: 0;
+}
+
 .right-rail {
   /* 右侧栏按“实时结果 -> 学生练习 -> 光路核对”的教学顺序组织；
      这里只调整信息层级和可读性，不改变任何物理计算或绘图数据源。 */
@@ -921,6 +946,55 @@ button:disabled {
   line-height: 1.2;
   font-weight: 800;
   letter-spacing: 0;
+}
+
+/*
+  主实验字体整体放大一级。仅作用于 operationModule，避免改变原理讲解的
+  教学排版；Canvas 内文字由绘图脚本控制，不在此处缩放。
+*/
+#operationModule {
+  font-size: 16px;
+}
+
+#operationModule .panel-heading h2,
+#operationModule .stage-heading h2 {
+  font-size: 19px;
+}
+
+#operationModule .text-button,
+#operationModule .control-label,
+#operationModule .toggle-control strong,
+#operationModule .section-guide,
+#operationModule .view-toggle button {
+  font-size: 16px;
+}
+
+#operationModule .number-input,
+#operationModule .order-buttons button {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+#operationModule .range-limits,
+#operationModule .wavelength-chip,
+#operationModule .toggle-control em,
+#operationModule .simulation-heading span,
+#operationModule .chart-legend span {
+  font-size: 14px;
+}
+
+#operationModule .simulation-heading h3 {
+  font-size: 17px;
+}
+
+#operationModule .student-lab-intro {
+  font-size: 15px;
+}
+
+#operationModule .student-lab-highlights span,
+#operationModule .student-lab-footnote,
+#operationModule .lab-link {
+  font-size: 13px;
 }
 
 .line-icon {

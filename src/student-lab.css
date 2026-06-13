@@ -33,6 +33,7 @@ body {
   color: var(--text);
   font-family: var(--font);
   font-size: 15px;
+  font-weight: 600;
   line-height: 1.48;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
@@ -42,6 +43,42 @@ body {
     linear-gradient(90deg, rgba(31, 91, 234, 0.026) 1px, transparent 1px),
     var(--bg);
   background-size: 24px 24px, 24px 24px, 100% 100%;
+}
+
+/*
+  学生动手实验用于课堂读数与计算，正文、控件标签和数据统一加粗，
+  提升投屏及手机阅读清晰度。数学公式保持中等字重，避免上下标粘连。
+*/
+.lab-shell button,
+.lab-shell input,
+.lab-shell select,
+.lab-shell textarea,
+.lab-shell label,
+.lab-shell p,
+.lab-shell li,
+.lab-shell dt,
+.lab-shell dd,
+.lab-shell th,
+.lab-shell td {
+  font-weight: 650;
+}
+
+.lab-shell strong,
+.lab-shell h1,
+.lab-shell h2,
+.lab-shell h3,
+.lab-shell .section-index,
+.lab-shell .metric-value,
+.lab-shell .analysis-value {
+  font-weight: 850;
+}
+
+.lab-shell .math,
+.lab-shell .formula,
+.lab-shell [class*="formula"],
+.lab-shell sub,
+.lab-shell sup {
+  font-weight: 600;
 }
 
 button,

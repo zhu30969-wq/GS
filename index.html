@@ -31,7 +31,7 @@
     <meta name="keywords" content="光栅衍射,大学物理实验,实验操作,原理讲解,光强分布,衍射光栅,学生动手实验,交互网页" />
     <meta name="theme-color" content="#08121d" />
     <meta name="robots" content="index,follow" />
-    <link rel="stylesheet" href="./src/styles.css?v=theory-simple-apparatus-20260609" />
+    <link rel="stylesheet" href="./src/styles.css?v=layout-font-polish-20260613" />
     <link rel="manifest" href="./site.webmanifest" />
     <link rel="icon" href="./assets/icons/site-icon.svg" type="image/svg+xml" />
     <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%23081218"/%3E%3Cpath d="M10 32h44M32 10v44" stroke="%237dc7ff" stroke-width="6" stroke-linecap="round"/%3E%3C/svg%3E' />
@@ -216,7 +216,7 @@
 
         </section>
 
-        <aside class="right-rail" aria-label="扫码访问、光路示意图与学生动手实验">
+        <aside class="right-rail" aria-label="扫码访问与学生动手实验">
           <section class="panel result-panel qr-access-panel">
             <div class="panel-heading">
               <h2><span class="line-icon">╬</span>扫码访问</h2>
@@ -231,28 +231,6 @@
               <div><dt>相对误差</dt><dd id="relativeError">--</dd></div>
             </dl>
             <p class="conclusion result-data-cache" aria-hidden="true">实验结论：<span id="conclusionText">符合理论值</span><span id="conclusionIcon">✓</span></p>
-          </section>
-
-          <section class="panel diagram-panel">
-            <div class="panel-heading">
-              <h2><span class="line-icon">⌘</span>光路示意图</h2>
-            </div>
-            <svg id="rayDiagram" viewBox="0 0 420 195" role="img" aria-label="二维光路示意图">
-              <defs>
-                <linearGradient id="screenGlow" x1="0" x2="1" y1="0" y2="0">
-                  <stop offset="0%" stop-color="#28344b" />
-                  <stop offset="100%" stop-color="#121923" />
-                </linearGradient>
-                <filter id="dotGlow">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <g class="diagram-layer"></g>
-            </svg>
           </section>
 
           <section id="studentLabPanel" class="panel student-lab-panel student-lab-entry" aria-label="学生动手实验入口">
@@ -362,7 +340,7 @@
       </footer>
     </div>
 
-    <script type="module" src="./src/app.js?v=theory-simple-apparatus-20260609"></script>
+    <script type="module" src="./src/app.js?v=layout-font-polish-20260613"></script>
     <script type="module" src="./src/pwa.js?v=sampling-restore-20260603"></script>
   </body>
 </html>

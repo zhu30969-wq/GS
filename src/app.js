@@ -1284,6 +1284,10 @@ function drawIntensityChart() {
 }
 
 function drawRayDiagram() {
+  // 光路示意图已从主实验右栏删除。保留绘图函数便于兼容旧缓存，
+  // 但在节点不存在时直接返回，避免 renderAll() 因空节点访问而中断。
+  if (!diagramLayer) return;
+
   const rows = orderRows(state.params).filter((row) => row.valid);
   const laserColor = wavelengthToColor(state.params.lambdaNm);
   const raySoft = `rgba(${laserColor.r}, ${laserColor.g}, ${laserColor.b}, 0.66)`;
