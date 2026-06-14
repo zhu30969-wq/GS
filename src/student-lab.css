@@ -2696,15 +2696,26 @@ main {
   .stepper li:not(:last-child)::after {
     position: absolute;
     top: 50%;
-    right: calc(-1 * var(--step-connector-gap));
+    /*
+      连线需要跨越“前一步文字后的留白 + 网格间距”，而不是只填满 gap。
+      右侧预留 24px，使箭头不会贴住下一步序号圆圈。
+    */
+    right: calc(-1 * var(--step-connector-gap) + 24px);
     display: block;
-    width: var(--step-connector-gap);
-    min-width: var(--step-connector-gap);
-    height: 2px;
+    width: clamp(72px, 8vw, 132px);
+    min-width: 72px;
+    height: 10px;
     margin: 0;
-    border-radius: 999px;
-    background: #9eb5d8;
-    box-shadow: 0 0 0 1px rgba(158, 181, 216, 0.12);
+    background: linear-gradient(90deg, #c8d6ec 0%, #8eace0 72%, #6292df 100%);
+    clip-path: polygon(
+      0 42%,
+      calc(100% - 10px) 42%,
+      calc(100% - 10px) 8%,
+      100% 50%,
+      calc(100% - 10px) 92%,
+      calc(100% - 10px) 58%,
+      0 58%
+    );
     transform: translateY(-50%);
   }
 
