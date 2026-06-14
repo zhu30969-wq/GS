@@ -1,10 +1,10 @@
-const CACHE_VERSION = "diffraction-grating-v2026-06-14-student-step-arrows-v9";
+const CACHE_VERSION = "diffraction-grating-v2026-06-14-theory-typography-xl-v1";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
-  "./src/styles.css?v=operation-cn-step-v1-20260613",
+  "./src/styles.css?v=theory-typography-xl-v1-20260614",
   "./src/student-lab.css?v=student-step-arrows-v9-20260614",
   "./src/physics.js",
   "./src/app.js?v=operation-cn-step-v1-20260613",
