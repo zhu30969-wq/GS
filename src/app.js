@@ -96,7 +96,7 @@ const theoryVisuals = [
         <p>光栅是一种具有大量等间距、相互平行狭缝或刻线的周期性光学元件。它会使入射光发生衍射，并使不同狭缝或刻线产生的光波相干叠加，从而在屏幕上形成按级次 j 分布的明暗条纹。</p>
         <p class="muted-line">本实验采用透射光栅的多缝模型：光栅常数 d 表示相邻狭缝中心间距，单缝宽度 b 决定单缝衍射包络。</p>
       </article>
-      <div class="visual-grid three">
+      <div class="visual-grid two concept-overview-grid">
         <article class="visual-card wide apparatus-detail-card">
           <h3>光栅结构示意图</h3>
           <svg class="ray-sketch apparatus-sketch" viewBox="0 0 820 300" role="img" aria-label="激光通过准直镜和光栅后在 CCD 屏幕上形成 j 级明纹">

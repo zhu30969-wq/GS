@@ -3702,6 +3702,31 @@ html.force-desktop-layout .formula-large {
 #theoryModule.theory-shell {
   grid-template-columns: 340px minmax(0, 1fr);
   gap: 20px;
+  align-items: start;
+}
+
+/*
+  左侧目录只按自身内容高度排布，不再跟随右侧长章节被拉伸。
+  目录超过当前视口时在侧栏内部滚动，既减少无效空白，也保留章节快速切换能力。
+*/
+#theoryModule .theory-rail {
+  position: sticky;
+  top: 12px;
+  align-self: start;
+  grid-template-rows: auto auto auto;
+  min-height: 0;
+  max-height: calc(100vh - 24px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/*
+  第一页的装置图独占整行，参数说明与学习目标在下一行等宽铺满。
+  原布局使用三列但只有两张信息卡，导致右侧遗留整列空白。
+*/
+#theoryModule .concept-overview-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
 }
 
 #theoryModule .theory-rail-head {
@@ -3944,6 +3969,16 @@ html.force-desktop-layout .formula-large {
   #theoryModule.theory-shell {
     grid-template-columns: 1fr;
     gap: 14px;
+  }
+
+  #theoryModule .theory-rail {
+    position: static;
+    max-height: none;
+    overflow: hidden;
+  }
+
+  #theoryModule .concept-overview-grid {
+    grid-template-columns: 1fr;
   }
 
   #theoryModule .theory-rail-head {
