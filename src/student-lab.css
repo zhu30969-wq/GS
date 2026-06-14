@@ -2173,3 +2173,317 @@ main {
     min-height: 36px;
   }
 }
+
+/*
+  学生动手实验页大字号与空间利用统一规则。
+  关键逻辑：
+  1. 只放大中文界面信息，数学公式仍使用独立的数学字体与自适应字号，避免上下标错位。
+  2. 参数卡不再强制与 CCD 测量卡等高，内容结束后立即收束，消除桌面端和窄屏端的大块空白。
+  3. 移动端保留较大的可读字号，同时通过单列布局和紧凑间距防止横向溢出。
+*/
+.lab-shell {
+  font-size: 18px;
+}
+
+.brand-link strong {
+  font-size: 30px;
+}
+
+.mode-switch button,
+.top-tools a,
+.top-tools button {
+  font-size: 18px;
+}
+
+.hero-copy p {
+  font-size: 21px;
+}
+
+.hero-metrics span {
+  min-height: 34px;
+  font-size: 17px;
+}
+
+.stepper {
+  gap: 18px;
+  padding-block: 16px;
+}
+
+.stepper li {
+  grid-template-columns: 58px minmax(108px, max-content);
+  min-height: 62px;
+}
+
+.stepper b {
+  font-size: 23px;
+  line-height: 1.18;
+}
+
+.stepper em {
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.white-card h2 {
+  min-height: 64px;
+  font-size: 26px;
+}
+
+.white-card h2 span {
+  width: 58px;
+  height: 40px;
+  font-size: 22px;
+}
+
+.zoom-button,
+.measurement-actions button,
+.bottom-actions button,
+.report-toolbar button {
+  font-size: 18px;
+}
+
+.work-grid {
+  grid-template-columns: minmax(380px, 450px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.params-card {
+  min-height: 0;
+  align-self: start;
+}
+
+.field-grid {
+  gap: 16px;
+  padding-top: 20px;
+}
+
+.field-grid label {
+  grid-template-columns: 142px minmax(0, 1fr) 50px;
+  min-height: 52px;
+  font-size: 21px;
+}
+
+.field-grid input,
+.field-grid select,
+.readout-grid input,
+.readout-grid output {
+  min-height: 50px;
+  font-size: 21px;
+}
+
+.field-grid b,
+.readout-grid b {
+  font-size: 18px;
+}
+
+.field-note,
+.muted-line,
+.warning-line {
+  font-size: 17px;
+}
+
+#fringeCanvas {
+  height: 214px;
+}
+
+.measurement-actions button {
+  min-height: 48px;
+}
+
+.readout-grid {
+  margin-top: 16px;
+}
+
+.readout-grid label {
+  min-height: 102px;
+}
+
+.readout-grid label span {
+  font-size: 18px;
+}
+
+.formula-stack {
+  font-size: clamp(22px, 1.35vw, 25px);
+}
+
+.result-strip span,
+.analysis-grid span {
+  font-size: 18px;
+}
+
+.lambda-result-panel b {
+  font-size: 25px;
+}
+
+.warning-line {
+  min-height: 32px;
+}
+
+.bottom-actions span,
+.report-toolbar span {
+  font-size: 17px;
+}
+
+@media (max-width: 1280px) {
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .params-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  main {
+    padding: 10px 10px 20px;
+  }
+
+  .lab-shell {
+    font-size: 18px;
+  }
+
+  .brand-link strong {
+    font-size: 24px;
+  }
+
+  .mode-switch button,
+  .top-tools a,
+  .top-tools button {
+    min-height: 46px;
+    font-size: 18px;
+  }
+
+  .hero-copy h1 {
+    font-size: 29px;
+  }
+
+  .hero-copy p {
+    font-size: 19px;
+    line-height: 1.55;
+  }
+
+  .hero-metrics span {
+    min-height: 34px;
+    font-size: 16px;
+  }
+
+  .stepper {
+    gap: 6px;
+    padding: 10px;
+  }
+
+  .stepper li {
+    grid-template-columns: 48px minmax(0, 1fr);
+    min-height: 58px;
+    column-gap: 12px;
+  }
+
+  .stepper span:first-child {
+    width: 46px;
+    height: 46px;
+    font-size: 24px;
+  }
+
+  .stepper b {
+    font-size: 21px;
+  }
+
+  .stepper em {
+    font-size: 17px;
+  }
+
+  .white-card h2 {
+    min-height: 60px;
+    padding-inline: 12px;
+    font-size: 23px;
+  }
+
+  .white-card h2 span {
+    width: 50px;
+    height: 38px;
+    font-size: 20px;
+  }
+
+  .field-grid {
+    gap: 12px;
+    padding: 16px 14px 0;
+  }
+
+  .field-grid label,
+  .readout-grid label {
+    gap: 7px;
+    font-size: 20px;
+  }
+
+  .field-grid input,
+  .field-grid select,
+  .readout-grid input,
+  .readout-grid output {
+    min-height: 52px;
+    font-size: 21px;
+  }
+
+  .field-grid b,
+  .readout-grid b {
+    font-size: 18px;
+  }
+
+  .field-note,
+  .muted-line,
+  .warning-line {
+    margin-inline: 14px;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  #fringeCanvas {
+    width: calc(100% - 20px);
+    height: 180px;
+    margin-top: 12px;
+  }
+
+  .measurement-actions {
+    width: calc(100% - 20px);
+    gap: 8px;
+    margin-top: 10px;
+    padding: 0;
+  }
+
+  .measurement-actions button,
+  .bottom-actions button,
+  .report-toolbar button {
+    min-height: 50px;
+    font-size: 18px;
+  }
+
+  .readout-grid {
+    width: calc(100% - 20px);
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .readout-grid label {
+    min-height: 0;
+    padding: 12px;
+  }
+
+  .calc-pair {
+    gap: 10px;
+    padding: 14px 12px 0;
+  }
+
+  .formula-stack {
+    font-size: clamp(21px, 5vw, 24px);
+  }
+
+  .analysis-grid {
+    gap: 10px;
+    padding: 12px 10px 0;
+  }
+
+  .bottom-actions {
+    gap: 10px;
+    margin-top: 12px;
+  }
+}
