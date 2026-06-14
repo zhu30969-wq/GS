@@ -3240,7 +3240,7 @@ html.force-desktop-layout .theory-shell {
   width: auto !important;
   max-width: none !important;
   grid-template-columns: 300px minmax(0, 1fr) !important;
-  gap: 16px !important;
+  gap: 0 !important;
   margin-top: 12px !important;
 }
 
@@ -3701,14 +3701,33 @@ html.force-desktop-layout .formula-large {
 */
 #theoryModule.theory-shell {
   grid-template-columns: 340px minmax(0, 1fr);
-  gap: 20px;
+  gap: 0;
   align-items: start;
+  overflow: visible;
+  border: 1px solid rgba(150, 181, 211, 0.22);
+  border-radius: 9px;
+  background:
+    radial-gradient(circle at 78% 12%, rgba(111, 168, 255, 0.07), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 180px),
+    rgba(8, 19, 29, 0.9);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
 }
 
 /*
-  左侧目录只按自身内容高度排布，不再跟随右侧长章节被拉伸。
-  目录超过当前视口时在侧栏内部滚动，既减少无效空白，也保留章节快速切换能力。
+  原理区使用一个统一工作区，而不是左右两张独立面板：
+  - 清除 panel 类带来的独立边框、圆角、背景和阴影；
+  - 左右仅用低对比度分隔线建立导航层级；
+  - 侧栏仍保持粘性定位，滚动长章节时可以随时切换页面。
 */
+#theoryModule .theory-rail,
+#theoryModule .theory-main {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
 #theoryModule .theory-rail {
   position: sticky;
   top: 12px;
@@ -3718,6 +3737,12 @@ html.force-desktop-layout .formula-large {
   max-height: calc(100vh - 24px);
   overflow-x: hidden;
   overflow-y: auto;
+  border-right: 0;
+  background: transparent;
+}
+
+#theoryModule .theory-main {
+  border-left: 0;
 }
 
 /*
@@ -3731,6 +3756,7 @@ html.force-desktop-layout .formula-large {
 
 #theoryModule .theory-rail-head {
   padding: 28px 26px 22px;
+  border-bottom: 0;
 }
 
 #theoryModule .theory-rail-head h2 {
@@ -3767,6 +3793,11 @@ html.force-desktop-layout .formula-large {
 #theoryModule .theory-progress span,
 #theoryModule .theory-progress strong {
   font-size: 18px;
+}
+
+#theoryModule .theory-progress {
+  border-color: rgba(150, 181, 211, 0.14);
+  background: rgba(255, 255, 255, 0.018);
 }
 
 #theoryModule .theory-heading {
@@ -3807,10 +3838,19 @@ html.force-desktop-layout .formula-large {
 
 #theoryModule .theory-stage {
   margin: 18px 30px 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 #theoryModule .theory-visual {
   padding: 32px 36px 38px;
+  /*
+    章节内容直接使用统一工作区背景，不再绘制独立网格底板。
+    视觉边界仅由知识卡、公式框和图表承担，避免在缩放同版视图中出现贯穿全高的分割边缘。
+  */
+  background: transparent;
 }
 
 #theoryModule .visual-title {
@@ -3968,13 +4008,20 @@ html.force-desktop-layout .formula-large {
   */
   #theoryModule.theory-shell {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 0;
   }
 
   #theoryModule .theory-rail {
     position: static;
     max-height: none;
     overflow: hidden;
+    border-right: 0;
+    border-bottom: 1px solid rgba(150, 181, 211, 0.13);
+    background: transparent;
+  }
+
+  #theoryModule .theory-rail-head {
+    border-bottom: 1px solid rgba(150, 181, 211, 0.12);
   }
 
   #theoryModule .concept-overview-grid {

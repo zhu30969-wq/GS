@@ -1,10 +1,10 @@
-const CACHE_VERSION = "diffraction-grating-v2026-06-14-theory-compact-layout-v2";
+const CACHE_VERSION = "diffraction-grating-v2026-06-14-theory-seamless-workspace-v6";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
-  "./src/styles.css?v=theory-compact-layout-v2-20260614",
+  "./src/styles.css?v=theory-seamless-workspace-v6-20260614",
   "./src/student-lab.css?v=student-step-arrows-v9-20260614",
   "./src/physics.js",
   "./src/app.js?v=theory-compact-layout-v2-20260614",
