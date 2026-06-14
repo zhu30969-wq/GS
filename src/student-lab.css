@@ -2678,7 +2678,7 @@ main {
       连接线长度必须与步骤之间的网格间距一致。使用同一个自定义属性控制
       gap、伪元素宽度和定位，可避免调整排版后只剩一小截连接线。
     */
-    --step-connector-gap: clamp(22px, 2vw, 34px);
+    --step-connector-gap: clamp(30px, 2.8vw, 46px);
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: var(--step-connector-gap);
@@ -2702,11 +2702,9 @@ main {
     min-width: var(--step-connector-gap);
     height: 2px;
     margin: 0;
-    background: repeating-linear-gradient(
-      90deg,
-      #9eb5d8 0 10px,
-      transparent 10px 16px
-    );
+    border-radius: 999px;
+    background: #9eb5d8;
+    box-shadow: 0 0 0 1px rgba(158, 181, 216, 0.12);
     transform: translateY(-50%);
   }
 
@@ -2724,6 +2722,47 @@ main {
   .stepper em {
     font-size: clamp(16px, 1.05vw, 18px);
     white-space: nowrap;
+  }
+}
+
+/*
+  学生实验中的关键操作与误差结果需要能被快速识别：
+  操作按钮使用更大的正文级字号；误差卡片继续以数值为主视觉，
+  同时放大标题和状态标识，避免大卡片中出现文字比例过小的问题。
+*/
+.measurement-actions button {
+  min-height: 56px;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.analysis-grid .analysis-error-card span {
+  font-size: clamp(28px, 2vw, 34px);
+  line-height: 1.2;
+}
+
+.analysis-grid .analysis-error-card strong {
+  font-size: clamp(68px, 6vw, 104px);
+}
+
+.analysis-grid .analysis-error-card::before {
+  min-width: 56px;
+  min-height: 30px;
+  font-size: 16px;
+}
+
+@media (max-width: 720px) {
+  .measurement-actions button {
+    min-height: 54px;
+    font-size: 20px;
+  }
+
+  .analysis-grid .analysis-error-card span {
+    font-size: 26px;
+  }
+
+  .analysis-grid .analysis-error-card strong {
+    font-size: clamp(64px, 19vw, 88px);
   }
 }
 
