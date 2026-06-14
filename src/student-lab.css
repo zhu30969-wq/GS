@@ -2674,9 +2674,14 @@ main {
 */
 @media (min-width: 901px) {
   .stepper {
+    /*
+      连接线长度必须与步骤之间的网格间距一致。使用同一个自定义属性控制
+      gap、伪元素宽度和定位，可避免调整排版后只剩一小截连接线。
+    */
+    --step-connector-gap: clamp(22px, 2vw, 34px);
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 16px;
+    gap: var(--step-connector-gap);
     overflow: visible;
     padding-inline: 24px;
   }
@@ -2691,12 +2696,17 @@ main {
   .stepper li:not(:last-child)::after {
     position: absolute;
     top: 50%;
-    right: -16px;
+    right: calc(-1 * var(--step-connector-gap));
     display: block;
-    width: 16px;
-    min-width: 16px;
+    width: var(--step-connector-gap);
+    min-width: var(--step-connector-gap);
     height: 2px;
     margin: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      #9eb5d8 0 10px,
+      transparent 10px 16px
+    );
     transform: translateY(-50%);
   }
 
