@@ -2534,3 +2534,229 @@ main {
     font-size: 24px;
   }
 }
+
+/*
+  学生实验细节排版修正：
+  - 宽屏双栏中，让参数卡与 CCD 测量卡等高，并将参数行均匀分布，避免左栏下方形成空洞。
+  - 中等宽度采用五等分步骤条，确保“计算入射波长 λ”等副标题保持完整语义，不出现孤立字符。
+  - 单列与移动端恢复内容自适应高度，避免为了等高而制造新的纵向空白。
+*/
+@media (min-width: 1281px) {
+  .params-card {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+  }
+
+  .params-card .field-grid {
+    flex: 1 1 auto;
+    align-content: space-evenly;
+    padding-top: 12px;
+  }
+
+  .params-card .field-note {
+    margin-top: 12px;
+    padding: 14px 18px;
+    border-top: 1px solid #e2ebf8;
+    background: #f8fbff;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1280px) {
+  .stepper {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+    overflow: visible;
+    padding-inline: 18px;
+  }
+
+  .stepper li {
+    grid-template-columns: 48px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    min-height: 66px;
+  }
+
+  .stepper li:not(:last-child)::after {
+    position: absolute;
+    top: 50%;
+    right: -12px;
+    display: block;
+    width: 12px;
+    min-width: 12px;
+    height: 2px;
+    margin: 0;
+    transform: translateY(-50%);
+  }
+
+  .stepper span:first-child {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+
+  .stepper b {
+    font-size: clamp(18px, 1.65vw, 21px);
+  }
+
+  .stepper em {
+    font-size: clamp(15px, 1.35vw, 17px);
+    white-space: nowrap;
+  }
+
+  .params-card {
+    align-self: start;
+  }
+
+  .field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 20px;
+  }
+
+  .field-grid label {
+    grid-template-columns: 142px minmax(0, 1fr) 48px;
+  }
+
+  .field-note {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 900px) {
+  .stepper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 14px;
+  }
+
+  .stepper li:not(:last-child)::after {
+    display: none;
+  }
+
+  .stepper li:last-child {
+    grid-column: 1 / -1;
+    width: calc(50% - 7px);
+    justify-self: center;
+  }
+
+  .stepper em {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 720px) {
+  .stepper {
+    grid-template-columns: 1fr;
+  }
+
+  .stepper li:last-child {
+    grid-column: auto;
+    width: 100%;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .params-card {
+    display: block;
+    align-self: start;
+  }
+
+  .params-card .field-note {
+    padding-bottom: 14px;
+  }
+}
+
+/*
+  宽屏步骤条统一采用五等分网格。旧的 flex 连接线会挤占第 4 步文字宽度，
+  造成“计算入射波长 λ”中的 λ 单独换行；固定网格能让五个实验阶段稳定对齐。
+*/
+@media (min-width: 901px) {
+  .stepper {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+    overflow: visible;
+    padding-inline: 24px;
+  }
+
+  .stepper li {
+    grid-template-columns: 54px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 12px;
+    min-height: 68px;
+  }
+
+  .stepper li:not(:last-child)::after {
+    position: absolute;
+    top: 50%;
+    right: -16px;
+    display: block;
+    width: 16px;
+    min-width: 16px;
+    height: 2px;
+    margin: 0;
+    transform: translateY(-50%);
+  }
+
+  .stepper span:first-child {
+    width: 54px;
+    height: 54px;
+    font-size: 27px;
+  }
+
+  .stepper b {
+    font-size: clamp(19px, 1.35vw, 23px);
+    white-space: nowrap;
+  }
+
+  .stepper em {
+    font-size: clamp(16px, 1.05vw, 18px);
+    white-space: nowrap;
+  }
+}
+
+/* 中等宽度优先横向利用空间，避免顶部导航全部堆在左侧并留下大块空白。 */
+@media (min-width: 1000px) and (max-width: 1280px) {
+  .lab-topbar {
+    grid-template-columns: minmax(250px, 1fr) auto auto;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .mode-switch {
+    justify-self: center;
+  }
+
+  .top-tools {
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+
+  .top-tools a,
+  .top-tools button {
+    min-width: 96px;
+  }
+
+  .top-tools .top-primary-action {
+    min-width: 138px;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 999px) {
+  .lab-topbar {
+    grid-template-columns: minmax(250px, 1fr) auto;
+    gap: 10px 16px;
+    align-items: center;
+  }
+
+  .mode-switch {
+    justify-self: end;
+  }
+
+  .top-tools {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+}
