@@ -2487,3 +2487,50 @@ main {
     margin-top: 12px;
   }
 }
+
+/*
+  强化实验结束阶段的信息层级。
+  “查看步骤说明”等底部操作按钮需要作为明确操作入口；结果标签则需要在学生完成
+  读数后能够被快速扫描，因此单独提高字号、字重和垂直留白，不影响公式与数据数值。
+*/
+.bottom-actions button,
+.report-toolbar button {
+  min-height: 62px;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.analysis-grid span,
+.analysis-grid .analysis-main-card span,
+.analysis-grid .analysis-reference-card span {
+  font-size: 23px;
+  line-height: 1.25;
+  font-weight: 850;
+}
+
+.analysis-grid .analysis-error-card span {
+  font-size: 25px;
+}
+
+.analysis-grid .analysis-main-card,
+.analysis-grid .analysis-reference-card {
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .bottom-actions button,
+  .report-toolbar button {
+    min-height: 58px;
+    font-size: 21px;
+  }
+
+  .analysis-grid span,
+  .analysis-grid .analysis-main-card span,
+  .analysis-grid .analysis-reference-card span {
+    font-size: 22px;
+  }
+
+  .analysis-grid .analysis-error-card span {
+    font-size: 24px;
+  }
+}
