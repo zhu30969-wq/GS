@@ -18,9 +18,18 @@ import {
   wavelengthBandName,
   wavelengthToColor,
 } from "./physics.js";
+import {
+  competitionTheoryPages,
+  competitionTheoryVisuals,
+  initializeCompetitionTheoryInteractions,
+  renderCompetitionTheoryVisuals,
+  typesetCompetitionTheorySymbols,
+} from "./theory-competition.js?v=competition-theory-symbols-v19-20260718";
 
 const UI_FONT_STACK = '"HarmonyOS Sans SC", "MiSans", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif';
 const NUMBER_FONT_STACK = '"Bahnschrift", "DIN Alternate", "Segoe UI", "Microsoft YaHei UI", sans-serif';
+const MATH_FONT_STACK = '"Cambria Math", "STIX Two Math", "Times New Roman", serif';
+const EXPERIMENT_PHYSICS_SYMBOL_PATTERN = /(θ(?:[ⱼᵢ₀₁₂])?|φ|λ|Δ|δ|ρ|α|β|(?<![A-Za-z])(?:d|b|j|N|W|L|I|R|x|y|w|k|u|n)(?:[ⱼᵢ₀₁₂])?(?![A-Za-z]))/gu;
 const MIN_2D_ZOOM = 0.6;
 const MAX_2D_ZOOM = 3;
 const STEP_2D_ZOOM = 0.1;
@@ -56,7 +65,85 @@ const ccdCanvas = document.getElementById("ccdView");
 const chartCanvas = document.getElementById("intensityChart");
 const diagramLayer = document.querySelector("#rayDiagram .diagram-layer");
 
-const theoryPages = [
+/*
+ * 主实验采用科技论文排版规则：物理变量斜体，中文、数字、单位及函数名正体。
+ * 正则只识别本实验实际出现的独立变量；字母前后若仍是英文字母则不匹配，
+ * 因此 CCD、LAB、nm、cm、sin 和 Excel 等文本不会被误判。
+ */
+function physicsTextSegments(text, pattern = EXPERIMENT_PHYSICS_SYMBOL_PATTERN) {
+  const value = String(text);
+  const segments = [];
+  let cursor = 0;
+  pattern.lastIndex = 0;
+  for (const match of value.matchAll(pattern)) {
+    if (match.index > cursor) segments.push({ text: value.slice(cursor, match.index), variable: false });
+    segments.push({ text: match[0], variable: true });
+    cursor = match.index + match[0].length;
+  }
+  if (cursor < value.length) segments.push({ text: value.slice(cursor), variable: false });
+  return segments.length ? segments : [{ text: value, variable: false }];
+}
+
+function typesetExperimentSymbols(root) {
+  if (!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (!node.nodeValue?.trim()) return NodeFilter.FILTER_REJECT;
+      // SVG、Canvas 和 MathML 分别由自己的绘制/排版函数处理，禁止插入 HTML <var>。
+      if (node.parentElement?.closest("var, script, style, canvas, math, svg")) return NodeFilter.FILTER_REJECT;
+      EXPERIMENT_PHYSICS_SYMBOL_PATTERN.lastIndex = 0;
+      return EXPERIMENT_PHYSICS_SYMBOL_PATTERN.test(node.nodeValue)
+        ? NodeFilter.FILTER_ACCEPT
+        : NodeFilter.FILTER_REJECT;
+    },
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach((node) => {
+    const fragment = document.createDocumentFragment();
+    physicsTextSegments(node.nodeValue).forEach((segment) => {
+      if (!segment.variable) {
+        fragment.append(segment.text);
+        return;
+      }
+      const variable = document.createElement("var");
+      variable.className = "physics-variable";
+      variable.textContent = segment.text;
+      fragment.append(variable);
+    });
+    node.replaceWith(fragment);
+  });
+}
+
+function fillPhysicsCanvasText(ctx, text, x, y, options = {}) {
+  const segments = physicsTextSegments(text);
+  const size = options.size || 17;
+  const weight = options.weight || 600;
+  const align = options.align || "center";
+  const textFont = options.textFont || UI_FONT_STACK;
+  const mathFont = options.mathFont || MATH_FONT_STACK;
+  const setFont = (variable) => {
+    ctx.font = `${variable ? "italic 500" : weight} ${size}px ${variable ? mathFont : textFont}`;
+  };
+
+  ctx.save();
+  ctx.textBaseline = options.baseline || ctx.textBaseline;
+  const totalWidth = segments.reduce((sum, segment) => {
+    setFont(segment.variable);
+    return sum + ctx.measureText(segment.text).width;
+  }, 0);
+  let drawX = align === "left" ? x : align === "right" ? x - totalWidth : x - totalWidth / 2;
+  ctx.textAlign = "left";
+  segments.forEach((segment) => {
+    setFont(segment.variable);
+    ctx.fillText(segment.text, drawX, y);
+    drawX += ctx.measureText(segment.text).width;
+  });
+  ctx.restore();
+}
+
+const legacyTheoryPages = [
   {
     title: "01 光栅的基本概念",
     summary: "光栅常数 d、单缝宽度 b、屏距 L、波长 λ 和衍射级次 j 是描述光栅衍射的核心参数。",
@@ -87,18 +174,30 @@ const theoryPages = [
   },
 ];
 
-const theoryVisuals = [
+const legacyTheoryVisuals = [
   `
     <div class="theory-visual">
       <header class="visual-title"><strong>01</strong><span>光栅的基本概念</span></header>
-      <article class="visual-card grating-definition">
-        <h3>光栅的定义</h3>
-        <p>光栅是一种具有大量等间距、相互平行狭缝或刻线的周期性光学元件。它会使入射光发生衍射，并使不同狭缝或刻线产生的光波相干叠加，从而在屏幕上形成按级次 j 分布的明暗条纹。</p>
-        <p class="muted-line">本实验采用透射光栅的多缝模型：光栅常数 d 表示相邻狭缝中心间距，单缝宽度 b 决定单缝衍射包络。</p>
-      </article>
-      <div class="visual-grid two concept-overview-grid">
+      <div class="concept-hero-grid">
+        <article class="visual-card grating-definition">
+          <p class="card-kicker">CONCEPT / 基本概念</p>
+          <h3>光栅的定义</h3>
+          <p>光栅是一种具有大量等间距、相互平行狭缝或刻线的周期性光学元件。它会使入射光发生衍射，并使不同狭缝或刻线产生的光波相干叠加，从而在屏幕上形成按级次 j 分布的明暗条纹。</p>
+          <p class="muted-line">本实验采用透射光栅的多缝模型：光栅常数 d 表示相邻狭缝中心间距，单缝宽度 b 决定单缝衍射包络。</p>
+          <div class="concept-tags" aria-label="本节模型条件">
+            <span>透射光栅</span>
+            <span>多缝模型</span>
+            <span>正入射</span>
+          </div>
+        </article>
         <article class="visual-card wide apparatus-detail-card">
-          <h3>光栅结构示意图</h3>
+          <div class="card-heading-row">
+            <div>
+              <p class="card-kicker">APPARATUS / 光路</p>
+              <h3>光栅结构示意图</h3>
+            </div>
+            <span class="equation-chip">d sinθⱼ = jλ</span>
+          </div>
           <svg class="ray-sketch apparatus-sketch" viewBox="0 0 820 300" role="img" aria-label="激光通过准直镜和光栅后在 CCD 屏幕上形成 j 级明纹">
             <defs>
               <linearGradient id="simpleLensA" x1="0" x2="1">
@@ -182,7 +281,10 @@ const theoryVisuals = [
             <text x="420" y="34" text-anchor="middle" class="small-label">正入射　d sinθⱼ = jλ</text>
           </svg>
         </article>
+      </div>
+      <div class="concept-support-grid">
         <article class="visual-card">
+          <p class="card-kicker">PARAMETERS / 变量</p>
           <h3>关键参数说明</h3>
           <dl class="symbol-list">
             <div><dt>d</dt><dd>光栅常数，相邻狭缝中心间距</dd></div>
@@ -194,6 +296,7 @@ const theoryVisuals = [
           </dl>
         </article>
         <article class="visual-card">
+          <p class="card-kicker">OBJECTIVES / 目标</p>
           <h3>学习目标</h3>
           <ul class="check-list">
             <li>理解光栅结构与工作原理</li>
@@ -358,15 +461,25 @@ const theoryVisuals = [
   `,
 ];
 
+/*
+ * 旧版七章内容暂时保留为迁移参考，不再注入 DOM。竞赛版将两张“基本概念”
+ * 参考图合并为可切换页面，并采用用户附件中的五章教学结构。
+ */
+void legacyTheoryPages;
+void legacyTheoryVisuals;
+const theoryPages = competitionTheoryPages;
+const theoryVisuals = competitionTheoryVisuals;
+
 function hydrateTheoryVisuals() {
-  // 原始 Word 图片中的变量曾使用 m 表示级次、a 表示单缝宽度。这里改为可维护的
-  // HTML/SVG 文本层，统一采用 j 表示衍射级次、b 表示单缝宽度，避免后续位图残留。
+  // HTML/Canvas 文本层统一采用 j 表示衍射级次、b 表示单缝宽度；参考图中
+  // 混用的 m、a 不进入实际页面，避免在竞赛展示中出现符号冲突。
   document.querySelectorAll("[data-theory-panel]").forEach((panel) => {
     const index = Number(panel.dataset.theoryPanel);
     if (theoryVisuals[index]) {
       panel.innerHTML = theoryVisuals[index];
     }
   });
+  initializeCompetitionTheoryInteractions();
 }
 
 // 首屏不直接静态 import Three.js。否则浏览器必须先下载、解析 three.module.js
@@ -541,11 +654,16 @@ function setTheorySlide(index) {
 
   const page = theoryPages[nextIndex];
   $("theoryTitle").textContent = page.title;
+  $("theoryConditionText").textContent = page.condition;
   $("theorySummaryText").textContent = page.summary;
+  // 页首条件与页尾要点会在章节切换时重写，因此每次更新后重新标注变量斜体。
+  typesetCompetitionTheorySymbols($("theoryConditionText"));
+  typesetCompetitionTheorySymbols($("theorySummaryText"));
   $("theoryProgressText").textContent = `${nextIndex + 1} / ${theoryPages.length}`;
   $("theoryProgressBar").style.width = `${((nextIndex + 1) / theoryPages.length) * 100}%`;
   $("theoryPrev").disabled = nextIndex === 0;
   $("theoryNext").disabled = nextIndex === maxIndex;
+  renderCompetitionTheoryVisuals(nextIndex);
 }
 
 function resetParameters() {
@@ -801,7 +919,7 @@ async function initDeferredScene() {
   state.sceneLoading = true;
 
   try {
-    const { DiffractionScene } = await import("./scene3d.js?v=operation-cn-step-v1-20260613");
+    const { DiffractionScene } = await import("./scene3d.js?v=physics-italic-v20-20260718");
     const loadedScene = new DiffractionScene(sceneRoot);
     loadedScene.setView(state.view);
     loadedScene.setDisplayMode(state.mode);
@@ -1135,9 +1253,10 @@ function drawDiffractionPattern() {
 
   ctx.fillStyle = text;
   // 屏幕坐标标题是中文教学信息，字号高于数值刻度以便投屏阅读。
-  ctx.font = `600 17px ${UI_FONT_STACK}`;
-  ctx.textAlign = "center";
-  ctx.fillText("屏幕位置 x (cm)", plot.left + plot.width / 2, height - 9);
+  fillPhysicsCanvasText(ctx, "屏幕位置 x (cm)", plot.left + plot.width / 2, height - 9, {
+    size: 17,
+    weight: 600,
+  });
 }
 
 function deterministicNoise(x, y) {
@@ -1411,6 +1530,9 @@ function renderAll() {
   drawIntensityChart();
   drawRayDiagram();
   scene.update(state.params);
+  // 动态读数会在每次参数变化时重写文本，因此渲染末尾重新应用变量斜体。
+  typesetExperimentSymbols($("operationModule"));
+  typesetExperimentSymbols(document.querySelector(".bottom-status"));
 }
 
 function scheduleRenderAll() {

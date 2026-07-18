@@ -31,7 +31,7 @@
     <meta name="keywords" content="光栅衍射,大学物理实验,实验操作,原理讲解,光强分布,衍射光栅,学生动手实验,交互网页" />
     <meta name="theme-color" content="#08121d" />
     <meta name="robots" content="index,follow" />
-    <link rel="stylesheet" href="./src/styles.css?v=theory-seamless-workspace-v6-20260614" />
+    <link rel="stylesheet" href="./src/styles.css?v=parameter-label-inline-v22-20260718" />
     <link rel="manifest" href="./site.webmanifest" />
     <link rel="icon" href="./assets/icons/site-icon.svg" type="image/svg+xml" />
     <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%23081218"/%3E%3Cpath d="M10 32h44M32 10v44" stroke="%237dc7ff" stroke-width="6" stroke-linecap="round"/%3E%3C/svg%3E' />
@@ -66,8 +66,9 @@
             <div class="control-stack">
               <label class="range-control wavelength-control" for="lambda">
                 <span class="control-label">
-                  激光波长 λ (nm)
-                  <span id="wavelengthChip" class="wavelength-chip"><i></i><b>红光</b></span>
+                  <span class="control-name">激光波长</span>
+                  <var class="physics-variable control-symbol">λ</var>
+                  <span class="control-meta"><span class="control-unit">(nm)</span><span id="wavelengthChip" class="wavelength-chip"><i></i><b>红光</b></span></span>
                 </span>
                 <span class="control-row">
                   <input id="lambda" type="range" min="400" max="700" step="1" value="650" />
@@ -77,7 +78,7 @@
               </label>
 
               <label class="range-control" for="grating">
-                <span class="control-label">光栅常数 d (μm)</span>
+                <span class="control-label"><span class="control-name">光栅常数</span><var class="physics-variable control-symbol">d</var><span class="control-meta"><span class="control-unit">(μm)</span></span></span>
                 <span class="control-row">
                   <input id="grating" type="range" min="0.5" max="10" step="0.001" value="5" />
                   <input id="gratingNumber" class="number-input" type="number" min="0.5" max="10" step="0.001" value="5.000" />
@@ -86,7 +87,7 @@
               </label>
 
               <label class="range-control" for="distance">
-                <span class="control-label">屏距 L (cm)</span>
+                <span class="control-label"><span class="control-name">屏距</span><var class="physics-variable control-symbol">L</var><span class="control-meta"><span class="control-unit">(cm)</span></span></span>
                 <span class="control-row">
                   <input id="distance" type="range" min="10" max="200" step="0.1" value="100" />
                   <input id="distanceNumber" class="number-input" type="number" min="10" max="200" step="0.1" value="100.0" />
@@ -95,7 +96,7 @@
               </label>
 
               <div class="order-control" aria-label="衍射级次选择">
-                <span class="control-label">衍射级次 j</span>
+                <span class="control-label"><span class="control-name">衍射级次</span><var class="physics-variable control-symbol">j</var><span class="control-meta" aria-hidden="true"></span></span>
                 <div class="order-buttons" id="orderButtons">
                   <button type="button" data-order="-2">-2</button>
                   <button type="button" data-order="-1">-1</button>
@@ -106,7 +107,7 @@
               </div>
 
               <label class="range-control" for="slit">
-                <span class="control-label">缝宽 b (μm)</span>
+                <span class="control-label"><span class="control-name">缝宽</span><var class="physics-variable control-symbol">b</var><span class="control-meta"><span class="control-unit">(μm)</span></span></span>
                 <span class="control-row">
                   <input id="slit" type="range" min="1" max="100" step="0.1" value="2" />
                   <input id="slitNumber" class="number-input" type="number" min="1" max="100" step="0.1" value="2.0" />
@@ -115,7 +116,7 @@
               </label>
 
               <label class="range-control" for="slits">
-                <span class="control-label">缝数 N</span>
+                <span class="control-label"><span class="control-name">缝数</span><var class="physics-variable control-symbol">N</var><span class="control-meta" aria-hidden="true"></span></span>
                 <span class="control-row">
                   <input id="slits" type="range" min="2" max="200" step="1" value="40" />
                   <input id="slitsNumber" class="number-input" type="number" min="2" max="200" step="1" value="40" />
@@ -132,7 +133,7 @@
               </label>
 
               <label class="range-control" for="incidence">
-                <span class="control-label">入射角 θ (°)</span>
+                <span class="control-label"><span class="control-name">入射角</span><var class="physics-variable control-symbol">θ</var><span class="control-meta"><span class="control-unit">(°)</span></span></span>
                 <span class="control-row">
                   <input id="incidence" type="range" min="-30" max="30" step="0.1" value="0" />
                   <input id="incidenceNumber" class="number-input" type="number" min="-30" max="30" step="0.1" value="0.0" />
@@ -222,7 +223,7 @@
               <h2><span class="line-icon">╬</span>扫码访问</h2>
             </div>
             <figure class="qr-access-card">
-              <img src="./assets/gs-entry-qr-card.png?v=status-qr-scale-v1-20260613" alt="光栅衍射交互实验电脑同版网页二维码，微信或 QQ 扫码进入网页" loading="lazy" decoding="async" />
+              <img src="./assets/gs-entry-qr-card.png?v=qr-sync-v2-20260718" alt="光栅衍射交互实验电脑同版网页二维码，微信或 QQ 扫码进入网页" loading="lazy" decoding="async" />
             </figure>
             <dl class="result-list result-data-cache" aria-hidden="true">
               <div><dt>测得包络中央宽度 (mm)</dt><dd id="centralWidth">--</dd></div>
@@ -266,18 +267,16 @@
             <p>光的干涉与衍射现象</p>
           </div>
           <nav class="theory-nav" aria-label="原理讲解目录">
-            <button class="active" type="button" data-theory-slide="0"><span>01</span>光栅的基本概念</button>
-            <button type="button" data-theory-slide="1"><span>02</span>光栅衍射原理</button>
-            <button type="button" data-theory-slide="2"><span>03</span>衍射公式推导</button>
-            <button type="button" data-theory-slide="3"><span>04</span>衍射条纹特征</button>
-            <button type="button" data-theory-slide="4"><span>05</span>中央明纹宽度</button>
-            <button type="button" data-theory-slide="5"><span>06</span>实验测量原理</button>
-            <button type="button" data-theory-slide="6"><span>07</span>误差分析</button>
+            <button class="active" type="button" data-theory-slide="0"><span>01</span>基本概念</button>
+            <button type="button" data-theory-slide="1"><span>02</span>衍射原理</button>
+            <button type="button" data-theory-slide="2"><span>03</span>明纹宽度</button>
+            <button type="button" data-theory-slide="3"><span>04</span>实验测量</button>
+            <button type="button" data-theory-slide="4"><span>05</span>误差分析</button>
           </nav>
           <div class="theory-progress" aria-live="polite">
             <span>学习进度</span>
             <i><b id="theoryProgressBar"></b></i>
-            <strong id="theoryProgressText">1 / 7</strong>
+            <strong id="theoryProgressText">1 / 5</strong>
           </div>
         </aside>
 
@@ -285,7 +284,7 @@
           <div class="theory-heading">
             <div>
               <p>PRINCIPLE MODULE</p>
-              <h2 id="theoryTitle">01 光栅的基本概念</h2>
+              <h2 id="theoryTitle">01 基本概念</h2>
             </div>
             <div class="theory-controls" role="group" aria-label="原理页面控制">
               <button id="theoryPrev" class="secondary-button" type="button">‹ 上一页</button>
@@ -295,36 +294,30 @@
 
           <div class="theory-note">
             <strong>公式适用条件</strong>
-            <span>图中 d sinθ = jλ 默认正入射；有入射角时应使用 d(sinθⱼ − sinθᵢ) = jλ。屏幕位置应先用 yⱼ = L tanθⱼ 计算，只有小角度时才近似为 yⱼ ≈ jλL/d。</span>
+            <span id="theoryConditionText">光栅常数 d 是相邻等效狭缝或刻线的中心间距；本网页统一用 b 表示透射狭缝宽度，用 j 表示衍射级次。</span>
           </div>
 
           <div class="theory-stage">
             <figure class="theory-slide active" data-theory-panel="0">
-              <img src="./assets/theory/slides/theory-slide-01.webp" alt="光栅的基本概念：光栅结构、关键参数、实物图示、学习目标和重点提示" loading="eager" />
+              <div class="theory-loading">正在载入基本概念...</div>
             </figure>
             <figure class="theory-slide" data-theory-panel="1">
-              <img src="./assets/theory/slides/theory-slide-02.webp" alt="光栅衍射原理：多缝干涉、单缝衍射包络、缺级现象和本页结论" loading="lazy" />
+              <div class="theory-loading">正在载入衍射原理...</div>
             </figure>
             <figure class="theory-slide" data-theory-panel="2">
-              <img src="./assets/theory/slides/theory-slide-03.webp" alt="衍射公式推导：相邻狭缝光程差、形成明纹条件、屏幕位置和适用条件" loading="lazy" />
+              <div class="theory-loading">正在载入明纹宽度...</div>
             </figure>
             <figure class="theory-slide" data-theory-panel="3">
-              <img src="./assets/theory/slides/theory-slide-04.webp" alt="衍射条纹特征：对称性、改变光栅常数、波长、屏距和缝数对条纹的影响" loading="lazy" />
+              <div class="theory-loading">正在载入实验测量...</div>
             </figure>
             <figure class="theory-slide" data-theory-panel="4">
-              <img src="./assets/theory/slides/theory-slide-05.webp" alt="中央明纹宽度：单缝暗纹条件、中央明纹宽度、物理含义和反推缝宽" loading="lazy" />
-            </figure>
-            <figure class="theory-slide" data-theory-panel="5">
-              <img src="./assets/theory/slides/theory-slide-06.webp" alt="实验测量原理：设置波长、测量屏距、记录明纹位置、计算衍射角和反推光栅常数" loading="lazy" />
-            </figure>
-            <figure class="theory-slide" data-theory-panel="6">
-              <img src="./assets/theory/slides/theory-slide-07.webp" alt="误差分析：条纹读数误差、屏距测量误差、入射角偏差、小角度近似误差和相对误差公式" loading="lazy" />
+              <div class="theory-loading">正在载入误差分析...</div>
             </figure>
           </div>
 
           <div class="theory-summary" aria-live="polite">
             <h3 id="theorySummaryTitle">本页要点</h3>
-            <p id="theorySummaryText">光栅常数 d、单缝宽度 b、屏距 L、波长 λ 和衍射级次 j 是描述光栅衍射的核心参数。</p>
+            <p id="theorySummaryText">光栅是具有大量等间距、平行狭缝或刻线的周期性分光元件。d 决定各级主极大的角位置，N 决定主极大的锐度，b 决定单缝衍射包络。</p>
           </div>
         </section>
       </main>
@@ -340,7 +333,7 @@
       </footer>
     </div>
 
-    <script type="module" src="./src/app.js?v=theory-compact-layout-v2-20260614"></script>
+    <script type="module" src="./src/app.js?v=physics-italic-v20-20260718"></script>
     <script type="module" src="./src/pwa.js?v=sampling-restore-20260603"></script>
   </body>
 </html>

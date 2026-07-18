@@ -1,29 +1,20 @@
-const CACHE_VERSION = "diffraction-grating-v2026-06-14-theory-seamless-workspace-v6";
+const CACHE_VERSION = "diffraction-grating-v2026-07-18-qr-sync-v27";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
-  "./src/styles.css?v=theory-seamless-workspace-v6-20260614",
-  "./src/student-lab.css?v=student-step-arrows-v9-20260614",
+  "./src/styles.css?v=parameter-label-inline-v22-20260718",
+  "./src/student-lab.css?v=student-physics-italic-v24-20260718",
   "./src/physics.js",
-  "./src/app.js?v=theory-compact-layout-v2-20260614",
-  "./src/student-lab.js?v=student-excel-record-table-20260606",
-  "./src/scene3d.js?v=operation-cn-step-v1-20260613",
-  "./src/pwa.js?v=student-excel-record-table-20260606",
+  "./src/app.js?v=physics-italic-v20-20260718",
+  "./src/theory-competition.js?v=competition-theory-symbols-v19-20260718",
+  "./src/student-lab.js?v=student-physics-italic-v24-20260718",
+  "./src/scene3d.js?v=physics-italic-v20-20260718",
+  "./src/pwa.js?v=sampling-restore-20260603",
   "./vendor/three.module.js",
-  "./assets/gs-entry-qr-card.png?v=status-qr-scale-v1-20260613",
+  "./assets/gs-entry-qr-card.png?v=qr-sync-v2-20260718",
   "./assets/icons/site-icon.svg",
-  "./assets/theory/slides/theory-slide-01.webp",
-  "./assets/theory/slides/theory-slide-02.webp",
-  "./assets/theory/slides/theory-slide-03.webp",
-  "./assets/theory/slides/theory-slide-04.webp",
-  "./assets/theory/slides/theory-slide-05.webp",
-  "./assets/theory/slides/theory-slide-06.webp",
-  "./assets/theory/slides/theory-slide-07.webp",
-  "./assets/theory/simulations/single_slit_envelope_multislit_cn.png",
-  "./assets/theory/simulations/central_maximum_width_cn.png",
-  "./assets/theory/matlab/generate_theory_matlab_plots.m",
 ];
 
 self.addEventListener("install", (event) => {

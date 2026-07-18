@@ -4,6 +4,84 @@ const DEG = Math.PI / 180;
 const RAD = 180 / Math.PI;
 const UI_FONT_STACK = '"HarmonyOS Sans SC", "MiSans", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif';
 const NUMBER_FONT_STACK = '"Bahnschrift", "DIN Alternate", "Segoe UI", "Microsoft YaHei UI", sans-serif';
+const MATH_FONT_STACK = '"Cambria Math", "STIX Two Math", "Times New Roman", serif';
+const STUDENT_PHYSICS_SYMBOL_PATTERN = /(θ(?:[ⱼᵢ₀₁₂])?|φ|λ|Δ|δ|ρ|α|β|(?<![A-Za-z])(?:d|b|j|N|W|L|I|R|x|y|w|k|u|n)(?:[ⱼᵢ₀₁₂])?(?![A-Za-z]))/gu;
+
+/*
+ * 学生页的普通 DOM 文本与 Canvas 标注共用同一变量识别规则。
+ * 只把独立物理量设为斜体，避免把 CCD、nm、μm、cm、sin、arctan 等
+ * 仪器名、单位和数学函数误设成斜体。
+ */
+function studentPhysicsSegments(text) {
+  const value = String(text);
+  const segments = [];
+  let cursor = 0;
+  STUDENT_PHYSICS_SYMBOL_PATTERN.lastIndex = 0;
+  for (const match of value.matchAll(STUDENT_PHYSICS_SYMBOL_PATTERN)) {
+    if (match.index > cursor) segments.push({ text: value.slice(cursor, match.index), variable: false });
+    segments.push({ text: match[0], variable: true });
+    cursor = match.index + match[0].length;
+  }
+  if (cursor < value.length) segments.push({ text: value.slice(cursor), variable: false });
+  return segments.length ? segments : [{ text: value, variable: false }];
+}
+
+function typesetStudentSymbols(root) {
+  if (!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (!node.nodeValue?.trim()) return NodeFilter.FILTER_REJECT;
+      // MathML 和 SVG 已有独立结构；Canvas 不含可替换 DOM 文本。
+      if (node.parentElement?.closest("var, script, style, canvas, math, svg")) return NodeFilter.FILTER_REJECT;
+      STUDENT_PHYSICS_SYMBOL_PATTERN.lastIndex = 0;
+      return STUDENT_PHYSICS_SYMBOL_PATTERN.test(node.nodeValue)
+        ? NodeFilter.FILTER_ACCEPT
+        : NodeFilter.FILTER_REJECT;
+    },
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach((node) => {
+    const fragment = document.createDocumentFragment();
+    studentPhysicsSegments(node.nodeValue).forEach((segment) => {
+      if (!segment.variable) {
+        fragment.append(segment.text);
+        return;
+      }
+      const variable = document.createElement("var");
+      variable.className = "physics-variable";
+      variable.textContent = segment.text;
+      fragment.append(variable);
+    });
+    node.replaceWith(fragment);
+  });
+}
+
+function fillStudentPhysicsText(ctx, text, x, y, options = {}) {
+  const segments = studentPhysicsSegments(text);
+  const size = options.size || 13;
+  const weight = options.weight || 700;
+  const align = options.align || "center";
+  const setFont = (variable) => {
+    ctx.font = `${variable ? "italic 500" : weight} ${size}px ${variable ? MATH_FONT_STACK : UI_FONT_STACK}`;
+  };
+
+  ctx.save();
+  ctx.textBaseline = options.baseline || ctx.textBaseline;
+  const totalWidth = segments.reduce((sum, segment) => {
+    setFont(segment.variable);
+    return sum + ctx.measureText(segment.text).width;
+  }, 0);
+  let drawX = align === "left" ? x : align === "right" ? x - totalWidth : x - totalWidth / 2;
+  ctx.textAlign = "left";
+  segments.forEach((segment) => {
+    setFont(segment.variable);
+    ctx.fillText(segment.text, drawX, y);
+    drawX += ctx.measureText(segment.text).width;
+  });
+  ctx.restore();
+}
 
 const presets = {
   lambda: {
@@ -272,8 +350,173 @@ function displayExtentCm(params) {
   return Math.max(24, row.valid ? Math.abs(row.screenCm) * 1.9 : 24);
 }
 
-function formulaLine(symbolHtml, expressionHtml) {
-  return `<p><span class="symbol">${symbolHtml}</span><span class="equals">=</span><span class="expression">${expressionHtml}</span></p>`;
+// MathML keeps fractions, function names, subscripts and units on the correct
+// baselines at every responsive width. Each row uses the same three columns so
+// the equals signs remain vertically aligned instead of drifting after wrapping.
+function mathEquationTable(rows, ariaLabel, className = "") {
+  const rowMarkup = rows
+    .map(
+      ({ left = "", relation = "=", right, result = false }) => `
+        <mtr class="${result ? "formula-result-row" : ""}">
+          <mtd>${left}</mtd>
+          <mtd><mo>${relation}</mo></mtd>
+          <mtd>${right}</mtd>
+        </mtr>`,
+    )
+    .join("");
+
+  return `<div class="formula-math-row ${className}">
+    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="${ariaLabel}">
+      <mtable columnalign="right center left" rowspacing="0.55em">${rowMarkup}</mtable>
+    </math>
+  </div>`;
+}
+
+function mathSubscript(symbol, subscript, { text = false } = {}) {
+  const subscriptMarkup = text ? `<mtext>${subscript}</mtext>` : `<mi>${subscript}</mi>`;
+  return `<msub><mi>${symbol}</mi>${subscriptMarkup}</msub>`;
+}
+
+function mathFunction(name, argument) {
+  return `<mrow><mi mathvariant="normal">${name}</mi><mo>&#x2061;</mo><mrow><mo>(</mo>${argument}<mo>)</mo></mrow></mrow>`;
+}
+
+function mathUnit(unit) {
+  return `<mtext>&nbsp;${unit}</mtext>`;
+}
+
+function mathQuantity(value, unit = "") {
+  return `<mrow><mn>${value}</mn>${unit ? mathUnit(unit) : ""}</mrow>`;
+}
+
+function mathFraction(numerator, denominator) {
+  return `<mfrac><mrow>${numerator}</mrow><mrow>${denominator}</mrow></mfrac>`;
+}
+
+function thetaDerivationMarkup(result, distanceCm) {
+  const thetaJ = mathSubscript("θ", "j");
+  const xJ = mathSubscript("x", "j");
+  const rows = [
+    {
+      left: thetaJ,
+      right: mathFunction("arctan", mathFraction(xJ, "<mi>L</mi>")),
+    },
+  ];
+
+  if (result.thetaDeg !== null) {
+    rows.push(
+      {
+        right: mathFunction(
+          "arctan",
+          mathFraction(
+            mathQuantity(result.xMeanCm.toFixed(2), "cm"),
+            mathQuantity(distanceCm.toFixed(1), "cm"),
+          ),
+        ),
+      },
+      {
+        right: `<mrow><mn>${result.thetaDeg.toFixed(2)}</mn><mo>°</mo></mrow>`,
+        result: true,
+      },
+    );
+  }
+
+  return mathEquationTable(rows, "衍射角的完整几何计算", "theta-derivation");
+}
+
+function lambdaDerivationMarkup(result, gratingUm, order) {
+  const thetaJ = mathSubscript("θ", "j");
+  const rows = [
+    {
+      left: "<mi>λ</mi>",
+      right: mathFraction(
+        `<mi>d</mi><mo>×</mo>${mathFunction("sin", thetaJ)}`,
+        "<mi>j</mi>",
+      ),
+    },
+  ];
+
+  if (result.lambdaNm !== null && result.thetaDeg !== null) {
+    const thetaValue = `<mrow><mn>${result.thetaDeg.toFixed(2)}</mn><mo>°</mo></mrow>`;
+    rows.push(
+      {
+        right: mathFraction(
+          `${mathQuantity(gratingUm.toFixed(3), "μm")}<mo>×</mo>${mathFunction("sin", thetaValue)}`,
+          `<mn>${order}</mn>`,
+        ),
+      },
+      {
+        right: `<mrow>${mathQuantity((result.lambdaNm / 1000).toFixed(3), "μm")}<mo>=</mo>${mathQuantity(result.lambdaNm.toFixed(0), "nm")}</mrow>`,
+        result: true,
+      },
+    );
+  }
+
+  return mathEquationTable(rows, "由光栅方程反演激光波长", "lambda-derivation");
+}
+
+function dbDerivationMarkup(result, lambdaNm, order) {
+  const thetaJ = mathSubscript("θ", "j");
+  const thetaDark = mathSubscript("θ", "暗1", { text: true });
+  const lambdaUm = lambdaNm / 1000;
+  const dRows = [
+    {
+      left: "<mi>d</mi>",
+      right: mathFraction(`<mi>j</mi><mo>×</mo><mi>λ</mi>`, mathFunction("sin", thetaJ)),
+    },
+  ];
+  const bRows = [
+    {
+      left: "<mi>b</mi>",
+      right: mathFraction("<mi>λ</mi>", mathFunction("sin", thetaDark)),
+    },
+  ];
+
+  if (result.dUm !== null && result.thetaDeg !== null) {
+    const thetaValue = `<mrow><mn>${result.thetaDeg.toFixed(2)}</mn><mo>°</mo></mrow>`;
+    dRows.push(
+      {
+        right: mathFraction(
+          `<mn>${order}</mn><mo>×</mo>${mathQuantity(lambdaUm.toFixed(3), "μm")}`,
+          mathFunction("sin", thetaValue),
+        ),
+      },
+      { right: mathQuantity(result.dUm.toFixed(3), "μm"), result: true },
+    );
+  }
+
+  if (result.bUm !== null && result.thetaDarkDeg !== null) {
+    const thetaDarkValue = `<mrow><mn>${result.thetaDarkDeg.toFixed(2)}</mn><mo>°</mo></mrow>`;
+    bRows.push(
+      {
+        right: mathFraction(
+          mathQuantity(lambdaUm.toFixed(3), "μm"),
+          mathFunction("sin", thetaDarkValue),
+        ),
+      },
+      { right: mathQuantity(result.bUm.toFixed(2), "μm"), result: true },
+    );
+  }
+
+  return `<section class="formula-group">
+      <span class="formula-group-label">光栅常数</span>
+      ${mathEquationTable(dRows, "反演光栅常数", "d-derivation")}
+    </section>
+    <section class="formula-group">
+      <span class="formula-group-label">单缝宽度</span>
+      ${mathEquationTable(bRows, "反演单缝宽度", "b-derivation")}
+    </section>`;
+}
+
+function heroEquationMarkup(mode) {
+  const thetaJ = mathSubscript("θ", "j");
+  const thetaDark = mathSubscript("θ", "暗1", { text: true });
+  const gratingEquation = `<mrow><mi>d</mi><mi mathvariant="normal">sin</mi><mo>&#x2061;</mo>${thetaJ}<mo>=</mo><mi>j</mi><mi>λ</mi></mrow>`;
+  const slitEquation = `<mrow><mi>b</mi><mi mathvariant="normal">sin</mi><mo>&#x2061;</mo>${thetaDark}<mo>=</mo><mi>λ</mi></mrow>`;
+
+  return `<span class="hero-formula-label">核心方程</span>
+    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">${gratingEquation}</math>
+    ${mode === "db" ? `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">${slitEquation}</math>` : ""}`;
 }
 
 function heroSceneParams(params = modeConfig()) {
@@ -489,8 +732,14 @@ function drawHeroFallback(params = heroSceneParams()) {
   ctx.textAlign = "center";
   ctx.fillText(`激光器 ${params.lambdaNm.toFixed(0)} nm`, laserX + 14, centerY - 42);
   ctx.fillText("准直镜", lensX, centerY - 66);
-  ctx.fillText(`光栅架 d=${params.gratingUm.toFixed(3)} μm`, gratingX, centerY - 76);
-  ctx.fillText(`CCD 屏幕 L=${params.distanceCm.toFixed(1)} cm`, screenX + screenW / 2, screenTop - 10);
+  fillStudentPhysicsText(ctx, `光栅架 d=${params.gratingUm.toFixed(3)} μm`, gratingX, centerY - 76, {
+    size: 12,
+    weight: 700,
+  });
+  fillStudentPhysicsText(ctx, `CCD 屏幕 L=${params.distanceCm.toFixed(1)} cm`, screenX + screenW / 2, screenTop - 10, {
+    size: 12,
+    weight: 700,
+  });
 }
 
 function drawIntroApparatus(params = modeConfig()) {
@@ -674,7 +923,7 @@ function drawIntroApparatus(params = modeConfig()) {
   ctx.fillText(`+${order}`, screenX + screenW + 42, topSpotY + 5);
   ctx.fillText("0", screenX + screenW + 42, centerY + 5);
   ctx.fillText(`-${order}`, screenX + screenW + 42, bottomSpotY + 5);
-  ctx.fillText("xⱼ", screenX + screenW + 34, centerY);
+  fillStudentPhysicsText(ctx, "xⱼ", screenX + screenW + 34, centerY, { size: 13, weight: 700 });
 
   ctx.strokeStyle = "#60758f";
   ctx.lineWidth = 1.2;
@@ -687,7 +936,7 @@ function drawIntroApparatus(params = modeConfig()) {
   ctx.moveTo(screenX, dimY - 5);
   ctx.lineTo(screenX, dimY + 5);
   ctx.stroke();
-  ctx.fillText("L", (gratingX + screenX) / 2, dimY - 6);
+  fillStudentPhysicsText(ctx, "L", (gratingX + screenX) / 2, dimY - 6, { size: 13, weight: 700 });
 
   $("introApparatusCaption").innerHTML =
     currentMode() === "db" ? "d sinθ<sub>j</sub> = jλ；b sinθ<sub>暗1</sub> = λ" : "d sinθ<sub>j</sub> = jλ";
@@ -699,7 +948,7 @@ async function initHeroModel() {
 
   heroModel.loading = true;
   try {
-    const { DiffractionScene } = await import(new URL("scene3d.js", scriptBaseUrl).href);
+    const { DiffractionScene } = await import(new URL("scene3d.js?v=physics-italic-v20-20260718", scriptBaseUrl).href);
     heroModel.scene = new DiffractionScene(root);
     heroModel.scene.cameraState = { azimuth: 2.18, elevation: 0.36, radius: 8.6 };
     heroModel.scene.setView("3d");
@@ -749,19 +998,19 @@ function setMode(mode, resetValues = true) {
   if (resetValues) applyPreset(shell.dataset.mode);
 
   if (shell.dataset.mode === "db") {
-    $("heroTitle").textContent = "由衍射图样反演光栅常数 d 与缝宽 b";
+    $("heroTitle").innerHTML = "<span>由衍射图样反演</span><span>光栅常数 <var>d</var> 与缝宽 <var>b</var></span>";
     $("heroSubtitle").innerHTML = "已知 λ、L 与亮纹位置 x<sub>j</sub>，反推光栅常数 d；由中央包络宽度 W<sub>0</sub> 反推缝宽 b。";
     $("inversionTitle").textContent = "反演 d、b";
     $("stepInvertLabel").textContent = "反演 d、b";
-    $("stepInvertSub").textContent = "计算光栅常数与缝宽";
-    $("heroFormulaBadge").innerHTML = "d sin θⱼ = jλ<span>b sin θ暗1 = λ</span>";
+    $("stepInvertSub").textContent = "求解 d 与 b";
+    $("heroFormulaBadge").innerHTML = heroEquationMarkup("db");
   } else {
-    $("heroTitle").textContent = "由衍射图样反演激光波长 λ";
+    $("heroTitle").innerHTML = "<span>由衍射图样反演</span><span>激光波长 <var>λ</var></span>";
     $("heroSubtitle").innerHTML = "已知光栅常数 d、屏距 L 与亮纹位置 x<sub>j</sub>，反推出激光波长 λ。";
     $("inversionTitle").textContent = "反演 λ";
     $("stepInvertLabel").textContent = "反演波长";
     $("stepInvertSub").textContent = "计算入射波长 λ";
-    $("heroFormulaBadge").innerHTML = "d sin θⱼ = jλ";
+    $("heroFormulaBadge").innerHTML = heroEquationMarkup("lambda");
   }
 
   render();
@@ -949,7 +1198,11 @@ function drawFringes() {
   ctx.textAlign = "left";
   ctx.fillText(`CCD 窗口：-${extent.toFixed(1)} cm 到 +${extent.toFixed(1)} cm`, plot.left + 8, 15);
   ctx.textAlign = "right";
-  ctx.fillText("点击图样左右侧可修正 ±j 读数", plot.left + plotW - 8, 15);
+  fillStudentPhysicsText(ctx, "点击图样左右侧可修正 ±j 读数", plot.left + plotW - 8, 15, {
+    size: 11,
+    weight: 600,
+    align: "right",
+  });
 }
 
 function updateReadingFromCanvas(event) {
@@ -979,8 +1232,8 @@ function render() {
   const mode = currentMode();
   const params = modeConfig();
   $("heroLaserLabel").textContent = `${params.lambdaNm.toFixed(0)} nm`;
-  $("heroDLabel").textContent = `d = ${params.gratingUm.toFixed(3)} μm`;
-  $("heroLLabel").textContent = `L = ${params.distanceCm.toFixed(1)} cm`;
+  $("heroDValue").textContent = ` = ${params.gratingUm.toFixed(3)} μm`;
+  $("heroLValue").textContent = ` = ${params.distanceCm.toFixed(1)} cm`;
   drawIntroApparatus(params);
   const pair = symmetricPairDisplacementCm(readNumber("xMinus"), readNumber("xPlus"));
   $("xMean").textContent = Number.isFinite(pair.meanCm) ? pair.meanCm.toFixed(2) : "--";
@@ -1007,43 +1260,28 @@ function render() {
     const bError = result.bUm ? Math.abs(result.bUm - refB) / refB : null;
     const maxError = Math.max(dError ?? Infinity, bError ?? Infinity);
 
-    $("thetaFormula").innerHTML = [
-      formulaLine("θ<sub>j</sub>", "arctan(x<sub>j</sub>/L)"),
-      formulaLine(
-        "θ<sub>j</sub>",
-        result.thetaDeg === null
-          ? "--"
-          : `arctan(${result.xMeanCm.toFixed(2)} / ${distanceCm.toFixed(1)}) = ${result.thetaDeg.toFixed(2)}°`,
-      ),
-    ].join("");
+    $("thetaFormula").innerHTML = thetaDerivationMarkup(result, distanceCm);
     $("thetaResult").innerHTML = result.thetaDeg === null ? "--" : `${result.thetaDeg.toFixed(2)}°`;
     $("darkThetaLine").innerHTML =
       result.thetaDarkDeg === null
         ? ""
         : `中央包络半宽 W<sub>0</sub>/2 对应 θ<sub>暗1</sub> = ${result.thetaDarkDeg.toFixed(2)}°。`;
-    $("inversionFormula").innerHTML = [
-      formulaLine("d", "jλ/sinθ<sub>j</sub>"),
-      formulaLine(
-        "d",
-        result.dUm === null || result.thetaDeg === null
-          ? "--"
-          : `${Math.round(readNumber("order"))} × ${(lambdaNm / 1000).toFixed(3)} μm / sin${result.thetaDeg.toFixed(2)}° = ${result.dUm.toFixed(3)} μm`,
-      ),
-      formulaLine("b", "λ/sinθ<sub>暗1</sub>"),
-      formulaLine(
-        "b",
-        result.bUm === null || result.thetaDarkDeg === null
-          ? "--"
-          : `${(lambdaNm / 1000).toFixed(3)} μm / sin${result.thetaDarkDeg.toFixed(2)}° = ${result.bUm.toFixed(2)} μm`,
-      ),
-    ].join("");
+    $("inversionFormula").innerHTML = dbDerivationMarkup(
+      result,
+      lambdaNm,
+      Math.round(readNumber("order")),
+    );
     $("dResult").textContent = result.dUm === null ? "--" : `${result.dUm.toFixed(3)} μm`;
     $("bResult").textContent = result.bUm === null ? "--" : `${result.bUm.toFixed(2)} μm`;
-    $("analysisMain").textContent =
-      result.dUm === null || result.bUm === null ? "--" : `d=${result.dUm.toFixed(3)} μm，b=${result.bUm.toFixed(2)} μm`;
-    $("analysisReference").textContent = `d=${refD.toFixed(3)} μm，b=${refB.toFixed(2)} μm`;
-    $("analysisError").textContent =
-      dError === null || bError === null ? "--" : `d:${(dError * 100).toFixed(2)}%，b:${(bError * 100).toFixed(2)}%`;
+    $("analysisMain").innerHTML =
+      result.dUm === null || result.bUm === null
+        ? "--"
+        : `<span class="analysis-value-line"><var>d</var> = ${result.dUm.toFixed(3)} μm</span><span class="analysis-value-line"><var>b</var> = ${result.bUm.toFixed(2)} μm</span>`;
+    $("analysisReference").innerHTML = `<span class="analysis-value-line"><var>d</var> = ${refD.toFixed(3)} μm</span><span class="analysis-value-line"><var>b</var> = ${refB.toFixed(2)} μm</span>`;
+    $("analysisError").innerHTML =
+      dError === null || bError === null
+        ? "--"
+        : `<span class="analysis-error-line"><var>d</var><span class="analysis-error-equals">=</span><span class="analysis-error-number">${(dError * 100).toFixed(2)}%</span></span><span class="analysis-error-line"><var>b</var><span class="analysis-error-equals">=</span><span class="analysis-error-number">${(bError * 100).toFixed(2)}%</span></span>`;
     renderWarning(result.warnings);
   } else {
     const gratingUm = readNumber("knownD");
@@ -1058,26 +1296,14 @@ function render() {
     const reference = readNumber("referenceLambda");
     const relError = result.lambdaNm ? Math.abs(result.lambdaNm - reference) / reference : null;
 
-    $("thetaFormula").innerHTML = [
-      formulaLine("θ<sub>j</sub>", "arctan(x<sub>j</sub>/L)"),
-      formulaLine(
-        "θ<sub>j</sub>",
-        result.thetaDeg === null
-          ? "--"
-          : `arctan(${result.xMeanCm.toFixed(2)} / ${distanceCm.toFixed(1)}) = ${result.thetaDeg.toFixed(2)}°`,
-      ),
-    ].join("");
+    $("thetaFormula").innerHTML = thetaDerivationMarkup(result, distanceCm);
     $("thetaResult").innerHTML = result.thetaDeg === null ? "--" : `${result.thetaDeg.toFixed(2)}°`;
     $("darkThetaLine").innerHTML = "";
-    $("inversionFormula").innerHTML = [
-      formulaLine("λ", "d sinθ<sub>j</sub> / j"),
-      formulaLine(
-        "λ",
-        result.lambdaNm === null || result.thetaDeg === null
-          ? "--"
-          : `${gratingUm.toFixed(3)} μm × sin${result.thetaDeg.toFixed(2)}° / ${Math.round(readNumber("order"))} = ${result.lambdaNm.toFixed(0)} nm`,
-      ),
-    ].join("");
+    $("inversionFormula").innerHTML = lambdaDerivationMarkup(
+      result,
+      gratingUm,
+      Math.round(readNumber("order")),
+    );
     $("lambdaResult").textContent = result.lambdaNm === null ? "--" : `${result.lambdaNm.toFixed(0)} nm`;
     $("colorBand").textContent = result.lambdaNm === null ? "--" : wavelengthBandName(result.lambdaNm);
     $("colorBand").style.color = result.lambdaNm === null ? "" : wavelengthToColor(result.lambdaNm).css;
@@ -1086,6 +1312,8 @@ function render() {
     $("analysisError").textContent = relError === null ? "--" : `${(relError * 100).toFixed(2)}%`;
     renderWarning(result.warnings);
   }
+  // 模式切换和实时计算会重建多处文字，统一在本轮渲染结束后恢复物理变量斜体。
+  typesetStudentSymbols(shell);
 }
 
 function renderWarning(warnings) {
@@ -1487,7 +1715,7 @@ function buildWorkbookParts(report) {
   <!--
     导出表格样式与课程参考图一致：
     全表使用宋体；表头和分类列用淡蓝底；数值列用亮蓝色突出；
-    单位列保持黑色，所有单元格居中并使用浅蓝细边框。
+    单位列保持黑色；仅编号 1-3 的数据记录行使用黑色中粗实线边框。
   -->
   <fonts count="6">
     <font><sz val="12"/><color rgb="FF000000"/><name val="宋体"/><family val="3"/></font>
@@ -1505,21 +1733,21 @@ function buildWorkbookParts(report) {
   </fills>
   <borders count="2">
     <border><left/><right/><top/><bottom/><diagonal/></border>
-    <border><left style="thin"><color rgb="FFC8DAF2"/></left><right style="thin"><color rgb="FFC8DAF2"/></right><top style="thin"><color rgb="FFC8DAF2"/></top><bottom style="thin"><color rgb="FFC8DAF2"/></bottom><diagonal/></border>
+    <border><left style="medium"><color rgb="FF000000"/></left><right style="medium"><color rgb="FF000000"/></right><top style="medium"><color rgb="FF000000"/></top><bottom style="medium"><color rgb="FF000000"/></bottom><diagonal/></border>
   </borders>
   <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
   <cellXfs count="12">
-    <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
-    <xf numFmtId="0" fontId="1" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
-    <xf numFmtId="0" fontId="2" fillId="2" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
-    <xf numFmtId="0" fontId="3" fillId="3" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
-    <xf numFmtId="0" fontId="3" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
-    <xf numFmtId="0" fontId="4" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
-    <xf numFmtId="0" fontId="5" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
-    <xf numFmtId="0" fontId="2" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
-    <xf numFmtId="0" fontId="5" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
-    <xf numFmtId="0" fontId="5" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="left" vertical="center"/></xf>
-    <xf numFmtId="0" fontId="2" fillId="2" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="2" fillId="2" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="3" fillId="3" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="4" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+    <xf numFmtId="0" fontId="5" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="5" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="5" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="left" vertical="center"/></xf>
+    <xf numFmtId="0" fontId="2" fillId="2" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
     <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
   </cellXfs>
   <cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>

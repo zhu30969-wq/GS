@@ -26,6 +26,1648 @@
   --font-math: "Cambria Math", "STIX Two Math", "Times New Roman", "Noto Serif CJK SC", serif;
 }
 
+/* ========================================================================== */
+/* 竞赛参考图版：原理讲解（2026-07-17）                                      */
+/* ========================================================================== */
+/*
+  该区块放在样式表末尾，优先级仅作用于 theory-mode 和 #theoryModule。
+  主实验仍保留暗色 CAD 视觉；进入原理模块后切换为附件中的白色实验讲义界面。
+*/
+body.theory-mode {
+  color-scheme: light;
+  color: #18191b;
+  background: #f4f4f2;
+}
+
+body.theory-mode .app-shell {
+  width: min(1920px, 100%);
+  padding: 0 18px 18px;
+}
+
+body.theory-mode .topbar {
+  min-height: 76px;
+  border-bottom: 1px solid #d9dadd;
+  color: #18191b;
+  background: #ffffff;
+}
+
+body.theory-mode .brand h1 {
+  color: #101113;
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "STSong", "SimSun", serif;
+  font-size: clamp(25px, 1.8vw, 34px);
+  font-weight: 800;
+}
+
+body.theory-mode .brand p {
+  margin-top: 4px;
+  color: #6c7075;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+body.theory-mode .module-tabs {
+  border-color: #d9dadd;
+}
+
+body.theory-mode .tab {
+  border-color: #d9dadd;
+  color: #555a61;
+  background: #ffffff;
+  font-size: 18px;
+  font-weight: 750;
+}
+
+body.theory-mode .tab .icon {
+  color: #34383d;
+}
+
+body.theory-mode .tab:hover {
+  color: #151719;
+  background: #faf8f4;
+}
+
+body.theory-mode .tab.active {
+  border-bottom: 3px solid #d47a00;
+  color: #111214;
+  background: #fffaf2;
+}
+
+#theoryModule.theory-shell {
+  --paper-orange: #d47a00;
+  --paper-orange-soft: #fff7eb;
+  --paper-blue: #245fc7;
+  --paper-red: #e0443e;
+  --paper-green: #248642;
+  --paper-ink: #17181a;
+  --paper-muted: #62666c;
+  --paper-line: #d9dadd;
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 0;
+  margin-top: 0;
+  overflow: clip;
+  border: 1px solid #d9dadd;
+  border-top: 0;
+  border-radius: 0;
+  color: var(--paper-ink);
+  background: #ffffff;
+  box-shadow: 0 18px 48px rgba(24, 27, 31, 0.08);
+}
+
+#theoryModule .theory-rail,
+#theoryModule .theory-main {
+  border: 0;
+  border-radius: 0;
+  color: var(--paper-ink);
+  background: #ffffff;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+#theoryModule .theory-rail {
+  position: sticky;
+  top: 0;
+  grid-template-rows: auto 1fr auto;
+  align-self: start;
+  min-height: calc(100vh - 78px);
+  max-height: calc(100vh - 18px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-right: 1px solid var(--paper-line);
+}
+
+#theoryModule .theory-rail-head {
+  padding: 28px 26px 21px;
+  border-bottom: 1px solid #ececef;
+}
+
+#theoryModule .theory-rail-head::before {
+  content: "SPECTRAL LAB.";
+  display: block;
+  margin-bottom: 11px;
+  color: #17181a;
+  font-family: "Bahnschrift", "Segoe UI", sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+#theoryModule .theory-rail-head h2 {
+  margin: 0;
+  color: #17181a;
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "STSong", "SimSun", serif;
+  font-size: 26px;
+  line-height: 1.25;
+}
+
+#theoryModule .theory-rail-head p {
+  margin: 7px 0 0;
+  color: #777b80;
+  font-size: 15px;
+}
+
+#theoryModule .theory-nav {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 22px 0;
+}
+
+#theoryModule .theory-nav button {
+  position: relative;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 72px;
+  padding: 8px 22px;
+  border: 0;
+  border-left: 5px solid transparent;
+  border-radius: 0;
+  color: #272a2e;
+  background: #ffffff;
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "STSong", "SimSun", serif;
+  font-size: 21px;
+  font-weight: 750;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+#theoryModule .theory-nav button:hover {
+  border-left-color: #e6a44c;
+  color: #9c5800;
+  background: #fffbf4;
+}
+
+#theoryModule .theory-nav button:focus-visible {
+  outline: 2px solid #d47a00;
+  outline-offset: -3px;
+}
+
+#theoryModule .theory-nav button span {
+  display: block;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  color: #2d3034;
+  background: transparent;
+  font-family: "Bahnschrift", "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+#theoryModule .theory-nav button.active {
+  border-left-color: var(--paper-orange);
+  color: #bd6900;
+  background: #fff8ed;
+  box-shadow: none;
+}
+
+#theoryModule .theory-nav button.active span {
+  border: 0;
+  color: #bd6900;
+  background: transparent;
+}
+
+#theoryModule .theory-progress {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 20px 22px;
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 1px solid #ececef;
+  border-radius: 0;
+  color: #777b80;
+  background: #ffffff;
+}
+
+#theoryModule .theory-progress span,
+#theoryModule .theory-progress strong {
+  color: #6a6e73;
+  font-size: 13px;
+}
+
+#theoryModule .theory-progress i {
+  height: 4px;
+  background: #e8e8e8;
+}
+
+#theoryModule .theory-progress b {
+  background: #d47a00;
+}
+
+#theoryModule .theory-main {
+  min-width: 0;
+  padding-bottom: 22px;
+}
+
+#theoryModule .theory-heading {
+  min-height: 104px;
+  padding: 16px 34px 14px;
+  border-bottom: 1px solid #ececef;
+  color: #17181a;
+  background: #ffffff;
+}
+
+#theoryModule .theory-heading p {
+  margin: 0 0 4px;
+  color: #9c5a00;
+  font-family: "Bahnschrift", "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+#theoryModule .theory-heading h2 {
+  margin: 0;
+  color: #111214;
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "STSong", "SimSun", serif;
+  font-size: clamp(40px, 3vw, 58px);
+  font-weight: 850;
+  line-height: 1.12;
+}
+
+#theoryModule .theory-controls {
+  display: flex;
+  gap: 8px;
+}
+
+#theoryModule .theory-controls .secondary-button {
+  min-width: 104px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid #cfd1d4;
+  border-radius: 5px;
+  color: #3b3f44;
+  background: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+#theoryModule .theory-controls .secondary-button:hover {
+  border-color: #d47a00;
+  color: #9f5900;
+  background: #fff8ed;
+}
+
+#theoryModule .theory-controls .secondary-button:focus-visible {
+  outline: 2px solid #d47a00;
+  outline-offset: 2px;
+}
+
+#theoryModule .theory-note {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 14px;
+  margin: 16px 34px 0;
+  padding: 12px 16px;
+  border: 1px solid #edc88f;
+  border-radius: 5px;
+  color: #3b3e42;
+  background: #fffaf2;
+}
+
+#theoryModule .theory-note strong {
+  color: #ad6200;
+  font-size: 17px;
+}
+
+#theoryModule .theory-note span {
+  color: #3e4247;
+  font-size: 16px;
+  font-weight: 560;
+  line-height: 1.7;
+}
+
+#theoryModule .theory-stage {
+  margin: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+}
+
+#theoryModule .theory-slide {
+  margin: 0;
+}
+
+#theoryModule .theory-loading {
+  padding: 60px 34px;
+  color: #777b80;
+  font-size: 18px;
+}
+
+#theoryModule .theory-visual.competition-page {
+  min-height: 0;
+  padding: 22px 34px 28px;
+  color: var(--paper-ink);
+  background: #ffffff;
+}
+
+#theoryModule .chapter-lead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 17px;
+}
+
+#theoryModule .chapter-lead > p {
+  max-width: 980px;
+  margin: 0;
+  color: #303338;
+  font-size: 18px;
+  font-weight: 560;
+  line-height: 1.7;
+}
+
+#theoryModule .chapter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+#theoryModule .chapter-tags span {
+  padding: 6px 10px;
+  border: 1px solid #e4c69b;
+  border-radius: 4px;
+  color: #8d5205;
+  background: #fffaf2;
+  font-size: 13px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+#theoryModule .concept-mode-bar,
+#theoryModule .width-mode-bar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(620px, 100%);
+  margin: 0 0 16px;
+  border: 1px solid #d8dadd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#theoryModule .width-mode-bar {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(760px, 100%);
+}
+
+#theoryModule .concept-mode-bar button,
+#theoryModule .width-mode-bar button {
+  min-height: 44px;
+  padding: 7px 14px;
+  border: 0;
+  border-right: 1px solid #d8dadd;
+  color: #34373b;
+  background: #ffffff;
+  font-size: 16px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+#theoryModule .concept-mode-bar button:last-child,
+#theoryModule .width-mode-bar button:last-child {
+  border-right: 0;
+}
+
+#theoryModule .concept-mode-bar button:hover,
+#theoryModule .width-mode-bar button:hover {
+  color: #9f5900;
+  background: #fffaf2;
+}
+
+#theoryModule .concept-mode-bar button.active,
+#theoryModule .width-mode-bar button.active {
+  color: #ffffff;
+  background: #c97500;
+}
+
+#theoryModule .concept-mode-bar button:focus-visible,
+#theoryModule .width-mode-bar button:focus-visible {
+  outline: 2px solid #9f5900;
+  outline-offset: -3px;
+}
+
+#theoryModule .reference-grid,
+#theoryModule .principle-layout,
+#theoryModule .measurement-methods,
+#theoryModule .error-analysis-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+#theoryModule .concept-reference-grid {
+  grid-template-columns: minmax(0, 0.92fr) minmax(560px, 1.08fr);
+}
+
+#theoryModule .paper-section {
+  min-width: 0;
+  padding: 14px 16px 16px;
+  border: 1px solid #d9dadd;
+  border-radius: 6px;
+  color: #191b1e;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(25, 28, 31, 0.035);
+}
+
+#theoryModule .section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#theoryModule .section-title > span {
+  display: grid;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 4px;
+  color: #ffffff;
+  background: #e08000;
+  font-family: "Bahnschrift", sans-serif;
+  font-size: 22px;
+  font-weight: 850;
+}
+
+#theoryModule .section-title div {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+}
+
+#theoryModule .section-title strong {
+  color: #191a1c;
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "STSong", "SimSun", serif;
+  font-size: 22px;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+#theoryModule .section-title small {
+  color: #797d82;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+#theoryModule .theory-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+  background: #ffffff;
+}
+
+#theoryModule .concept-canvas { aspect-ratio: 1100 / 620; }
+#theoryModule .path-canvas { aspect-ratio: 900 / 700; }
+#theoryModule .phase-canvas { aspect-ratio: 1400 / 300; }
+#theoryModule .fringe-canvas { aspect-ratio: 1500 / 720; }
+#theoryModule .measurement-canvas { aspect-ratio: 1200 / 500; }
+#theoryModule .fit-plot-canvas { aspect-ratio: 900 / 480; }
+
+#theoryModule .equation-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 10px;
+  border: 1px solid #d9dadd;
+  border-radius: 5px;
+}
+
+#theoryModule .equation-pair > div {
+  display: grid;
+  gap: 5px;
+  padding: 13px 10px;
+  text-align: center;
+}
+
+#theoryModule .equation-pair > div + div {
+  border-left: 1px solid #d9dadd;
+}
+
+#theoryModule .equation-pair strong,
+#theoryModule .formula-box strong,
+#theoryModule .inline-equation,
+#theoryModule .formula-lines strong,
+#theoryModule .measurement-equations strong,
+#theoryModule .fit-formulas strong,
+#theoryModule .uncertainty-formulas strong,
+#theoryModule .exact-geometry-note span {
+  font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+}
+
+#theoryModule .equation-pair strong {
+  color: #1d2024;
+  font-size: 27px;
+  font-weight: 500;
+}
+
+#theoryModule .equation-pair span {
+  color: #686c71;
+  font-size: 14px;
+}
+
+#theoryModule .theory-symbol-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 16px;
+}
+
+#theoryModule .theory-symbol-table th,
+#theoryModule .theory-symbol-table td {
+  padding: 11px 13px;
+  border: 1px solid #d7d9dc;
+  color: #2b2e32;
+  line-height: 1.5;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+#theoryModule .theory-symbol-table th {
+  color: #45494e;
+  background: #f7f7f6;
+  font-weight: 800;
+}
+
+#theoryModule .theory-symbol-table th:first-child,
+#theoryModule .theory-symbol-table td:first-child {
+  width: 82px;
+  font-family: "Cambria Math", "Times New Roman", serif;
+  font-size: 20px;
+  text-align: center;
+}
+
+#theoryModule .teaching-callout,
+#theoryModule .core-conclusion,
+#theoryModule .critical-warning {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 13px 16px;
+  border: 1px solid #e4ad5d;
+  border-radius: 6px;
+  color: #2c2f33;
+  background: #fffaf2;
+}
+
+#theoryModule .callout-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 2px solid #d47a00;
+  border-radius: 50%;
+  color: #b56500;
+  font-family: "Bahnschrift", sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+#theoryModule .teaching-callout strong,
+#theoryModule .core-conclusion strong,
+#theoryModule .critical-warning strong {
+  color: #a85e00;
+  font-size: 18px;
+}
+
+#theoryModule .teaching-callout p,
+#theoryModule .core-conclusion p,
+#theoryModule .critical-warning p {
+  margin: 2px 0 0;
+  color: #35383c;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.65;
+}
+
+#theoryModule .principle-layout {
+  grid-template-columns: minmax(420px, 0.82fr) minmax(0, 1.18fr);
+  align-items: stretch;
+}
+
+#theoryModule .path-section {
+  display: flex;
+  flex-direction: column;
+}
+
+#theoryModule .path-section .path-canvas {
+  flex: 1 1 auto;
+}
+
+#theoryModule .formula-box {
+  display: grid;
+  gap: 3px;
+  padding: 12px;
+  border: 1px solid #edc88f;
+  border-radius: 5px;
+  text-align: center;
+  background: #fffaf2;
+}
+
+#theoryModule .formula-box strong {
+  font-size: 29px;
+  font-weight: 500;
+}
+
+#theoryModule .formula-box span {
+  color: #686c71;
+  font-size: 13px;
+}
+
+#theoryModule .principle-steps {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+#theoryModule .numbered-principle {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #d6b27b;
+}
+
+#theoryModule .numbered-principle > b {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 50%;
+  color: #ffffff;
+  background: #c87700;
+  font-family: "Bahnschrift", sans-serif;
+  font-size: 23px;
+}
+
+#theoryModule .numbered-principle h3 {
+  margin: 0 0 5px;
+  color: #1d1f22;
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "STSong", "SimSun", serif;
+  font-size: 21px;
+}
+
+#theoryModule .numbered-principle p,
+#theoryModule .signed-angle-note p {
+  margin: 0;
+  color: #44484d;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+#theoryModule .numbered-principle small {
+  display: block;
+  margin-top: 4px;
+  color: #70747a;
+  font-size: 14px;
+  text-align: center;
+}
+
+#theoryModule .inline-equation {
+  width: min(520px, 100%);
+  margin: 8px auto 0;
+  padding: 8px 12px;
+  border: 1px solid #e7bd7c;
+  border-radius: 4px;
+  color: #24272b;
+  background: #fffdf9;
+  font-size: 26px;
+  text-align: center;
+}
+
+#theoryModule .inline-equation.emphasis {
+  border-width: 2px;
+  color: #9a5600;
+  font-size: 28px;
+}
+
+#theoryModule .signed-angle-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 7px 12px;
+  padding: 11px 13px;
+  border: 1px solid #b9d2eb;
+  border-radius: 5px;
+  background: #f5f9fd;
+}
+
+#theoryModule .signed-angle-note strong {
+  color: #235b96;
+  font-size: 16px;
+}
+
+#theoryModule .signed-angle-note span {
+  color: #1f4f82;
+  font-family: "Cambria Math", serif;
+  font-size: 22px;
+}
+
+#theoryModule .signed-angle-note p {
+  grid-column: 1 / -1;
+  color: #4d6680;
+  font-size: 14px;
+}
+
+#theoryModule .phase-section {
+  margin-top: 14px;
+}
+
+#theoryModule .core-conclusion {
+  grid-template-columns: 112px minmax(0, 1fr);
+}
+
+#theoryModule .width-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.72fr) minmax(350px, 0.78fr);
+  gap: 14px;
+  align-items: start;
+}
+
+#theoryModule .figure-caption {
+  margin: 8px 4px 0;
+  color: #686c71;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+#theoryModule .width-formulas {
+  display: grid;
+  gap: 12px;
+}
+
+#theoryModule .formula-card-blue,
+#theoryModule .formula-card-red,
+#theoryModule .width-rule {
+  padding: 15px;
+  border: 2px solid #2f63ce;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+#theoryModule .formula-card-red {
+  border-color: #e0443e;
+}
+
+#theoryModule .width-rule {
+  border: 1px solid #e4ad5d;
+  background: #fffaf2;
+}
+
+#theoryModule .formula-card-blue h3,
+#theoryModule .formula-card-red h3 {
+  margin: 0 0 10px;
+  color: #245fc7;
+  font-size: 18px;
+  text-align: center;
+}
+
+#theoryModule .formula-card-red h3 {
+  color: #d93631;
+}
+
+#theoryModule .formula-lines {
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+  border-radius: 4px;
+  background: #eef4ff;
+  text-align: center;
+}
+
+#theoryModule .formula-card-red .formula-lines {
+  background: #fff0ef;
+}
+
+#theoryModule .formula-lines.soft {
+  margin-top: 8px;
+  background: #f7f7f7;
+}
+
+#theoryModule .formula-lines strong {
+  color: #1f2734;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+#theoryModule .formula-lines span {
+  color: #6a6e74;
+  font-size: 12px;
+}
+
+#theoryModule .formula-card-blue > p,
+#theoryModule .formula-card-red > p,
+#theoryModule .width-rule p {
+  margin: 10px 0 0;
+  color: #42464b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+#theoryModule .width-rule strong {
+  color: #a85e00;
+  font-size: 17px;
+}
+
+#theoryModule .measurement-methods {
+  align-items: stretch;
+}
+
+#theoryModule .measurement-method {
+  display: flex;
+  flex-direction: column;
+}
+
+#theoryModule .measurement-equations {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: auto;
+}
+
+#theoryModule .measurement-equations.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#theoryModule .measurement-equations > div {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  min-height: 86px;
+  padding: 9px;
+  border: 1px solid #e9c997;
+  border-radius: 4px;
+  background: #fffdf9;
+  text-align: center;
+}
+
+#theoryModule .measurement-equations span {
+  color: #7b5a2d;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+#theoryModule .measurement-equations strong {
+  color: #24272b;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+#theoryModule .method-note {
+  margin: 10px 2px 0;
+  color: #686c71;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+#theoryModule .fitting-section {
+  margin-top: 14px;
+}
+
+#theoryModule .fitting-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.9fr) minmax(300px, 0.9fr) minmax(270px, 0.7fr);
+  gap: 14px;
+  align-items: center;
+}
+
+#theoryModule .fit-plot {
+  position: relative;
+  min-height: 210px;
+  border-left: 2px solid #30343a;
+  border-bottom: 2px solid #30343a;
+  background: repeating-linear-gradient(0deg, transparent 0 41px, #eceeef 42px), repeating-linear-gradient(90deg, transparent 0 58px, #eceeef 59px);
+}
+
+#theoryModule .fit-plot i {
+  position: absolute;
+  inset: 18px 18px 18px 18px;
+  display: block;
+  background: linear-gradient(to bottom right, transparent 49.3%, #e3423d 49.5% 50.5%, transparent 50.7%);
+}
+
+#theoryModule .fit-plot b {
+  position: absolute;
+  left: var(--x);
+  bottom: calc(100% - var(--y));
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #245fc7;
+  transform: translate(-50%, 50%);
+}
+
+#theoryModule .fit-plot span,
+#theoryModule .fit-plot em {
+  position: absolute;
+  color: #3f4348;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 750;
+}
+
+#theoryModule .fit-plot span { left: -4px; top: -22px; }
+#theoryModule .fit-plot em { right: -8px; bottom: -24px; }
+
+#theoryModule .fit-formulas {
+  display: grid;
+  gap: 8px;
+}
+
+#theoryModule .fit-formulas strong {
+  color: #1f2327;
+  font-size: 26px;
+  font-weight: 500;
+}
+
+#theoryModule .fit-formulas p,
+#theoryModule .fit-formulas small {
+  margin: 0;
+  color: #45494e;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+#theoryModule .fit-formulas small {
+  color: #777b80;
+  font-size: 13px;
+}
+
+#theoryModule .fit-steps {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: fit-step;
+}
+
+#theoryModule .fit-steps li {
+  counter-increment: fit-step;
+  position: relative;
+  min-height: 30px;
+  padding-left: 36px;
+  color: #3e4247;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+#theoryModule .fit-steps li::before {
+  content: counter(fit-step);
+  position: absolute;
+  left: 0;
+  top: -1px;
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border-radius: 50%;
+  color: #ffffff;
+  background: #d47a00;
+  font-family: "Bahnschrift", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+#theoryModule .error-page {
+  display: grid;
+  gap: 14px;
+}
+
+#theoryModule .error-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(100px, 1fr) 30px) minmax(100px, 1fr);
+  align-items: center;
+  gap: 7px;
+}
+
+#theoryModule .error-flow article {
+  display: grid;
+  align-content: center;
+  min-height: 128px;
+  padding: 11px;
+  border: 1px solid #d9dadd;
+  border-radius: 5px;
+  text-align: center;
+  background: #ffffff;
+}
+
+#theoryModule .error-flow article b {
+  color: #d47a00;
+  font-family: "Bahnschrift", sans-serif;
+  font-size: 18px;
+}
+
+#theoryModule .error-flow article strong {
+  margin-top: 5px;
+  color: #24272a;
+  font-size: 17px;
+}
+
+#theoryModule .error-flow article p {
+  margin: 5px 0 0;
+  color: #64686d;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#theoryModule .error-flow > i {
+  color: #8a8e93;
+  font-size: 28px;
+  font-style: normal;
+  text-align: center;
+}
+
+#theoryModule .error-origin-summary {
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  border: 1px solid #e9c997;
+  border-radius: 4px;
+  color: #4a4135;
+  background: #fffaf2;
+  font-size: 15px;
+  font-weight: 650;
+  text-align: center;
+}
+
+#theoryModule .error-analysis-grid {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+#theoryModule .uncertainty-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
+  gap: 12px;
+}
+
+#theoryModule .uncertainty-formulas {
+  display: grid;
+  gap: 9px;
+}
+
+#theoryModule .uncertainty-formulas strong {
+  display: grid;
+  min-height: 72px;
+  padding: 9px;
+  place-items: center;
+  border: 1px solid #e9c997;
+  border-radius: 4px;
+  color: #22262a;
+  background: #fffdf9;
+  font-size: 21px;
+  font-weight: 500;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+#theoryModule .uncertainty-layout ul,
+#theoryModule .reduction-grid ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+#theoryModule .uncertainty-layout li,
+#theoryModule .reduction-grid li {
+  color: #43474c;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+#theoryModule .exact-geometry-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 5px 12px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid #b9d2eb;
+  border-radius: 4px;
+  background: #f5f9fd;
+}
+
+#theoryModule .exact-geometry-note strong {
+  color: #245f9c;
+  font-size: 15px;
+}
+
+#theoryModule .exact-geometry-note span {
+  color: #1f4f82;
+  font-size: 20px;
+}
+
+#theoryModule .exact-geometry-note p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #536b84;
+  font-size: 13px;
+}
+
+#theoryModule .priority-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+#theoryModule .priority-cards article {
+  min-height: 150px;
+  padding: 12px;
+  border: 1px solid #efb5b3;
+  border-radius: 5px;
+  background: #fffafa;
+}
+
+#theoryModule .priority-cards .priority-medium {
+  border-color: #edc38e;
+  background: #fffaf3;
+}
+
+#theoryModule .priority-cards .priority-conditional {
+  border-color: #b9d9c1;
+  background: #f7fcf8;
+}
+
+#theoryModule .priority-cards strong {
+  display: block;
+  margin-bottom: 12px;
+  color: #cf302b;
+  font-size: 15px;
+  text-align: center;
+}
+
+#theoryModule .priority-medium strong { color: #c66b00; }
+#theoryModule .priority-conditional strong { color: #237d3d; }
+
+#theoryModule .priority-cards p {
+  margin: 6px 0;
+  color: #3f4348;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+#theoryModule .priority-note {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border: 1px solid #eab5b3;
+  border-radius: 4px;
+  color: #7f3431;
+  background: #fff8f8;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+#theoryModule .reduction-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+#theoryModule .reduction-grid > div {
+  padding: 3px 16px 4px;
+}
+
+#theoryModule .reduction-grid > div + div {
+  border-left: 1px dashed #d5d7da;
+}
+
+#theoryModule .reduction-grid h3 {
+  margin: 0 0 9px;
+  color: #248642;
+  font-size: 17px;
+}
+
+#theoryModule .critical-warning {
+  grid-template-columns: 120px minmax(0, 1fr);
+  margin-top: 0;
+  border-color: #efaaa6;
+  color: #b5231e;
+  background: #fff7f7;
+}
+
+#theoryModule .critical-warning strong {
+  color: #d62822;
+  font-size: 20px;
+}
+
+#theoryModule .critical-warning p {
+  color: #4f3030;
+}
+
+#theoryModule .theory-summary {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 14px;
+  margin: 0 34px;
+  padding: 13px 16px;
+  border: 1px solid #e4ad5d;
+  border-radius: 6px;
+  color: #303338;
+  background: #fffaf2;
+}
+
+#theoryModule .theory-summary h3 {
+  margin: 0;
+  color: #a85e00;
+  font-size: 18px;
+}
+
+#theoryModule .theory-summary p {
+  margin: 0;
+  color: #35383c;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.65;
+}
+
+/* 中等宽度先收窄公式和留白，保持两栏讲义结构。 */
+@media (max-width: 1180px) {
+  #theoryModule.theory-shell {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  #theoryModule .theory-nav button {
+    grid-template-columns: 38px minmax(0, 1fr);
+    min-height: 64px;
+    padding-inline: 14px;
+    font-size: 18px;
+  }
+
+  #theoryModule .theory-nav button span {
+    font-size: 21px;
+  }
+
+  #theoryModule .theory-heading,
+  #theoryModule .theory-visual.competition-page {
+    padding-inline: 22px;
+  }
+
+  #theoryModule .theory-note,
+  #theoryModule .theory-summary {
+    margin-inline: 22px;
+  }
+
+  #theoryModule .concept-reference-grid,
+  #theoryModule .principle-layout,
+  #theoryModule .width-layout,
+  #theoryModule .measurement-methods,
+  #theoryModule .error-analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #theoryModule .symbol-section {
+    order: 2;
+  }
+
+  #theoryModule .fitting-grid {
+    grid-template-columns: minmax(280px, 1fr) minmax(280px, 1fr);
+  }
+
+  #theoryModule .fit-steps {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  #theoryModule .error-flow {
+    grid-template-columns: repeat(5, minmax(110px, 1fr));
+  }
+
+  #theoryModule .error-flow > i {
+    display: none;
+  }
+}
+
+/* 手机端采用横向章节导航；内容保持同一信息层级，不做缩小版桌面截图。 */
+@media (max-width: 760px) {
+  body.theory-mode .app-shell {
+    padding: 0;
+  }
+
+  body.theory-mode .topbar {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 13px 14px 0;
+  }
+
+  body.theory-mode .brand h1 {
+    font-size: 25px;
+  }
+
+  body.theory-mode .brand p {
+    font-size: 11px;
+  }
+
+  body.theory-mode .module-tabs {
+    width: 100%;
+  }
+
+  body.theory-mode .tab {
+    min-height: 50px;
+    font-size: 16px;
+  }
+
+  #theoryModule.theory-shell {
+    grid-template-columns: 1fr;
+    border-inline: 0;
+  }
+
+  #theoryModule .theory-rail {
+    position: static;
+    display: block;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
+    border-right: 0;
+    border-bottom: 1px solid var(--paper-line);
+  }
+
+  #theoryModule .theory-rail-head {
+    padding: 16px 16px 10px;
+  }
+
+  #theoryModule .theory-rail-head::before {
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+
+  #theoryModule .theory-rail-head h2 {
+    font-size: 23px;
+  }
+
+  #theoryModule .theory-rail-head p {
+    font-size: 13px;
+  }
+
+  #theoryModule .theory-nav {
+    display: flex;
+    gap: 6px;
+    padding: 8px 12px 12px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+  }
+
+  #theoryModule .theory-nav button {
+    flex: 0 0 146px;
+    grid-template-columns: 30px minmax(0, 1fr);
+    min-height: 54px;
+    padding: 7px 9px;
+    border: 1px solid #dedfe1;
+    border-left: 4px solid transparent;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  #theoryModule .theory-nav button span {
+    font-size: 18px;
+  }
+
+  #theoryModule .theory-nav button.active {
+    border-color: #e4b36b;
+    border-left-color: #d47a00;
+  }
+
+  #theoryModule .theory-progress {
+    display: none;
+  }
+
+  #theoryModule .theory-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-height: 88px;
+    padding: 13px 14px;
+  }
+
+  #theoryModule .theory-heading p {
+    font-size: 11px;
+  }
+
+  #theoryModule .theory-heading h2 {
+    font-size: clamp(32px, 10vw, 42px);
+  }
+
+  #theoryModule .theory-controls {
+    gap: 5px;
+  }
+
+  #theoryModule .theory-controls .secondary-button {
+    min-width: 42px;
+    width: 42px;
+    min-height: 42px;
+    padding: 0;
+    overflow: hidden;
+    color: transparent;
+    font-size: 0;
+  }
+
+  #theoryModule .theory-controls .secondary-button::first-letter {
+    color: #34383d;
+    font-size: 27px;
+  }
+
+  #theoryModule .theory-note,
+  #theoryModule .theory-summary {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    margin-inline: 14px;
+    padding: 10px 12px;
+  }
+
+  #theoryModule .theory-note strong,
+  #theoryModule .theory-summary h3 {
+    font-size: 16px;
+  }
+
+  #theoryModule .theory-note span,
+  #theoryModule .theory-summary p {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  #theoryModule .theory-visual.competition-page {
+    padding: 17px 14px 20px;
+  }
+
+  #theoryModule .chapter-lead {
+    display: grid;
+    gap: 9px;
+  }
+
+  #theoryModule .chapter-lead > p {
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  #theoryModule .chapter-tags {
+    justify-content: flex-start;
+  }
+
+  #theoryModule .chapter-tags span {
+    font-size: 12px;
+  }
+
+  #theoryModule .concept-mode-bar,
+  #theoryModule .width-mode-bar {
+    width: 100%;
+  }
+
+  #theoryModule .width-mode-bar {
+    grid-template-columns: 1fr;
+  }
+
+  #theoryModule .concept-mode-bar button,
+  #theoryModule .width-mode-bar button {
+    min-height: 42px;
+    font-size: 15px;
+  }
+
+  #theoryModule .width-mode-bar button {
+    border-right: 0;
+    border-bottom: 1px solid #d8dadd;
+  }
+
+  #theoryModule .width-mode-bar button:last-child {
+    border-bottom: 0;
+  }
+
+  #theoryModule .reference-grid,
+  #theoryModule .principle-layout,
+  #theoryModule .width-layout,
+  #theoryModule .measurement-methods,
+  #theoryModule .error-analysis-grid,
+  #theoryModule .uncertainty-layout,
+  #theoryModule .reduction-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #theoryModule .paper-section {
+    padding: 12px 11px 13px;
+  }
+
+  #theoryModule .section-title > span {
+    flex-basis: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 19px;
+  }
+
+  #theoryModule .section-title strong {
+    font-size: 19px;
+  }
+
+  #theoryModule .section-title small {
+    font-size: 11px;
+  }
+
+  #theoryModule .theory-symbol-table {
+    font-size: 14px;
+  }
+
+  #theoryModule .theory-symbol-table th,
+  #theoryModule .theory-symbol-table td {
+    padding: 8px 7px;
+  }
+
+  #theoryModule .theory-symbol-table th:first-child,
+  #theoryModule .theory-symbol-table td:first-child {
+    width: 54px;
+    font-size: 17px;
+  }
+
+  #theoryModule .equation-pair strong {
+    font-size: 22px;
+  }
+
+  #theoryModule .numbered-principle {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  #theoryModule .numbered-principle > b {
+    width: 34px;
+    height: 34px;
+    font-size: 19px;
+  }
+
+  #theoryModule .numbered-principle h3 {
+    font-size: 18px;
+  }
+
+  #theoryModule .numbered-principle p,
+  #theoryModule .signed-angle-note p {
+    font-size: 15px;
+  }
+
+  #theoryModule .inline-equation {
+    font-size: 22px;
+  }
+
+  #theoryModule .formula-lines strong,
+  #theoryModule .measurement-equations strong,
+  #theoryModule .uncertainty-formulas strong {
+    font-size: 18px;
+  }
+
+  #theoryModule .measurement-equations,
+  #theoryModule .measurement-equations.two,
+  #theoryModule .priority-cards,
+  #theoryModule .fitting-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #theoryModule .measurement-equations > div {
+    min-height: 70px;
+  }
+
+  #theoryModule .fit-steps {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
+
+  #theoryModule .error-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #theoryModule .error-flow article:last-of-type {
+    grid-column: 1 / -1;
+  }
+
+  #theoryModule .error-flow article {
+    min-height: 112px;
+  }
+
+  #theoryModule .reduction-grid > div {
+    padding: 3px 5px;
+  }
+
+  #theoryModule .reduction-grid > div + div {
+    padding-top: 12px;
+    border-top: 1px dashed #d5d7da;
+    border-left: 0;
+  }
+
+  #theoryModule .critical-warning,
+  #theoryModule .core-conclusion {
+    grid-template-columns: 1fr;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -4122,6 +5764,648 @@ html.force-desktop-layout .formula-large {
 }
 
 
+/*
+  物理实验竞赛版原理工作区。
+  这里把章节导航、公式条件和知识内容收进同一个连续界面：左栏负责定位，
+  右侧按“章节标题 -> 适用条件 -> 证据图示 -> 本页结论”建立稳定阅读顺序。
+  所有颜色均沿用项目原有的蓝、青、紫语义色，避免形成与主实验割裂的新主题。
+*/
+#theoryModule.theory-shell {
+  --theory-line: rgba(137, 176, 211, 0.2);
+  --theory-line-strong: rgba(112, 187, 246, 0.38);
+  --theory-surface: #0b1824;
+  --theory-surface-raised: #102131;
+  --theory-surface-soft: #0d1c29;
+  --theory-cyan: #7fd2ff;
+  --theory-violet: #9a8cff;
+  grid-template-columns: 276px minmax(0, 1fr);
+  gap: 0;
+  border-color: var(--theory-line);
+  border-radius: 8px;
+  background: #08141f;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.26);
+}
+
+#theoryModule .theory-rail {
+  top: 10px;
+  max-height: calc(100vh - 20px);
+  border-right: 1px solid var(--theory-line);
+  background: #0a1621;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(127, 210, 255, 0.36) transparent;
+}
+
+#theoryModule .theory-rail-head {
+  padding: 22px 22px 16px;
+  border-bottom: 1px solid var(--theory-line);
+}
+
+#theoryModule .theory-rail-head h2 {
+  font-size: 25px;
+  line-height: 1.25;
+}
+
+#theoryModule .theory-rail-head p {
+  margin-top: 7px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+#theoryModule .theory-nav {
+  gap: 7px;
+  padding: 14px 12px;
+}
+
+#theoryModule .theory-nav button {
+  position: relative;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 10px;
+  min-height: 54px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 17px;
+  line-height: 1.3;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+#theoryModule .theory-nav button:hover {
+  border-color: rgba(127, 210, 255, 0.24);
+  background: rgba(127, 210, 255, 0.055);
+  color: #eef7ff;
+}
+
+#theoryModule .theory-nav button:focus-visible {
+  outline: 2px solid var(--theory-cyan);
+  outline-offset: 2px;
+}
+
+#theoryModule .theory-nav button span {
+  width: 34px;
+  height: 34px;
+  border-color: rgba(161, 190, 219, 0.3);
+  background: rgba(255, 255, 255, 0.018);
+  font-size: 16px;
+}
+
+#theoryModule .theory-nav button.active {
+  border-color: rgba(112, 168, 255, 0.48);
+  background: #1a3150;
+  box-shadow: inset 3px 0 0 #76c9ff;
+}
+
+#theoryModule .theory-nav button.active span {
+  border-color: rgba(167, 151, 255, 0.76);
+  background: #514d8c;
+}
+
+#theoryModule .theory-progress {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 12px 14px;
+  padding: 11px 12px;
+  border-color: var(--theory-line);
+  border-radius: 6px;
+  background: #0d1b28;
+}
+
+#theoryModule .theory-progress span,
+#theoryModule .theory-progress strong {
+  font-size: 14px;
+}
+
+#theoryModule .theory-progress i {
+  height: 5px;
+}
+
+#theoryModule .theory-main {
+  min-width: 0;
+  background: #091621;
+}
+
+#theoryModule .theory-heading {
+  min-height: 82px;
+  padding: 13px 24px;
+  border-bottom-color: var(--theory-line);
+  background: #0c1a26;
+}
+
+#theoryModule .theory-heading p {
+  margin-bottom: 4px;
+  color: #79a8cb;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+#theoryModule .theory-heading h2 {
+  font-size: clamp(32px, 2.2vw, 42px);
+  line-height: 1.15;
+}
+
+#theoryModule .theory-controls .secondary-button {
+  min-width: 98px;
+  min-height: 42px;
+  border-color: rgba(143, 178, 211, 0.22);
+  border-radius: 6px;
+  background: #111f2c;
+  font-size: 16px;
+}
+
+#theoryModule .theory-controls .secondary-button:not(:disabled):hover {
+  border-color: rgba(127, 210, 255, 0.42);
+  background: #172a3b;
+}
+
+#theoryModule .theory-note {
+  grid-template-columns: 142px minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  margin: 14px 24px 0;
+  padding: 13px 16px;
+  border-color: rgba(127, 210, 255, 0.3);
+  border-radius: 6px;
+  background: #0e2635;
+}
+
+#theoryModule .theory-note strong {
+  color: var(--theory-cyan);
+  font-size: 17px;
+}
+
+#theoryModule .theory-note span {
+  color: #d2deeb;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+#theoryModule .theory-stage {
+  margin: 14px 24px 0;
+  overflow: hidden;
+  border: 1px solid var(--theory-line);
+  border-radius: 7px;
+  background: #07131e;
+}
+
+#theoryModule .theory-visual {
+  min-height: 0;
+  padding: 22px;
+  background:
+    linear-gradient(rgba(125, 162, 196, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 162, 196, 0.024) 1px, transparent 1px),
+    #07131e;
+  background-size: 24px 24px, 24px 24px, auto;
+}
+
+/* 顶部章节标题已完整显示当前页名称，隐藏内容区的重复标题以释放首屏空间。 */
+#theoryModule .visual-title {
+  display: none;
+}
+
+#theoryModule .visual-grid,
+#theoryModule .step-grid {
+  gap: 14px;
+}
+
+#theoryModule .visual-card {
+  padding: 20px 22px;
+  border-color: var(--theory-line);
+  border-radius: 7px;
+  background: var(--theory-surface-soft);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+}
+
+#theoryModule .visual-card h3,
+#theoryModule .step-card h3 {
+  margin-bottom: 12px;
+  font-size: clamp(20px, 1.35vw, 24px);
+  line-height: 1.35;
+}
+
+#theoryModule .visual-card p,
+#theoryModule .visual-card li,
+#theoryModule .visual-card dd,
+#theoryModule .visual-card dt {
+  font-size: clamp(16px, 1.04vw, 18px);
+  line-height: 1.7;
+}
+
+#theoryModule .card-kicker {
+  margin: 0 0 7px;
+  color: #75bde9;
+  font-family: var(--font-number);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+#theoryModule .card-heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+#theoryModule .card-heading-row h3 {
+  margin-bottom: 10px;
+}
+
+#theoryModule .equation-chip {
+  flex: 0 0 auto;
+  padding: 7px 11px;
+  border: 1px solid rgba(154, 140, 255, 0.38);
+  border-radius: 5px;
+  background: #181e39;
+  color: #e9e5ff;
+  font-family: var(--font-math);
+  font-size: 17px;
+}
+
+/* 第一页首屏使用 5:8 信息比例，定义负责导入，装置图负责建立实验直觉。 */
+#theoryModule .concept-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.78fr) minmax(560px, 1.55fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+#theoryModule .concept-support-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+#theoryModule .grating-definition {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border-color: rgba(127, 210, 255, 0.32);
+  border-left: 3px solid #75c8f8;
+  background: #10273a;
+}
+
+#theoryModule .grating-definition p {
+  max-width: none;
+  color: #d9e6f3;
+  font-size: clamp(17px, 1.08vw, 19px);
+  line-height: 1.74;
+}
+
+#theoryModule .grating-definition .muted-line {
+  color: #a9c4dc;
+}
+
+#theoryModule .concept-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+#theoryModule .concept-tags span {
+  padding: 5px 9px;
+  border: 1px solid rgba(127, 210, 255, 0.24);
+  border-radius: 4px;
+  background: #0c1e2d;
+  color: #bfe6ff;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+#theoryModule .apparatus-detail-card {
+  grid-column: auto;
+  background: #0a1926;
+}
+
+#theoryModule .apparatus-sketch {
+  min-height: 0;
+  max-height: 330px;
+  padding: 4px;
+  border-color: rgba(127, 210, 255, 0.2);
+  border-radius: 6px;
+  background: #07131f;
+}
+
+#theoryModule .symbol-list,
+#theoryModule .compact-list {
+  gap: 7px;
+}
+
+#theoryModule .symbol-list div,
+#theoryModule .compact-list div {
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 12px;
+  min-height: 42px;
+}
+
+#theoryModule .symbol-list dt {
+  width: 42px;
+  height: 42px;
+  background: #242b50;
+  font-size: 24px;
+}
+
+#theoryModule .check-list {
+  gap: 9px;
+}
+
+#theoryModule .check-list li {
+  padding-left: 29px;
+}
+
+#theoryModule .check-list li::before {
+  width: 19px;
+  height: 19px;
+  font-size: 12px;
+}
+
+#theoryModule .formula-large {
+  min-height: 64px;
+  margin: 12px 0;
+  padding: 15px 16px;
+  border-color: rgba(154, 140, 255, 0.34);
+  border-radius: 6px;
+  background: #091625;
+  font-size: clamp(27px, 2.05vw, 36px);
+}
+
+#theoryModule .visual-tip {
+  margin-top: 12px !important;
+  padding: 10px 12px;
+  border-color: rgba(154, 140, 255, 0.28);
+  border-radius: 6px;
+  background: #171d38;
+}
+
+#theoryModule .matlab-theory-plot {
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+#theoryModule .matlab-plot-note {
+  border-radius: 5px;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+#theoryModule .stripe-row {
+  min-height: 94px;
+  border: 1px solid rgba(154, 140, 255, 0.16);
+  border-radius: 6px;
+}
+
+#theoryModule .stripe-row span,
+#theoryModule .stripe-row strong {
+  font-size: 22px;
+}
+
+#theoryModule .workflow-row {
+  gap: 10px;
+}
+
+#theoryModule .workflow-row .visual-card {
+  padding: 15px;
+}
+
+#theoryModule .theory-summary {
+  grid-template-columns: 126px minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+  margin: 12px 24px 16px;
+  padding: 13px 16px;
+  border-color: var(--theory-line-strong);
+  border-radius: 6px;
+  background: #102131;
+}
+
+#theoryModule .theory-summary h3 {
+  color: var(--theory-cyan);
+  font-size: 17px;
+}
+
+#theoryModule .theory-summary p {
+  color: #d6e2ee;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+/* 中等宽度先收紧导航和首屏比例，避免装置图或公式被挤压。 */
+@media (max-width: 1320px) {
+  #theoryModule.theory-shell {
+    grid-template-columns: 238px minmax(0, 1fr);
+  }
+
+  #theoryModule .theory-nav button {
+    grid-template-columns: 36px minmax(0, 1fr);
+    min-height: 50px;
+    padding: 4px 9px;
+    font-size: 15px;
+  }
+
+  #theoryModule .theory-nav button span {
+    width: 31px;
+    height: 31px;
+    font-size: 14px;
+  }
+
+  #theoryModule .concept-hero-grid {
+    grid-template-columns: minmax(260px, 0.72fr) minmax(470px, 1.5fr);
+  }
+
+  #theoryModule .visual-grid.four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #theoryModule .workflow-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* 平板与手机改为连续单栏；章节目录横向滚动，不制造纵向超长侧栏。 */
+@media (max-width: 980px) {
+  #theoryModule.theory-shell {
+    grid-template-columns: 1fr;
+  }
+
+  #theoryModule .theory-rail {
+    position: static;
+    max-height: none;
+    overflow: hidden;
+    border-right: 0;
+    border-bottom: 1px solid var(--theory-line);
+  }
+
+  #theoryModule .theory-rail-head {
+    padding: 17px 18px 12px;
+  }
+
+  #theoryModule .theory-rail-head h2 {
+    font-size: 23px;
+  }
+
+  #theoryModule .theory-rail-head p {
+    font-size: 15px;
+  }
+
+  #theoryModule .theory-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px 12px;
+    scrollbar-width: none;
+  }
+
+  #theoryModule .theory-nav button {
+    flex: 0 0 190px;
+  }
+
+  #theoryModule .theory-progress {
+    margin: 0 12px 12px;
+  }
+
+  #theoryModule .theory-heading {
+    min-height: 76px;
+    padding: 12px 16px;
+  }
+
+  #theoryModule .theory-heading h2 {
+    font-size: clamp(29px, 5.2vw, 38px);
+  }
+
+  #theoryModule .theory-note,
+  #theoryModule .theory-summary {
+    margin-right: 16px;
+    margin-left: 16px;
+  }
+
+  #theoryModule .theory-stage {
+    margin-right: 16px;
+    margin-left: 16px;
+  }
+
+  #theoryModule .concept-hero-grid,
+  #theoryModule .concept-support-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #theoryModule .apparatus-sketch {
+    max-height: none;
+  }
+}
+
+@media (max-width: 620px) {
+  /*
+    Chromium 在部分手机 WebView 中会用约 500px 的布局视口渲染再缩放。
+    因此原理页在 620px 就明确锁定到设备宽度，防止顶栏和正文被右侧裁切。
+  */
+  body.theory-mode .app-shell {
+    width: 100vw;
+    max-width: 100vw;
+    padding-right: 8px;
+    padding-left: 8px;
+    overflow-x: hidden;
+  }
+
+  body.theory-mode .module-tabs,
+  body.theory-mode #theoryModule.theory-shell {
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+    min-width: 0;
+  }
+
+  body.theory-mode .module-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.theory-mode .module-tabs .tab {
+    min-width: 0;
+    padding-right: 5px;
+    padding-left: 5px;
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  #theoryModule .theory-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  #theoryModule .theory-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #theoryModule .theory-controls .secondary-button {
+    min-width: 0;
+  }
+
+  #theoryModule .theory-note,
+  #theoryModule .theory-summary {
+    grid-template-columns: 1fr;
+  }
+
+  #theoryModule .theory-note strong,
+  #theoryModule .theory-summary h3 {
+    padding-bottom: 7px;
+    border-bottom: 1px solid rgba(127, 210, 255, 0.16);
+  }
+
+  #theoryModule .theory-visual {
+    padding: 13px;
+  }
+
+  #theoryModule .theory-note span,
+  #theoryModule .theory-summary p,
+  #theoryModule .visual-card p,
+  #theoryModule .visual-card li,
+  #theoryModule .visual-card dd {
+    overflow-wrap: anywhere;
+  }
+
+  #theoryModule .visual-card {
+    padding: 17px 15px;
+  }
+
+  #theoryModule .card-heading-row {
+    display: block;
+  }
+
+  #theoryModule .equation-chip {
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  #theoryModule .visual-grid.two,
+  #theoryModule .visual-grid.four,
+  #theoryModule .workflow-row,
+  #theoryModule .step-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #theoryModule .stripe-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  #theoryModule .stripe-row span,
+  #theoryModule .stripe-row strong {
+    font-size: 16px;
+  }
+}
+
+/* 二维码的电脑同版入口仍使用同一套竞赛布局，避免强制桌面规则覆盖新比例。 */
+html.force-desktop-layout #theoryModule.theory-shell {
+  grid-template-columns: 276px minmax(0, 1fr) !important;
+}
+
+html.force-desktop-layout #theoryModule .theory-heading {
+  padding: 13px 24px !important;
+}
+
+html.force-desktop-layout #theoryModule .visual-card {
+  padding: 20px 22px !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -4129,5 +6413,1565 @@ html.force-desktop-layout .formula-large {
     scroll-behavior: auto !important;
     transition: none !important;
     animation: none !important;
+  }
+}
+
+/*
+  末端兼容层：旧版原理主题仍保留在上方供历史页面回溯，这里以更高作用域
+  明确竞赛参考图版的最终值，防止旧主题在常规、窄屏或强制桌面模式下反向覆盖。
+*/
+body.theory-mode #theoryModule.theory-shell {
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 0;
+  overflow: clip;
+  border: 1px solid #d9dadd;
+  border-top: 0;
+  border-radius: 0;
+  color: #17181a;
+  background: #ffffff;
+  box-shadow: 0 18px 48px rgba(24, 27, 31, 0.08);
+}
+
+body.theory-mode #theoryModule .theory-rail,
+body.theory-mode #theoryModule .theory-main {
+  border-radius: 0;
+  color: #17181a;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+body.theory-mode #theoryModule .theory-rail {
+  border-right: 1px solid #d9dadd;
+}
+
+body.theory-mode #theoryModule .theory-rail-head {
+  padding: 28px 26px 21px;
+  border-bottom: 1px solid #ececef;
+}
+
+body.theory-mode #theoryModule .theory-rail-head h2,
+body.theory-mode #theoryModule .theory-heading h2 {
+  color: #111214;
+}
+
+body.theory-mode #theoryModule .theory-rail-head h2 {
+  font-size: 26px;
+}
+
+body.theory-mode #theoryModule .theory-rail-head p {
+  color: #777b80;
+  font-size: 15px;
+}
+
+body.theory-mode #theoryModule .theory-nav {
+  gap: 4px;
+  padding: 22px 0;
+}
+
+body.theory-mode #theoryModule .theory-nav button {
+  grid-template-columns: 46px minmax(0, 1fr);
+  min-height: 72px;
+  padding: 8px 22px;
+  border: 0;
+  border-left: 5px solid transparent;
+  border-radius: 0;
+  color: #272a2e;
+  background: #ffffff;
+  font-size: 21px;
+  box-shadow: none;
+}
+
+body.theory-mode #theoryModule .theory-nav button span {
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  color: #2d3034;
+  background: transparent;
+  font-size: 24px;
+}
+
+body.theory-mode #theoryModule .theory-nav button.active {
+  border-left-color: #d47a00;
+  color: #bd6900;
+  background: #fff8ed;
+}
+
+body.theory-mode #theoryModule .theory-nav button.active span {
+  border: 0;
+  color: #bd6900;
+  background: transparent;
+}
+
+body.theory-mode #theoryModule .theory-progress {
+  margin: 12px 20px 22px;
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 1px solid #ececef;
+  border-radius: 0;
+  color: #777b80;
+  background: #ffffff;
+}
+
+body.theory-mode #theoryModule .theory-progress span,
+body.theory-mode #theoryModule .theory-progress strong {
+  color: #6a6e73;
+  font-size: 13px;
+}
+
+body.theory-mode #theoryModule .theory-progress b {
+  background: #d47a00;
+}
+
+body.theory-mode #theoryModule .theory-heading {
+  min-height: 104px;
+  padding: 16px 34px 14px;
+  border-bottom: 1px solid #ececef;
+  background: #ffffff;
+}
+
+body.theory-mode #theoryModule .theory-heading p {
+  color: #9c5a00;
+  font-size: 13px;
+}
+
+body.theory-mode #theoryModule .theory-heading h2 {
+  font-size: clamp(40px, 3vw, 58px);
+}
+
+body.theory-mode #theoryModule .theory-note {
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 14px;
+  margin: 16px 34px 0;
+  padding: 12px 16px;
+  border: 1px solid #edc88f;
+  border-radius: 5px;
+  color: #3b3e42;
+  background: #fffaf2;
+}
+
+body.theory-mode #theoryModule .theory-note strong {
+  color: #ad6200;
+  font-size: 17px;
+}
+
+body.theory-mode #theoryModule .theory-note span {
+  color: #3e4247;
+  font-size: 16px;
+}
+
+body.theory-mode #theoryModule .theory-stage {
+  margin: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+}
+
+body.theory-mode #theoryModule .theory-visual,
+body.theory-mode #theoryModule .theory-visual.competition-page {
+  min-height: 0;
+  padding: 22px 34px 28px;
+  color: #17181a;
+  background: #ffffff;
+}
+
+body.theory-mode #theoryModule .theory-summary {
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 14px;
+  margin: 0 34px;
+  padding: 13px 16px;
+  border: 1px solid #e4ad5d;
+  border-radius: 6px;
+  background: #fffaf2;
+}
+
+body.theory-mode #theoryModule .theory-summary h3 {
+  color: #a85e00;
+  font-size: 18px;
+}
+
+body.theory-mode #theoryModule .theory-summary p {
+  color: #35383c;
+  font-size: 16px;
+}
+
+@media (max-width: 1180px) {
+  body.theory-mode #theoryModule.theory-shell {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  body.theory-mode #theoryModule .theory-nav button {
+    grid-template-columns: 38px minmax(0, 1fr);
+    min-height: 64px;
+    padding-inline: 14px;
+    font-size: 18px;
+  }
+
+  body.theory-mode #theoryModule .theory-nav button span {
+    font-size: 21px;
+  }
+
+  body.theory-mode #theoryModule .theory-heading,
+  body.theory-mode #theoryModule .theory-visual,
+  body.theory-mode #theoryModule .theory-visual.competition-page {
+    padding-inline: 22px;
+  }
+
+  body.theory-mode #theoryModule .theory-note,
+  body.theory-mode #theoryModule .theory-summary {
+    margin-inline: 22px;
+  }
+}
+
+@media (max-width: 760px) {
+  body.theory-mode .app-shell {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  body.theory-mode .module-tabs,
+  body.theory-mode #theoryModule.theory-shell {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  body.theory-mode #theoryModule.theory-shell {
+    grid-template-columns: 1fr;
+  }
+
+  body.theory-mode #theoryModule .theory-rail {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    border-right: 0;
+    border-bottom: 1px solid #d9dadd;
+  }
+
+  body.theory-mode #theoryModule .theory-rail-head {
+    padding: 16px 16px 10px;
+  }
+
+  body.theory-mode #theoryModule .theory-rail-head h2 {
+    font-size: 23px;
+  }
+
+  body.theory-mode #theoryModule .theory-rail-head p {
+    font-size: 13px;
+  }
+
+  body.theory-mode #theoryModule .theory-nav {
+    display: flex;
+    gap: 6px;
+    padding: 8px 12px 12px;
+    overflow-x: auto;
+  }
+
+  body.theory-mode #theoryModule .theory-nav button {
+    flex: 0 0 146px;
+    grid-template-columns: 30px minmax(0, 1fr);
+    min-height: 54px;
+    padding: 7px 9px;
+    border: 1px solid #dedfe1;
+    border-left: 4px solid transparent;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  body.theory-mode #theoryModule .theory-nav button span {
+    font-size: 18px;
+  }
+
+  body.theory-mode #theoryModule .theory-nav button.active {
+    border-color: #e4b36b;
+    border-left-color: #d47a00;
+  }
+
+  body.theory-mode #theoryModule .theory-progress {
+    display: none;
+  }
+
+  body.theory-mode #theoryModule .theory-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-height: 88px;
+    padding: 13px 14px;
+  }
+
+  body.theory-mode #theoryModule .theory-heading h2 {
+    font-size: clamp(32px, 10vw, 42px);
+  }
+
+  body.theory-mode #theoryModule .theory-note,
+  body.theory-mode #theoryModule .theory-summary {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    margin-inline: 14px;
+  }
+
+  body.theory-mode #theoryModule .theory-visual,
+  body.theory-mode #theoryModule .theory-visual.competition-page {
+    padding: 17px 14px 20px;
+  }
+
+  body.theory-mode #theoryModule .theory-controls {
+    display: flex;
+  }
+
+  body.theory-mode #theoryModule .theory-controls .secondary-button {
+    min-width: 42px;
+    width: 42px;
+  }
+}
+
+html.force-desktop-layout body.theory-mode #theoryModule.theory-shell {
+  grid-template-columns: 250px minmax(0, 1fr) !important;
+}
+
+html.force-desktop-layout body.theory-mode #theoryModule .theory-heading {
+  padding: 16px 34px 14px !important;
+}
+
+body.theory-mode #theoryModule .theory-controls .secondary-button {
+  min-width: 104px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid #cfd1d4;
+  border-radius: 5px;
+  color: #3b3f44;
+  background: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+body.theory-mode #theoryModule .theory-controls .secondary-button:hover {
+  border-color: #d47a00;
+  color: #9f5900;
+  background: #fff8ed;
+}
+
+body.theory-mode #theoryModule .theory-controls .secondary-button:disabled {
+  color: #9a9ea3;
+  background: #f1f2f3;
+}
+
+@media (max-width: 760px) {
+  body.theory-mode #theoryModule .theory-controls .secondary-button {
+    min-width: 42px;
+    width: 42px;
+    min-height: 42px;
+    padding: 0;
+    overflow: hidden;
+    color: transparent;
+    font-size: 0;
+  }
+
+  body.theory-mode #theoryModule .theory-controls .secondary-button::before {
+    display: block;
+    color: #34383d;
+    font-size: 27px;
+  }
+
+  body.theory-mode #theoryPrev::before { content: "‹"; }
+  body.theory-mode #theoryNext::before { content: "›"; }
+}
+
+/* ========================================================================== */
+/* 原理讲解：答辩可读性与物理变量规范排版（2026-07-17）                     */
+/* ========================================================================== */
+/*
+  <var> 只包裹物理量；sin、cos、tan、arcsin、sinc 等函数名以及 nm、mm、μm
+  等单位仍保持正体。这比把整条公式直接设为斜体更符合科技论文排版规则。
+*/
+body.theory-mode #theoryModule var.physics-variable {
+  display: inline;
+  margin: 0 0.02em;
+  color: inherit;
+  font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+  font-size: 1.03em;
+  font-style: italic;
+  font-weight: inherit;
+  letter-spacing: 0;
+}
+
+/* 主实验普通文字中的变量与原理页遵循同一数学字体规则。 */
+#operationModule var.physics-variable,
+.bottom-status var.physics-variable {
+  display: inline;
+  margin: 0 0.02em;
+  color: inherit;
+  font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+  font-size: 1.03em;
+  font-style: italic;
+  font-weight: inherit;
+  letter-spacing: 0;
+}
+
+/*
+  参数标题使用固定三列：中文名称、物理变量、单位/状态。
+  不依赖文字长度分配间距，因此所有变量和单位在窄屏、桌面端都保持同列对齐。
+*/
+#operationModule .parameter-panel .control-label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 46px minmax(92px, auto);
+  gap: 10px;
+  align-items: baseline;
+  width: 100%;
+}
+
+#operationModule .parameter-panel .control-name {
+  min-width: 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+#operationModule .parameter-panel .control-symbol {
+  width: 46px;
+  margin: 0;
+  justify-self: center;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#operationModule .parameter-panel .control-meta {
+  display: flex;
+  min-width: 92px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+#operationModule .parameter-panel .control-unit {
+  font: inherit;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+#operationModule .parameter-panel .wavelength-chip {
+  flex: 0 0 auto;
+}
+
+/*
+  参数标题按阅读顺序紧邻排列：名称 → 变量 → 单位/状态。
+  用户要求变量和单位跟随中文名称，因此这里覆盖前面的等宽列规则，但不改变控件尺寸。
+*/
+#operationModule .parameter-panel .control-label {
+  display: flex;
+  width: 100%;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+#operationModule .parameter-panel .control-name,
+#operationModule .parameter-panel .control-symbol,
+#operationModule .parameter-panel .control-meta {
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  justify-self: auto;
+  flex: 0 0 auto;
+  text-align: left;
+}
+
+#operationModule .parameter-panel .control-meta {
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+body.theory-mode .brand h1 { font-size: 38px; }
+body.theory-mode .brand p { font-size: 15px; }
+body.theory-mode .tab { font-size: 20px; }
+
+body.theory-mode #theoryModule .theory-rail-head::before { font-size: 20px; }
+body.theory-mode #theoryModule .theory-rail-head h2 { font-size: 30px; }
+body.theory-mode #theoryModule .theory-rail-head p { font-size: 17px; }
+body.theory-mode #theoryModule .theory-nav button { font-size: 24px; }
+body.theory-mode #theoryModule .theory-nav button span { font-size: 27px; }
+body.theory-mode #theoryModule .theory-progress span,
+body.theory-mode #theoryModule .theory-progress strong { font-size: 15px; }
+
+body.theory-mode #theoryModule .theory-heading { min-height: 116px; }
+body.theory-mode #theoryModule .theory-heading p { font-size: 15px; }
+body.theory-mode #theoryModule .theory-heading h2 { font-size: 62px; }
+body.theory-mode #theoryModule .theory-controls .secondary-button { font-size: 18px; }
+body.theory-mode #theoryModule .theory-note strong { font-size: 20px; }
+body.theory-mode #theoryModule .theory-note span { font-size: 19px; line-height: 1.72; }
+body.theory-mode #theoryModule .theory-loading { font-size: 20px; }
+
+body.theory-mode #theoryModule .chapter-lead > p { font-size: 21px; line-height: 1.72; }
+body.theory-mode #theoryModule .chapter-tags span { font-size: 15px; }
+body.theory-mode #theoryModule .concept-mode-bar button,
+body.theory-mode #theoryModule .width-mode-bar button { min-height: 48px; font-size: 18px; }
+body.theory-mode #theoryModule .section-title > span { width: 38px; height: 38px; flex-basis: 38px; font-size: 24px; }
+body.theory-mode #theoryModule .section-title strong { font-size: 26px; }
+body.theory-mode #theoryModule .section-title small { font-size: 15px; }
+
+body.theory-mode #theoryModule .equation-pair strong { font-size: 32px; }
+body.theory-mode #theoryModule .equation-pair span { font-size: 16px; }
+body.theory-mode #theoryModule .theory-symbol-table { font-size: 19px; }
+body.theory-mode #theoryModule .theory-symbol-table th,
+body.theory-mode #theoryModule .theory-symbol-table td { padding: 13px 14px; line-height: 1.58; }
+body.theory-mode #theoryModule .theory-symbol-table th:first-child,
+body.theory-mode #theoryModule .theory-symbol-table td:first-child { width: 92px; font-size: 26px; }
+
+body.theory-mode #theoryModule .teaching-callout strong,
+body.theory-mode #theoryModule .core-conclusion strong,
+body.theory-mode #theoryModule .critical-warning strong { font-size: 21px; }
+body.theory-mode #theoryModule .teaching-callout p,
+body.theory-mode #theoryModule .core-conclusion p,
+body.theory-mode #theoryModule .critical-warning p { font-size: 18px; line-height: 1.72; }
+
+body.theory-mode #theoryModule .formula-box strong { font-size: 34px; }
+body.theory-mode #theoryModule .formula-box span { font-size: 15px; }
+body.theory-mode #theoryModule .numbered-principle h3 { font-size: 24px; }
+body.theory-mode #theoryModule .numbered-principle p,
+body.theory-mode #theoryModule .signed-angle-note p { font-size: 18px; line-height: 1.72; }
+body.theory-mode #theoryModule .numbered-principle small { font-size: 16px; }
+body.theory-mode #theoryModule .inline-equation { font-size: 30px; }
+body.theory-mode #theoryModule .inline-equation.emphasis { font-size: 33px; }
+body.theory-mode #theoryModule .signed-angle-note strong { font-size: 19px; }
+body.theory-mode #theoryModule .signed-angle-note span { font-size: 27px; }
+
+body.theory-mode #theoryModule .figure-caption { font-size: 16px; line-height: 1.7; }
+body.theory-mode #theoryModule .formula-card-blue h3,
+body.theory-mode #theoryModule .formula-card-red h3 { font-size: 22px; }
+body.theory-mode #theoryModule .formula-lines strong { font-size: 24px; line-height: 1.45; }
+body.theory-mode #theoryModule .formula-lines span { font-size: 14px; }
+body.theory-mode #theoryModule .formula-card-blue > p,
+body.theory-mode #theoryModule .formula-card-red > p,
+body.theory-mode #theoryModule .width-rule p { font-size: 17px; line-height: 1.7; }
+body.theory-mode #theoryModule .width-rule strong { font-size: 20px; }
+
+body.theory-mode #theoryModule .measurement-equations span { font-size: 14px; }
+body.theory-mode #theoryModule .measurement-equations strong { font-size: 22px; }
+body.theory-mode #theoryModule .method-note { font-size: 16px; line-height: 1.7; }
+body.theory-mode #theoryModule .fit-formulas strong { font-size: 30px; }
+body.theory-mode #theoryModule .fit-formulas p { font-size: 17px; }
+body.theory-mode #theoryModule .fit-formulas small { font-size: 15px; }
+body.theory-mode #theoryModule .fit-steps li { font-size: 16px; line-height: 1.65; }
+
+body.theory-mode #theoryModule .error-flow article b { font-size: 20px; }
+body.theory-mode #theoryModule .error-flow article strong { font-size: 19px; }
+body.theory-mode #theoryModule .error-flow article p { font-size: 15px; line-height: 1.58; }
+body.theory-mode #theoryModule .error-origin-summary { font-size: 17px; }
+body.theory-mode #theoryModule .uncertainty-formulas strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  line-height: 1.45;
+}
+body.theory-mode #theoryModule .uncertainty-layout li,
+body.theory-mode #theoryModule .reduction-grid li { font-size: 16px; line-height: 1.65; }
+body.theory-mode #theoryModule .exact-geometry-note strong { font-size: 17px; }
+body.theory-mode #theoryModule .exact-geometry-note span { font-size: 24px; }
+body.theory-mode #theoryModule .exact-geometry-note p { font-size: 15px; }
+body.theory-mode #theoryModule .priority-cards strong { font-size: 17px; }
+body.theory-mode #theoryModule .priority-cards p { font-size: 16px; line-height: 1.55; }
+body.theory-mode #theoryModule .priority-note { font-size: 15px; }
+body.theory-mode #theoryModule .reduction-grid h3 { font-size: 20px; }
+body.theory-mode #theoryModule .theory-summary h3 { font-size: 21px; }
+body.theory-mode #theoryModule .theory-summary p { font-size: 19px; line-height: 1.72; }
+
+@media (max-width: 1180px) and (min-width: 761px) {
+  body.theory-mode #theoryModule .theory-nav button { font-size: 21px; }
+  body.theory-mode #theoryModule .theory-nav button span { font-size: 24px; }
+  body.theory-mode #theoryModule .theory-heading h2 { font-size: 54px; }
+}
+
+@media (max-width: 760px) {
+  body.theory-mode .brand h1 { font-size: 28px; }
+  body.theory-mode .brand p { font-size: 13px; }
+  body.theory-mode .tab { font-size: 17px; }
+  body.theory-mode #theoryModule .theory-rail-head::before { font-size: 14px; }
+  body.theory-mode #theoryModule .theory-rail-head h2 { font-size: 27px; }
+  body.theory-mode #theoryModule .theory-rail-head p { font-size: 15px; }
+  body.theory-mode #theoryModule .theory-nav button { flex-basis: 158px; font-size: 18px; }
+  body.theory-mode #theoryModule .theory-nav button span { font-size: 21px; }
+  body.theory-mode #theoryModule .theory-heading { min-height: 96px; }
+  body.theory-mode #theoryModule .theory-heading p { font-size: 13px; }
+  body.theory-mode #theoryModule .theory-heading h2 { font-size: 42px; }
+  body.theory-mode #theoryModule .theory-note strong,
+  body.theory-mode #theoryModule .theory-summary h3 { font-size: 19px; }
+  body.theory-mode #theoryModule .theory-note span,
+  body.theory-mode #theoryModule .theory-summary p { font-size: 17px; }
+  body.theory-mode #theoryModule .chapter-lead > p { font-size: 18px; }
+  body.theory-mode #theoryModule .chapter-tags span { font-size: 14px; }
+  body.theory-mode #theoryModule .concept-mode-bar button,
+  body.theory-mode #theoryModule .width-mode-bar button { font-size: 17px; }
+  body.theory-mode #theoryModule .section-title > span { width: 34px; height: 34px; flex-basis: 34px; font-size: 21px; }
+  body.theory-mode #theoryModule .section-title strong { font-size: 22px; }
+  body.theory-mode #theoryModule .section-title small { font-size: 13px; }
+  body.theory-mode #theoryModule .theory-symbol-table { font-size: 16px; }
+  body.theory-mode #theoryModule .theory-symbol-table th:first-child,
+  body.theory-mode #theoryModule .theory-symbol-table td:first-child { width: 62px; font-size: 22px; }
+  body.theory-mode #theoryModule .equation-pair strong { font-size: 25px; }
+  body.theory-mode #theoryModule .equation-pair span { font-size: 15px; }
+  body.theory-mode #theoryModule .teaching-callout strong,
+  body.theory-mode #theoryModule .core-conclusion strong,
+  body.theory-mode #theoryModule .critical-warning strong { font-size: 19px; }
+  body.theory-mode #theoryModule .teaching-callout p,
+  body.theory-mode #theoryModule .core-conclusion p,
+  body.theory-mode #theoryModule .critical-warning p { font-size: 17px; }
+  body.theory-mode #theoryModule .formula-box strong { font-size: 27px; }
+  body.theory-mode #theoryModule .formula-box span { font-size: 14px; }
+  body.theory-mode #theoryModule .numbered-principle h3 { font-size: 21px; }
+  body.theory-mode #theoryModule .numbered-principle p,
+  body.theory-mode #theoryModule .signed-angle-note p { font-size: 17px; }
+  body.theory-mode #theoryModule .numbered-principle small { font-size: 15px; }
+  body.theory-mode #theoryModule .inline-equation { font-size: 25px; }
+  body.theory-mode #theoryModule .inline-equation.emphasis { font-size: 27px; }
+  body.theory-mode #theoryModule .signed-angle-note strong { font-size: 18px; }
+  body.theory-mode #theoryModule .signed-angle-note span { font-size: 23px; }
+  body.theory-mode #theoryModule .figure-caption { font-size: 15px; }
+  body.theory-mode #theoryModule .formula-card-blue h3,
+  body.theory-mode #theoryModule .formula-card-red h3 { font-size: 20px; }
+  body.theory-mode #theoryModule .formula-lines strong,
+  body.theory-mode #theoryModule .measurement-equations strong,
+  body.theory-mode #theoryModule .uncertainty-formulas strong { font-size: 21px; }
+  body.theory-mode #theoryModule .formula-card-blue > p,
+  body.theory-mode #theoryModule .formula-card-red > p,
+  body.theory-mode #theoryModule .width-rule p,
+  body.theory-mode #theoryModule .method-note { font-size: 16px; }
+  body.theory-mode #theoryModule .fit-formulas strong { font-size: 27px; }
+  body.theory-mode #theoryModule .fit-formulas p,
+  body.theory-mode #theoryModule .fit-steps li,
+  body.theory-mode #theoryModule .uncertainty-layout li,
+  body.theory-mode #theoryModule .reduction-grid li,
+  body.theory-mode #theoryModule .priority-cards p { font-size: 16px; }
+  body.theory-mode #theoryModule .error-flow article p,
+  body.theory-mode #theoryModule .exact-geometry-note p,
+  body.theory-mode #theoryModule .priority-note { font-size: 15px; }
+
+  /* 旧版曾用 ::first-letter 模拟箭头；在放大字号后必须归零，避免原按钮文字显现。 */
+  body.theory-mode #theoryModule .theory-controls .secondary-button {
+    color: transparent;
+    font-size: 0;
+  }
+
+  body.theory-mode #theoryModule .theory-controls .secondary-button::first-letter {
+    color: transparent;
+    font-size: 0;
+  }
+
+  body.theory-mode #theoryModule .theory-controls .secondary-button::before {
+    color: #34383d;
+    font-size: 30px;
+  }
+
+  body.theory-mode #theoryModule .theory-controls .secondary-button:disabled::before {
+    color: #aeb2b6;
+  }
+}
+
+/* 答辩展示 V5：充分利用适用条件横条的垂直空间，提高远距离辨识度。 */
+body.theory-mode #theoryModule .theory-note {
+  grid-template-columns: 168px minmax(0, 1fr);
+  align-items: center;
+  min-height: 82px;
+  gap: 20px;
+  padding: 14px 20px;
+}
+
+body.theory-mode #theoryModule .theory-note strong {
+  font-size: 25px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+body.theory-mode #theoryModule .theory-note span {
+  font-size: 23px;
+  line-height: 1.65;
+}
+
+@media (max-width: 760px) {
+  body.theory-mode #theoryModule .theory-note {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 7px;
+    padding: 13px 16px;
+  }
+
+  body.theory-mode #theoryModule .theory-note strong {
+    font-size: 21px;
+  }
+
+  body.theory-mode #theoryModule .theory-note span {
+    font-size: 18px;
+    line-height: 1.75;
+  }
+}
+
+/* ========================================================================== */
+/* 原理讲解 V6：五章信息密度与提示条统一                                      */
+/* ========================================================================== */
+/* 桌面答辩视图不再保留 14-15px 的教学说明，最低正文层级统一到 16px。 */
+body.theory-mode #theoryModule .theory-progress span,
+body.theory-mode #theoryModule .theory-progress strong,
+body.theory-mode #theoryModule .theory-heading p,
+body.theory-mode #theoryModule .chapter-tags span,
+body.theory-mode #theoryModule .section-title small,
+body.theory-mode #theoryModule .formula-box span,
+body.theory-mode #theoryModule .formula-lines span,
+body.theory-mode #theoryModule .measurement-equations span {
+  font-size: 16px;
+}
+
+body.theory-mode #theoryModule .equation-pair span {
+  font-size: 17px;
+}
+
+body.theory-mode #theoryModule .figure-caption,
+body.theory-mode #theoryModule .method-note {
+  font-size: 17px;
+  line-height: 1.72;
+}
+
+body.theory-mode #theoryModule .fit-formulas p {
+  font-size: 18px;
+}
+
+body.theory-mode #theoryModule .fit-formulas small,
+body.theory-mode #theoryModule .fit-steps li,
+body.theory-mode #theoryModule .error-flow article p,
+body.theory-mode #theoryModule .uncertainty-layout li,
+body.theory-mode #theoryModule .reduction-grid li,
+body.theory-mode #theoryModule .exact-geometry-note p,
+body.theory-mode #theoryModule .priority-cards p,
+body.theory-mode #theoryModule .priority-note {
+  font-size: 17px;
+  line-height: 1.68;
+}
+
+body.theory-mode #theoryModule .priority-cards strong {
+  font-size: 19px;
+}
+
+body.theory-mode #theoryModule .error-origin-summary {
+  display: grid;
+  min-height: 52px;
+  padding: 10px 14px;
+  place-items: center;
+  font-size: 19px;
+  line-height: 1.55;
+}
+
+body.theory-mode #theoryModule .priority-note {
+  min-height: 54px;
+  padding: 11px 13px;
+}
+
+body.theory-mode #theoryModule .width-rule {
+  padding: 17px 18px;
+}
+
+body.theory-mode #theoryModule .width-rule strong {
+  font-size: 22px;
+}
+
+body.theory-mode #theoryModule .width-rule p {
+  font-size: 19px;
+}
+
+/* 四类总结组件共用一致的标题、正文和垂直节奏。 */
+body.theory-mode #theoryModule .teaching-callout {
+  min-height: 98px;
+  gap: 16px;
+  padding: 17px 21px;
+}
+
+body.theory-mode #theoryModule .callout-mark {
+  width: 44px;
+  height: 44px;
+  font-size: 27px;
+}
+
+body.theory-mode #theoryModule .teaching-callout strong,
+body.theory-mode #theoryModule .core-conclusion strong,
+body.theory-mode #theoryModule .critical-warning strong {
+  font-size: 24px;
+  line-height: 1.35;
+}
+
+body.theory-mode #theoryModule .teaching-callout p,
+body.theory-mode #theoryModule .core-conclusion p,
+body.theory-mode #theoryModule .critical-warning p {
+  font-size: 21px;
+  line-height: 1.7;
+}
+
+body.theory-mode #theoryModule .core-conclusion,
+body.theory-mode #theoryModule .critical-warning {
+  grid-template-columns: 132px minmax(0, 1fr);
+  align-items: center;
+  min-height: 78px;
+  gap: 18px;
+  padding: 15px 20px;
+}
+
+body.theory-mode #theoryModule .theory-summary {
+  grid-template-columns: 126px minmax(0, 1fr);
+  align-items: center;
+  min-height: 78px;
+  gap: 18px;
+  padding: 15px 20px;
+}
+
+body.theory-mode #theoryModule .theory-summary h3 {
+  font-size: 24px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+body.theory-mode #theoryModule .theory-summary p {
+  font-size: 21px;
+  line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+  body.theory-mode #theoryModule .theory-heading p,
+  body.theory-mode #theoryModule .chapter-tags span,
+  body.theory-mode #theoryModule .section-title small,
+  body.theory-mode #theoryModule .formula-box span,
+  body.theory-mode #theoryModule .formula-lines span,
+  body.theory-mode #theoryModule .measurement-equations span {
+    font-size: 15px;
+  }
+
+  body.theory-mode #theoryModule .figure-caption,
+  body.theory-mode #theoryModule .method-note,
+  body.theory-mode #theoryModule .fit-formulas small,
+  body.theory-mode #theoryModule .fit-steps li,
+  body.theory-mode #theoryModule .error-flow article p,
+  body.theory-mode #theoryModule .uncertainty-layout li,
+  body.theory-mode #theoryModule .reduction-grid li,
+  body.theory-mode #theoryModule .exact-geometry-note p,
+  body.theory-mode #theoryModule .priority-cards p,
+  body.theory-mode #theoryModule .priority-note {
+    font-size: 16px;
+  }
+
+  body.theory-mode #theoryModule .error-origin-summary {
+    min-height: 0;
+    font-size: 17px;
+  }
+
+  body.theory-mode #theoryModule .priority-note {
+    min-height: 0;
+  }
+
+  body.theory-mode #theoryModule .teaching-callout {
+    min-height: 0;
+    gap: 12px;
+    padding: 14px 15px;
+  }
+
+  body.theory-mode #theoryModule .callout-mark {
+    width: 38px;
+    height: 38px;
+    font-size: 23px;
+  }
+
+  body.theory-mode #theoryModule .teaching-callout strong,
+  body.theory-mode #theoryModule .core-conclusion strong,
+  body.theory-mode #theoryModule .critical-warning strong,
+  body.theory-mode #theoryModule .theory-summary h3 {
+    font-size: 20px;
+  }
+
+  body.theory-mode #theoryModule .teaching-callout p,
+  body.theory-mode #theoryModule .core-conclusion p,
+  body.theory-mode #theoryModule .critical-warning p,
+  body.theory-mode #theoryModule .theory-summary p {
+    font-size: 18px;
+  }
+
+  body.theory-mode #theoryModule .core-conclusion,
+  body.theory-mode #theoryModule .critical-warning,
+  body.theory-mode #theoryModule .theory-summary {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 7px;
+    padding: 13px 15px;
+  }
+}
+
+/* 批注修订 V8：移除关键词标签后，让导语、符号表和基本公式承担主要信息层级。 */
+body.theory-mode #theoryModule .chapter-lead > p {
+  width: 100%;
+  max-width: none;
+}
+
+body.theory-mode #theoryModule .concept-reference-grid {
+  align-items: stretch;
+}
+
+body.theory-mode #theoryModule .symbol-section {
+  padding: 16px 18px 18px;
+}
+
+body.theory-mode #theoryModule .theory-symbol-table {
+  font-size: 22px;
+}
+
+body.theory-mode #theoryModule .theory-symbol-table th,
+body.theory-mode #theoryModule .theory-symbol-table td {
+  padding: 15px 17px;
+  line-height: 1.62;
+}
+
+body.theory-mode #theoryModule .theory-symbol-table th:first-child,
+body.theory-mode #theoryModule .theory-symbol-table td:first-child {
+  width: 100px;
+  font-size: 31px;
+}
+
+body.theory-mode #theoryModule .equation-pair {
+  margin-top: 14px;
+}
+
+body.theory-mode #theoryModule .equation-pair > div {
+  min-height: 126px;
+  gap: 8px;
+  padding: 16px 12px;
+}
+
+body.theory-mode #theoryModule .equation-pair strong {
+  font-size: 40px;
+  line-height: 1.25;
+}
+
+body.theory-mode #theoryModule .equation-pair span {
+  font-size: 20px;
+}
+
+@media (max-width: 760px) {
+  body.theory-mode #theoryModule .symbol-section {
+    padding: 13px 11px 14px;
+  }
+
+  body.theory-mode #theoryModule .theory-symbol-table {
+    font-size: 17px;
+  }
+
+  body.theory-mode #theoryModule .theory-symbol-table th,
+  body.theory-mode #theoryModule .theory-symbol-table td {
+    padding: 10px 8px;
+    line-height: 1.6;
+  }
+
+  body.theory-mode #theoryModule .theory-symbol-table th:first-child,
+  body.theory-mode #theoryModule .theory-symbol-table td:first-child {
+    width: 62px;
+    font-size: 24px;
+  }
+
+  body.theory-mode #theoryModule .equation-pair > div {
+    min-height: 102px;
+    padding: 13px 8px;
+  }
+
+  body.theory-mode #theoryModule .equation-pair strong {
+    font-size: 29px;
+  }
+
+  body.theory-mode #theoryModule .equation-pair span {
+    font-size: 17px;
+  }
+}
+
+/* ========================================================================== */
+/* 原理讲解 V9：年长评委答辩可读性与图文标注平衡                            */
+/* ========================================================================== */
+/* 桌面展示把正文层级提升到 20px 左右，公式与结论继续保持更强层级。 */
+body.theory-mode #theoryModule .chapter-lead > p {
+  font-size: 23px;
+  line-height: 1.78;
+}
+
+body.theory-mode #theoryModule .section-title {
+  gap: 13px;
+  margin-bottom: 14px;
+}
+
+body.theory-mode #theoryModule .section-title > span {
+  width: 44px;
+  height: 44px;
+  flex-basis: 44px;
+  font-size: 28px;
+}
+
+body.theory-mode #theoryModule .section-title strong {
+  font-size: 31px;
+  line-height: 1.28;
+}
+
+body.theory-mode #theoryModule .section-title small {
+  font-size: 19px;
+  line-height: 1.45;
+}
+
+body.theory-mode #theoryModule .principle-steps {
+  gap: 16px;
+  padding-block: 7px;
+}
+
+body.theory-mode #theoryModule .numbered-principle {
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 15px;
+  padding-bottom: 16px;
+}
+
+body.theory-mode #theoryModule .numbered-principle > b {
+  width: 48px;
+  height: 48px;
+  font-size: 28px;
+}
+
+body.theory-mode #theoryModule .numbered-principle h3 {
+  margin-bottom: 7px;
+  font-size: 31px;
+  line-height: 1.35;
+}
+
+body.theory-mode #theoryModule .numbered-principle p {
+  font-size: 22px;
+  line-height: 1.78;
+}
+
+body.theory-mode #theoryModule .numbered-principle small {
+  margin-top: 7px;
+  font-size: 20px;
+}
+
+body.theory-mode #theoryModule .inline-equation {
+  width: min(620px, 100%);
+  margin-top: 12px;
+  padding: 13px 16px;
+  font-size: 39px;
+  line-height: 1.35;
+}
+
+body.theory-mode #theoryModule .inline-equation.emphasis {
+  font-size: 43px;
+}
+
+body.theory-mode #theoryModule .signed-angle-note {
+  gap: 10px 16px;
+  padding: 15px 17px;
+}
+
+body.theory-mode #theoryModule .signed-angle-note strong {
+  font-size: 23px;
+}
+
+body.theory-mode #theoryModule .signed-angle-note span {
+  font-size: 35px;
+}
+
+body.theory-mode #theoryModule .signed-angle-note p {
+  font-size: 20px;
+  line-height: 1.7;
+}
+
+body.theory-mode #theoryModule .figure-caption {
+  margin-top: 13px;
+  font-size: 21px;
+  line-height: 1.78;
+}
+
+body.theory-mode #theoryModule .formula-box span {
+  font-size: 19px;
+  line-height: 1.55;
+}
+
+body.theory-mode #theoryModule .formula-card-blue h3,
+body.theory-mode #theoryModule .formula-card-red h3 {
+  font-size: 26px;
+}
+
+body.theory-mode #theoryModule .formula-lines strong {
+  font-size: 28px;
+}
+
+body.theory-mode #theoryModule .formula-lines span {
+  font-size: 18px;
+}
+
+body.theory-mode #theoryModule .formula-card-blue > p,
+body.theory-mode #theoryModule .formula-card-red > p,
+body.theory-mode #theoryModule .width-rule p {
+  font-size: 20px;
+}
+
+body.theory-mode #theoryModule .measurement-equations {
+  gap: 11px;
+}
+
+body.theory-mode #theoryModule .measurement-equations > div {
+  min-height: 112px;
+  gap: 7px;
+  padding: 12px 10px;
+}
+
+body.theory-mode #theoryModule .measurement-equations span {
+  font-size: 20px;
+}
+
+body.theory-mode #theoryModule .measurement-equations strong {
+  font-size: 28px;
+  line-height: 1.42;
+}
+
+body.theory-mode #theoryModule .method-note {
+  margin-top: 13px;
+  font-size: 21px;
+  line-height: 1.78;
+}
+
+body.theory-mode #theoryModule .fitting-grid {
+  gap: 20px;
+}
+
+body.theory-mode #theoryModule .fit-formulas {
+  gap: 12px;
+}
+
+body.theory-mode #theoryModule .fit-formulas strong {
+  font-size: 39px;
+  line-height: 1.35;
+}
+
+body.theory-mode #theoryModule .fit-formulas p {
+  font-size: 22px;
+  line-height: 1.72;
+}
+
+body.theory-mode #theoryModule .fit-formulas small {
+  font-size: 20px;
+  line-height: 1.72;
+}
+
+body.theory-mode #theoryModule .fit-steps {
+  gap: 12px;
+}
+
+body.theory-mode #theoryModule .fit-steps li {
+  min-height: 36px;
+  padding-left: 46px;
+  font-size: 21px;
+  line-height: 1.68;
+}
+
+body.theory-mode #theoryModule .fit-steps li::before {
+  width: 34px;
+  height: 34px;
+  font-size: 18px;
+}
+
+body.theory-mode #theoryModule .reduction-section {
+  padding: 18px 20px 20px;
+}
+
+body.theory-mode #theoryModule .reduction-grid {
+  gap: 26px;
+}
+
+body.theory-mode #theoryModule .reduction-grid > div {
+  padding: 7px 20px 9px;
+}
+
+body.theory-mode #theoryModule .reduction-grid h3 {
+  margin-bottom: 13px;
+  font-size: 28px;
+  line-height: 1.4;
+}
+
+body.theory-mode #theoryModule .reduction-grid ul {
+  gap: 11px;
+}
+
+body.theory-mode #theoryModule .reduction-grid li {
+  font-size: 22px;
+  line-height: 1.72;
+}
+
+@media (max-width: 760px) {
+  body.theory-mode #theoryModule .chapter-lead > p { font-size: 19px; }
+  body.theory-mode #theoryModule .section-title > span {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+    font-size: 23px;
+  }
+  body.theory-mode #theoryModule .section-title strong { font-size: 25px; }
+  body.theory-mode #theoryModule .section-title small { font-size: 17px; }
+  body.theory-mode #theoryModule .numbered-principle {
+    grid-template-columns: 45px minmax(0, 1fr);
+    gap: 11px;
+  }
+  body.theory-mode #theoryModule .numbered-principle > b {
+    width: 40px;
+    height: 40px;
+    font-size: 23px;
+  }
+  body.theory-mode #theoryModule .numbered-principle h3 { font-size: 25px; }
+  body.theory-mode #theoryModule .numbered-principle p { font-size: 19px; }
+  body.theory-mode #theoryModule .numbered-principle small { font-size: 17px; }
+  body.theory-mode #theoryModule .inline-equation { font-size: 30px; }
+  body.theory-mode #theoryModule .inline-equation.emphasis { font-size: 33px; }
+  body.theory-mode #theoryModule .signed-angle-note strong { font-size: 20px; }
+  body.theory-mode #theoryModule .signed-angle-note span { font-size: 27px; }
+  body.theory-mode #theoryModule .signed-angle-note p,
+  body.theory-mode #theoryModule .figure-caption,
+  body.theory-mode #theoryModule .method-note { font-size: 18px; }
+  body.theory-mode #theoryModule .formula-box span { font-size: 17px; }
+  body.theory-mode #theoryModule .measurement-equations span { font-size: 17px; }
+  body.theory-mode #theoryModule .measurement-equations strong { font-size: 23px; }
+  body.theory-mode #theoryModule .fit-formulas strong { font-size: 30px; }
+  body.theory-mode #theoryModule .fit-formulas p,
+  body.theory-mode #theoryModule .fit-formulas small,
+  body.theory-mode #theoryModule .fit-steps li,
+  body.theory-mode #theoryModule .reduction-grid li { font-size: 19px; }
+  body.theory-mode #theoryModule .reduction-grid h3 { font-size: 24px; }
+}
+
+/* 原理讲解 V11：公式使用 MathML，避免根式、分式和括号在错误位置断行。 */
+body.theory-mode #theoryModule math {
+  color: inherit;
+  font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+  letter-spacing: 0;
+}
+
+body.theory-mode #theoryModule .screen-distance-formula {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.08em;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+body.theory-mode #theoryModule .stacked-fraction {
+  display: inline-grid;
+  align-items: center;
+  margin-left: 0.08em;
+  line-height: 1.05;
+  text-align: center;
+  vertical-align: middle;
+}
+
+body.theory-mode #theoryModule .fraction-numerator,
+body.theory-mode #theoryModule .fraction-denominator {
+  display: block;
+  padding-inline: 0.12em;
+}
+
+body.theory-mode #theoryModule .fraction-numerator {
+  padding-bottom: 0.1em;
+  border-bottom: 1.7px solid currentColor;
+}
+
+body.theory-mode #theoryModule .fraction-denominator {
+  padding-top: 0.08em;
+}
+
+body.theory-mode #theoryModule .radical-expression {
+  display: inline-flex;
+  align-items: flex-start;
+}
+
+body.theory-mode #theoryModule .radical-symbol {
+  margin-right: -0.06em;
+  font-size: 1.12em;
+  font-style: normal;
+  line-height: 1;
+}
+
+body.theory-mode #theoryModule .radicand {
+  display: inline-block;
+  padding: 0.03em 0.08em 0;
+  border-top: 1.7px solid currentColor;
+}
+
+body.theory-mode #theoryModule .screen-distance-formula sup,
+body.theory-mode #theoryModule .screen-distance-formula sub {
+  font-size: 0.66em;
+  line-height: 0;
+}
+
+body.theory-mode #theoryModule .measurement-equations strong {
+  overflow-wrap: normal;
+}
+
+body.theory-mode #theoryModule .exact-geometry-note > span {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+body.theory-mode #theoryModule .measurement-equations .screen-distance-formula,
+body.theory-mode #theoryModule .measurement-equations .screen-distance-formula span,
+body.theory-mode #theoryModule .exact-geometry-note .screen-distance-formula span {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+body.theory-mode #theoryModule .exact-geometry-note .screen-distance-formula {
+  font-size: 1.05em;
+}
+
+body.theory-mode #theoryModule .uncertainty-formulas strong.uncertainty-equation {
+  display: grid;
+  min-height: 150px;
+  gap: 1px;
+  padding: 10px 8px;
+  place-content: center;
+  overflow-wrap: normal;
+}
+
+body.theory-mode #theoryModule .uncertainty-equation math {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  justify-self: center;
+  font-size: 27px;
+  white-space: nowrap;
+}
+
+@media (min-width: 761px) {
+  body.theory-mode #theoryModule .measurement-equations:not(.two) {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.05fr) minmax(0, 1.15fr);
+  }
+
+  body.theory-mode #theoryModule .measurement-equations:not(.two) strong {
+    font-size: 25px;
+    white-space: nowrap;
+  }
+
+  body.theory-mode #theoryModule .measurement-equations:not(.two) > div:nth-child(3) strong {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 760px) {
+  body.theory-mode #theoryModule .uncertainty-formulas strong.uncertainty-equation {
+    min-height: 132px;
+  }
+
+  body.theory-mode #theoryModule .uncertainty-equation math {
+    font-size: 23px;
+  }
+}
+
+/* ========================================================================== */
+/* 原理讲解 V15：角度标注、明纹宽度、误差优先级与不确定度公式重排          */
+/* ========================================================================== */
+/* 删除“不要混淆”提示后，两张公式卡直接承担右栏全部空间，避免形成空洞。 */
+@media (min-width: 1181px) {
+  body.theory-mode #theoryModule .width-layout {
+    align-items: stretch;
+  }
+
+  body.theory-mode #theoryModule .width-formulas {
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+
+  body.theory-mode #theoryModule .formula-card-blue,
+  body.theory-mode #theoryModule .formula-card-red {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+    padding: 20px 18px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1180px) {
+  body.theory-mode #theoryModule .width-formulas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  body.theory-mode #theoryModule .formula-card-blue,
+  body.theory-mode #theoryModule .formula-card-red {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/* 传播公式使用同一个 MathML 行，所有运算符共享数学基线，避免分行居中造成横向错位。 */
+body.theory-mode #theoryModule .uncertainty-layout {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+body.theory-mode #theoryModule .uncertainty-formulas {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+body.theory-mode #theoryModule .uncertainty-formulas > strong:first-child {
+  min-height: 76px;
+  font-size: 30px;
+}
+
+body.theory-mode #theoryModule .uncertainty-formulas strong.uncertainty-equation {
+  display: grid;
+  min-height: 118px;
+  padding: 13px 16px;
+  place-items: center;
+}
+
+body.theory-mode #theoryModule .uncertainty-equation math {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto;
+  font-size: 28px;
+  white-space: nowrap;
+}
+
+body.theory-mode #theoryModule .uncertainty-layout > ul {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 30px;
+  padding-left: 27px;
+}
+
+body.theory-mode #theoryModule .uncertainty-layout > ul li {
+  font-size: 19px;
+  line-height: 1.7;
+}
+
+/* 右侧优先级区随同排左栏高度伸展，内容在可用空间内均匀分布。 */
+body.theory-mode #theoryModule .priority-section {
+  display: flex;
+  flex-direction: column;
+}
+
+body.theory-mode #theoryModule .priority-cards {
+  flex: 1 1 auto;
+  min-height: 260px;
+  align-items: stretch;
+  gap: 12px;
+}
+
+body.theory-mode #theoryModule .priority-cards article {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  min-height: 0;
+  padding: 20px 15px;
+}
+
+body.theory-mode #theoryModule .priority-cards strong {
+  margin-bottom: 17px;
+  font-size: 23px;
+  line-height: 1.4;
+}
+
+body.theory-mode #theoryModule .priority-cards p {
+  margin: 8px 0;
+  font-size: 20px;
+  line-height: 1.65;
+}
+
+body.theory-mode #theoryModule .priority-note {
+  margin-top: 12px;
+  padding: 14px 16px;
+  font-size: 19px;
+  line-height: 1.72;
+}
+
+@media (max-width: 760px) {
+  body.theory-mode #theoryModule .width-formulas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.theory-mode #theoryModule .uncertainty-equation math {
+    font-size: 18px;
+  }
+
+  body.theory-mode #theoryModule .uncertainty-layout > ul {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+    padding-left: 23px;
+  }
+
+  body.theory-mode #theoryModule .uncertainty-layout > ul li {
+    font-size: 18px;
+  }
+
+  body.theory-mode #theoryModule .priority-cards {
+    min-height: 0;
+  }
+
+  body.theory-mode #theoryModule .priority-cards article {
+    min-height: 168px;
+    padding: 18px 16px;
+  }
+
+  body.theory-mode #theoryModule .priority-cards strong {
+    font-size: 22px;
+  }
+
+  body.theory-mode #theoryModule .priority-cards p,
+  body.theory-mode #theoryModule .priority-note {
+    font-size: 18px;
+  }
+}
+
+/* ========================================================================== */
+/* 原理讲解 V18：Canvas 标注避让与误差来源流程卡可读性                    */
+/* ========================================================================== */
+/* 竞赛评审需要远距离阅读，流程卡的三级文字均提高字号并增加垂直空间。 */
+body.theory-mode #theoryModule .error-flow article {
+  min-height: 156px;
+  padding: 15px 12px;
+}
+
+body.theory-mode #theoryModule .error-flow article b {
+  font-size: 23px;
+  line-height: 1.2;
+}
+
+body.theory-mode #theoryModule .error-flow article strong {
+  margin-top: 8px;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+body.theory-mode #theoryModule .error-flow article p {
+  margin-top: 8px;
+  font-size: 19px;
+  line-height: 1.62;
+}
+
+body.theory-mode #theoryModule .error-flow > i {
+  font-size: 32px;
+}
+
+@media (max-width: 760px) {
+  body.theory-mode #theoryModule .error-flow article {
+    min-height: 152px;
+    padding: 15px 12px;
+  }
+
+  body.theory-mode #theoryModule .error-flow article b {
+    font-size: 22px;
+  }
+
+  body.theory-mode #theoryModule .error-flow article strong {
+    font-size: 21px;
+  }
+
+  body.theory-mode #theoryModule .error-flow article p {
+    font-size: 18px;
   }
 }

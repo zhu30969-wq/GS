@@ -8,6 +8,23 @@ const LASER_EXIT_LOCAL_X = 0.66;
 const MIN_2D_ZOOM = 0.6;
 const MAX_2D_ZOOM = 3;
 const ORTHO_BASE_HALF_HEIGHT = 4.2;
+const SPRITE_TEXT_FONT = '"HarmonyOS Sans SC", "MiSans", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif';
+const SPRITE_MATH_FONT = '"Cambria Math", "STIX Two Math", "Times New Roman", serif';
+const SPRITE_PHYSICS_SYMBOL_PATTERN = /(θ(?:[ⱼᵢ₀₁₂])?|φ|λ|Δ|δ|ρ|α|β|(?<![A-Za-z])(?:d|b|j|N|W|L|I|R|x|y|w|k|u|n)(?:[ⱼᵢ₀₁₂])?(?![A-Za-z]))/gu;
+
+function spriteTextSegments(text) {
+  const value = String(text);
+  const segments = [];
+  let cursor = 0;
+  SPRITE_PHYSICS_SYMBOL_PATTERN.lastIndex = 0;
+  for (const match of value.matchAll(SPRITE_PHYSICS_SYMBOL_PATTERN)) {
+    if (match.index > cursor) segments.push({ text: value.slice(cursor, match.index), variable: false });
+    segments.push({ text: match[0], variable: true });
+    cursor = match.index + match[0].length;
+  }
+  if (cursor < value.length) segments.push({ text: value.slice(cursor), variable: false });
+  return segments.length ? segments : [{ text: value, variable: false }];
+}
 
 function makeTextSprite(text, options = {}) {
   const {
@@ -25,15 +42,27 @@ function makeTextSprite(text, options = {}) {
   ctx.clearRect(0, 0, width, height);
   ctx.fillStyle = background;
   ctx.fillRect(0, 0, width, height);
-  ctx.font = `600 ${fontSize}px "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif`;
-  ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillStyle = color;
   const lines = String(text).split("\n");
   const lineHeight = fontSize * 1.22;
   const firstY = height / 2 - ((lines.length - 1) * lineHeight) / 2;
   lines.forEach((line, index) => {
-    ctx.fillText(line, width / 2, firstY + index * lineHeight);
+    const segments = spriteTextSegments(line);
+    const setFont = (variable) => {
+      ctx.font = `${variable ? "italic 500" : "600"} ${fontSize}px ${variable ? SPRITE_MATH_FONT : SPRITE_TEXT_FONT}`;
+    };
+    const totalWidth = segments.reduce((sum, segment) => {
+      setFont(segment.variable);
+      return sum + ctx.measureText(segment.text).width;
+    }, 0);
+    let drawX = width / 2 - totalWidth / 2;
+    ctx.textAlign = "left";
+    segments.forEach((segment) => {
+      setFont(segment.variable);
+      ctx.fillText(segment.text, drawX, firstY + index * lineHeight);
+      drawX += ctx.measureText(segment.text).width;
+    });
   });
 
   const texture = new THREE.CanvasTexture(canvas);

@@ -8,7 +8,7 @@
     <meta name="keywords" content="光栅衍射,学生实验,反演光栅常数,反演波长,CCD采样,大学物理实验" />
     <meta name="theme-color" content="#2155e8" />
     <meta name="robots" content="index,follow" />
-    <link rel="stylesheet" href="./src/student-lab.css?v=student-step-arrows-v9-20260614" />
+  <link rel="stylesheet" href="./src/student-lab.css?v=student-physics-italic-v24-20260718" />
     <link rel="manifest" href="./site.webmanifest" />
     <link rel="icon" href="./assets/icons/site-icon.svg" type="image/svg+xml" />
     <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%232155e8"/%3E%3Cpath d="M32 8v48M8 32h48M17 17c11 9 19 9 30 0M17 47c11-9 19-9 30 0" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/%3E%3C/svg%3E' />
@@ -36,7 +36,8 @@
       <main>
         <section class="hero-panel">
           <div class="hero-copy">
-            <h1 id="heroTitle">由衍射图样反演激光波长 λ</h1>
+            <span class="hero-kicker">INVERSION LAB · 学生反演实验</span>
+            <h1 id="heroTitle"><span>由衍射图样反演</span><span>激光波长 <var>λ</var></span></h1>
             <p id="heroSubtitle">已知光栅常数 d、屏距 L 与亮纹位置 x<sub>j</sub>，反推出激光波长 λ。</p>
             <div class="hero-metrics" aria-label="实验方法摘要">
               <span>正入射</span>
@@ -119,7 +120,7 @@
                 </g>
                 <path d="M14 16h28M14 153h28" stroke="#8da2bd" stroke-width="3" />
                 <text x="28" y="-6" text-anchor="middle">光栅架</text>
-                <text id="heroDLabel" x="28" y="168" text-anchor="middle" fill="#52637b" font-size="10">d = 5.519 μm</text>
+          <text id="heroDLabel" x="28" y="168" text-anchor="middle" fill="#52637b" font-size="10"><tspan class="svg-physics-variable">d</tspan><tspan id="heroDValue"> = 5.519 μm</tspan></text>
               </g>
 
               <g transform="translate(676 36)">
@@ -141,7 +142,7 @@
                   <path d="M75 18v116M18 76h114" />
                 </g>
                 <text x="75" y="-12" text-anchor="middle">CCD 屏幕</text>
-                <text x="75" y="181" text-anchor="middle" fill="#52637b" font-size="10">采样面 L</text>
+          <text x="75" y="181" text-anchor="middle" fill="#52637b" font-size="10">采样面 <tspan class="svg-physics-variable">L</tspan></text>
               </g>
 
               <g stroke="#ff2525" stroke-width="2.2" fill="none" filter="url(#redGlow)">
@@ -157,7 +158,7 @@
                 <circle cx="510" cy="119" r="3" />
               </g>
               <path d="M514 178h158" stroke="#536883" stroke-width="1.4" />
-              <text id="heroLLabel" x="592" y="192" text-anchor="middle" fill="#52637b" font-size="12">L = 142.4 cm</text>
+        <text id="heroLLabel" x="592" y="192" text-anchor="middle" fill="#52637b" font-size="12"><tspan class="svg-physics-variable">L</tspan><tspan id="heroLValue"> = 142.4 cm</tspan></text>
             </svg>
             <div id="studentHeroScene" class="student-hero-scene" aria-label="与主实验一致的三维实验仪器建模视图"></div>
             <canvas id="studentHeroFallback" class="student-hero-fallback" aria-hidden="true"></canvas>
@@ -167,7 +168,7 @@
               <span>同步参数</span>
             </div>
           </figure>
-          <div id="heroFormulaBadge" class="hero-formula-badge" aria-label="核心反演公式">d sin θⱼ = jλ</div>
+          <div id="heroFormulaBadge" class="hero-formula-badge" aria-label="核心反演公式"></div>
         </section>
 
         <ol class="stepper" aria-label="实验步骤">
@@ -292,7 +293,7 @@
       </main>
     </div>
 
-    <script src="./src/student-lab.js?v=student-excel-record-table-20260606" defer></script>
+  <script src="./src/student-lab.js?v=student-physics-italic-v24-20260718" defer></script>
     <script type="module" src="./src/pwa.js?v=student-excel-record-table-20260606"></script>
   </body>
 </html>

@@ -241,6 +241,24 @@ main {
   letter-spacing: 0;
 }
 
+.hero-copy h1 span {
+  display: inline;
+}
+
+.hero-copy h1 var {
+  font-family: var(--font-math);
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* “求 d、b”标题字符更长；宽屏保持整句同排，避免变量 b 成为孤立尾行。 */
+@media (min-width: 1281px) {
+  .lab-shell[data-mode="db"] .hero-copy h1 {
+    font-size: clamp(43px, 2.75vw, 52px);
+    white-space: nowrap;
+  }
+}
+
 .hero-copy p {
   margin: 14px 0 0;
   color: #263a64;
@@ -2818,5 +2836,882 @@ main {
   .top-tools {
     grid-column: 1 / -1;
     justify-content: flex-end;
+  }
+}
+
+/* ========================================================================== */
+/* 学生反演实验 V20：与“原理讲解”竞赛答辩版统一的学术纸张式界面             */
+/* ========================================================================== */
+/*
+  视觉逻辑：橙色只承担章节定位和关键操作，正文维持黑灰高对比；标题使用宋体
+  系列体现实验报告感，控件和数据继续使用无衬线字体以保证投屏读数清晰。
+  公式由 student-lab.js 输出 MathML，本节只控制整体尺度和容器，不用定位偏移
+  修补上下标，因此桌面端和移动端采用同一套基线规则。
+*/
+:root {
+  /* V20 keeps the competition-paper layout, while restoring the original blue visual hierarchy. */
+  --blue: #1f5bea;
+  --blue-2: #0f3fb8;
+  --blue-soft: #eaf2ff;
+  --line: #d9dadd;
+  --line-strong: #b9cff2;
+  --text: #17191c;
+  --muted: #626970;
+  --bg: #f6f9ff;
+  --card: #ffffff;
+  --shadow: 0 5px 16px rgba(24, 27, 31, 0.055);
+  --radius: 6px;
+  --font-serif: "Source Han Serif SC", "Noto Serif CJK SC", "STSong", "SimSun", serif;
+}
+
+body {
+  color: var(--text);
+  font-size: 18px;
+  background:
+    linear-gradient(rgba(31, 91, 234, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 91, 234, 0.02) 1px, transparent 1px),
+    var(--bg);
+  background-size: 28px 28px, 28px 28px, 100% 100%;
+}
+
+.lab-shell {
+  width: min(1760px, 100%);
+  font-size: 19px;
+}
+
+.lab-topbar {
+  min-height: 76px;
+  border-bottom: 1px solid #d3d4d6;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 3px 12px rgba(25, 28, 31, 0.045);
+}
+
+.brand-link strong {
+  color: #111316;
+  font-family: var(--font-serif);
+  font-size: 31px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.brand-mark {
+  border-radius: 6px;
+  background: #1f5bea;
+  box-shadow: 0 8px 18px rgba(31, 91, 234, 0.2);
+}
+
+.mode-switch {
+  grid-template-columns: 104px 116px;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border-color: #d5d6d8;
+  border-radius: 5px;
+  background: #ffffff;
+}
+
+.mode-switch button {
+  min-height: 44px;
+  border-right: 1px solid #d5d6d8;
+  border-radius: 0;
+  color: #30343a;
+  font-size: 18px;
+  font-weight: 850;
+}
+
+.mode-switch button:last-child {
+  border-right: 0;
+}
+
+.mode-switch button.active {
+  color: #ffffff;
+  background: #1f5bea;
+  box-shadow: none;
+}
+
+.top-tools a,
+.top-tools button {
+  min-width: 118px;
+  min-height: 46px;
+  border-color: #d3d4d6;
+  border-radius: 5px;
+  color: #272b30;
+  font-size: 18px;
+  background: #ffffff;
+}
+
+.top-tools .top-primary-action {
+  min-width: 166px;
+  border-color: #1f5bea;
+  color: #ffffff;
+  background: #1f5bea;
+  box-shadow: 0 7px 16px rgba(31, 91, 234, 0.16);
+}
+
+main {
+  padding-top: 16px;
+}
+
+.hero-panel {
+  min-height: 216px;
+  padding: 18px 28px;
+  border-color: #d8d9db;
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.hero-copy {
+  display: grid;
+  justify-items: center;
+}
+
+.hero-kicker {
+  display: block;
+  margin-bottom: 7px;
+  color: #1f5bea;
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 850;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.hero-copy h1 {
+  color: #111316;
+  font-family: var(--font-serif);
+  font-size: clamp(46px, 3.35vw, 64px);
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: 0;
+}
+
+.hero-copy p {
+  margin-top: 13px;
+  color: #34383d;
+  font-size: 22px;
+  font-weight: 650;
+  line-height: 1.58;
+}
+
+.hero-metrics {
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.hero-metrics span {
+  min-height: 36px;
+  padding: 0 13px;
+  border-color: #b9cff2;
+  border-radius: 4px;
+  color: #0f3fb8;
+  font-size: 17px;
+  background: #f4f8ff;
+}
+
+.hero-panel .apparatus-figure {
+  height: 168px;
+  min-height: 168px;
+}
+
+.lab-model-figure > svg {
+  filter: drop-shadow(0 12px 14px rgba(24, 27, 31, 0.12));
+}
+
+.hero-formula-badge {
+  display: grid;
+  gap: 7px;
+  min-width: 286px;
+  min-height: 126px;
+  padding: 14px 18px;
+  border-color: #b9cff2;
+  border-radius: 5px;
+  color: #17191c;
+  background: #f4f8ff;
+  box-shadow: none;
+  white-space: normal;
+}
+
+.hero-formula-label {
+  color: #0f3fb8;
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 850;
+  text-align: center;
+}
+
+.hero-formula-badge math {
+  width: 100%;
+  color: #17191c;
+  font-family: var(--font-math);
+  font-size: 30px;
+  text-align: center;
+}
+
+.stepper {
+  margin: 15px 0;
+  padding-block: 17px;
+  border-color: #d8d9db;
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.stepper span:first-child,
+.stepper .active span:first-child {
+  border: 0;
+  border-radius: 6px;
+  color: #ffffff !important;
+  background: #1f5bea;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.stepper b {
+  color: #16181b;
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 1.45vw, 26px);
+  font-weight: 900;
+  line-height: 1.24;
+}
+
+.stepper em {
+  color: #656b72;
+  font-size: clamp(17px, 1.05vw, 19px);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+@media (min-width: 901px) {
+  .stepper li:not(:last-child)::after {
+    height: 8px;
+    background: linear-gradient(90deg, #b9d3ff 0%, #1f5bea 100%);
+  }
+}
+
+.white-card {
+  border-color: #d8d9db;
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.white-card h2 {
+  min-height: 72px;
+  gap: 14px;
+  padding-inline: 22px;
+  border-color: #dedfe1;
+  color: #17191c;
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1.28;
+  letter-spacing: 0;
+}
+
+.white-card h2 > b {
+  font: inherit;
+}
+
+.white-card h2 span {
+  width: 60px;
+  height: 46px;
+  border-radius: 5px;
+  color: #ffffff !important;
+  background: #1f5bea;
+  font-size: 24px;
+}
+
+.zoom-button {
+  min-width: 118px;
+  min-height: 44px;
+  border-color: #a9c2fb;
+  border-radius: 5px;
+  color: #0f3fb8;
+  font-size: 19px;
+  background: #f4f8ff;
+}
+
+.work-grid {
+  grid-template-columns: minmax(420px, 470px) minmax(0, 1fr);
+  gap: 20px;
+}
+
+.field-grid {
+  gap: 18px;
+  padding: 22px 24px 0;
+}
+
+.field-grid label {
+  grid-template-columns: 152px minmax(0, 1fr) 54px;
+  min-height: 58px;
+  color: #24282d;
+  font-size: 22px;
+  font-weight: 780;
+}
+
+.field-grid input,
+.field-grid select,
+.readout-grid input,
+.readout-grid output {
+  min-height: 54px;
+  border-color: #cfd1d4;
+  border-radius: 4px;
+  color: #15181c;
+  background: #ffffff;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.field-grid input:focus,
+.field-grid select:focus,
+.readout-grid input:focus {
+  border-color: #1f5bea;
+  box-shadow: 0 0 0 3px rgba(31, 91, 234, 0.13);
+}
+
+.field-grid b,
+.readout-grid b {
+  color: #34383d;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.field-note {
+  color: #5f656c;
+  font-size: 19px;
+  line-height: 1.72;
+}
+
+#fringeCanvas {
+  height: 232px;
+  border-color: #bfc2c6;
+  border-radius: 5px;
+  box-shadow: none;
+}
+
+.measurement-actions button {
+  min-height: 58px;
+  border-color: #a9c2fb;
+  border-radius: 5px;
+  color: #0f3fb8;
+  font-size: 22px;
+  background: #f4f8ff;
+}
+
+.measurement-actions button:hover,
+.zoom-button:hover {
+  border-color: #1f5bea;
+  color: #ffffff;
+  background: #1f5bea;
+}
+
+.readout-grid label {
+  min-height: 116px;
+  border-color: #d7d9dc;
+  border-radius: 5px;
+  background: #ffffff;
+}
+
+.readout-grid label span {
+  color: #4d535a;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.calc-grid {
+  gap: 20px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+.angle-card,
+.inversion-card {
+  min-height: 310px;
+}
+
+.calc-pair {
+  grid-template-columns: minmax(0, 1.45fr) minmax(230px, 0.55fr);
+  gap: 20px;
+  align-items: stretch;
+  padding: 20px 22px 2px;
+}
+
+.formula-stack {
+  display: grid;
+  min-width: 0;
+  gap: 0;
+  color: #17191c;
+  font-family: var(--font-math);
+}
+
+.formula-math-row {
+  display: grid;
+  min-width: 0;
+  align-items: center;
+  padding: 8px 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.formula-math-row math {
+  display: block;
+  min-width: max-content;
+  width: 100%;
+  color: #17191c;
+  font-family: var(--font-math);
+  font-size: clamp(28px, 1.65vw, 34px);
+  font-weight: 500;
+  text-align: center;
+}
+
+.formula-math-row mtd {
+  padding-inline: 0.13em;
+}
+
+.formula-result-row {
+  color: #0f4fd8;
+  font-weight: 700;
+}
+
+.formula-group {
+  display: grid;
+  min-width: 0;
+  align-content: center;
+  border: 1px solid #e0e1e3;
+  border-radius: 5px;
+  background: #ffffff;
+}
+
+.formula-group-label {
+  padding: 9px 12px;
+  border-bottom: 1px solid #d7e4f5;
+  color: #0f3fb8;
+  background: #f4f8ff;
+  font-family: var(--font);
+  font-size: 19px;
+  font-weight: 850;
+  text-align: center;
+}
+
+.lab-shell[data-mode="db"] .calc-grid {
+  grid-template-columns: 1fr;
+}
+
+.lab-shell[data-mode="db"] #inversionFormula {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.lab-shell[data-mode="db"] .inversion-card .calc-pair {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.32fr);
+}
+
+.lab-shell[data-mode="db"] .formula-math-row math {
+  font-size: clamp(26px, 1.45vw, 31px);
+}
+
+.big-result,
+.result-strip div {
+  border-color: #a9c2fb;
+  border-radius: 5px;
+  background: #f4f8ff;
+}
+
+.big-result strong,
+#lambdaResult,
+.result-strip strong {
+  color: #0f4fd8;
+}
+
+.big-result strong,
+#lambdaResult {
+  font-size: clamp(48px, 3.3vw, 58px);
+}
+
+.result-strip span {
+  color: #4e545a;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.lambda-result-panel b {
+  font-size: 27px;
+}
+
+.muted-line,
+.warning-line {
+  font-size: 19px;
+  line-height: 1.72;
+}
+
+.analysis-card {
+  margin-top: 20px;
+}
+
+.analysis-grid {
+  gap: 20px;
+  padding: 22px 24px 2px;
+}
+
+.analysis-grid > div {
+  border-color: #d8d9db;
+  border-radius: 5px;
+  background: #ffffff;
+}
+
+.analysis-grid .analysis-error-card {
+  border-color: #ff7a45;
+  background:
+    radial-gradient(circle at 90% 14%, rgba(255, 91, 48, 0.2), transparent 32%),
+    linear-gradient(135deg, #fffaf6 0%, #fff0e7 58%, #ffe1d3 100%);
+  box-shadow: 0 12px 28px rgba(255, 75, 33, 0.13);
+}
+
+.analysis-grid span,
+.analysis-grid .analysis-main-card span,
+.analysis-grid .analysis-reference-card span {
+  color: #4f555c;
+  font-size: 24px;
+}
+
+.analysis-grid strong,
+.analysis-grid .analysis-main-card strong,
+.analysis-grid .analysis-reference-card strong {
+  color: #1a1d21;
+}
+
+/* d、b 模式用两行结果避免长字符串在手机端撑宽网格；字号继承结果主值。 */
+.analysis-grid strong > .analysis-value-line {
+  display: block;
+  width: 100%;
+  color: inherit;
+  font: inherit;
+  line-height: 1.22;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.analysis-grid strong > .analysis-value-line + .analysis-value-line {
+  margin-top: 0.22em;
+}
+
+.analysis-grid strong > .analysis-value-line var {
+  font-family: var(--font-math);
+  font-style: italic;
+}
+
+.analysis-grid .analysis-error-card > span {
+  color: #a83d00;
+  font-size: 31px;
+}
+
+.analysis-grid .analysis-error-card strong {
+  color: #ff3b1f;
+}
+
+.analysis-grid .analysis-error-card::before {
+  border-radius: 4px;
+  background: #ff4b2b;
+}
+
+/*
+  d、b 的误差值使用同一组三列网格：变量列、等号列、数值列。
+  这样不同字形宽度不会推动百分数横向漂移，桌面端和移动端均保持基线一致。
+*/
+#analysisError {
+  display: grid;
+  width: min(100%, 8em);
+  justify-self: center;
+  justify-items: center;
+  align-content: center;
+  gap: 0.14em;
+  text-align: center;
+}
+
+#analysisError > .analysis-error-line {
+  display: grid;
+  grid-template-columns: 0.72em 0.62em max-content;
+  column-gap: 0.1em;
+  justify-content: center;
+  align-items: baseline;
+  width: 100%;
+  margin: 0;
+  color: #ff3b1f;
+  font-family: var(--font-math);
+  font-size: clamp(48px, 4vw, 68px);
+  font-weight: 900;
+  line-height: 1.12;
+  text-align: left;
+  white-space: nowrap;
+}
+
+#analysisError > .analysis-error-line > * {
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+}
+
+#analysisError > .analysis-error-line var {
+  font-style: italic;
+  text-align: center;
+}
+
+#analysisError > .analysis-error-line .analysis-error-equals,
+#analysisError > .analysis-error-line .analysis-error-number {
+  font-style: normal;
+}
+
+#analysisError > .analysis-error-line .analysis-error-equals {
+  text-align: center;
+}
+
+/* DOM 与 SVG 中的物理量使用数学斜体；单位和说明文字继续继承原正体字体。 */
+.lab-shell var.physics-variable,
+.lab-shell .svg-physics-variable {
+  color: inherit;
+  font-family: var(--font-math);
+  font-style: italic;
+  font-weight: inherit;
+}
+
+.bottom-actions button,
+.report-toolbar button {
+  min-height: 62px;
+  border-color: #d5d6d8;
+  border-radius: 5px;
+  color: #34383d;
+  font-size: 22px;
+  background: #ffffff;
+}
+
+.bottom-actions button.primary-action {
+  border-color: #1f5bea;
+  color: #ffffff;
+  background: #1f5bea;
+  box-shadow: none;
+}
+
+.bottom-actions .export-excel-action,
+.report-export-button {
+  border-color: #79b69f;
+  color: #08735c;
+  background: #f4fcf8;
+}
+
+@media (max-width: 1440px) {
+  .calc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .angle-card,
+  .inversion-card {
+    min-height: 0;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1280px) {
+  .hero-panel {
+    grid-template-columns: minmax(270px, 0.72fr) minmax(0, 1.28fr);
+    gap: 20px;
+  }
+
+  .hero-panel .apparatus-figure {
+    order: 1;
+    width: 100%;
+  }
+
+  .hero-copy {
+    order: 2;
+  }
+
+  .hero-formula-badge {
+    grid-column: 1 / -1;
+    order: 3;
+    width: min(720px, 100%);
+    min-height: 108px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(39px, 5vw, 54px);
+  }
+
+  .hero-copy h1 span {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .lab-shell[data-mode="db"] #inversionFormula {
+    grid-template-columns: 1fr;
+  }
+
+  .lab-shell[data-mode="db"] .inversion-card .calc-pair {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  body,
+  .lab-shell {
+    font-size: 18px;
+  }
+
+  /* 桌面双栏规则位于文件末段，移动端必须在同一层显式复位为单栏。 */
+  .work-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lab-topbar {
+    padding: 13px 12px;
+  }
+
+  .brand-link strong {
+    font-size: 27px;
+  }
+
+  .hero-panel {
+    gap: 13px;
+    padding: 16px 12px 18px;
+  }
+
+  .hero-kicker {
+    font-size: 14px;
+  }
+
+  .hero-copy h1 {
+    max-width: none;
+    font-size: 34px;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .hero-copy h1 span {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .hero-copy p {
+    max-width: none;
+    font-size: 20px;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .hero-formula-badge {
+    min-height: 106px;
+    padding: 12px 8px;
+  }
+
+  .hero-formula-badge math {
+    font-size: 27px;
+  }
+
+  .stepper {
+    padding: 12px;
+  }
+
+  .stepper b {
+    font-size: 24px;
+  }
+
+  .stepper em {
+    font-size: 18px;
+  }
+
+  .white-card h2 {
+    min-height: 68px;
+    font-size: 27px;
+  }
+
+  .white-card h2 span {
+    width: 54px;
+    height: 42px;
+    font-size: 22px;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-grid label {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    font-size: 22px;
+  }
+
+  .field-grid input,
+  .field-grid select,
+  .readout-grid input,
+  .readout-grid output {
+    font-size: 23px;
+  }
+
+  .field-note,
+  .muted-line,
+  .warning-line {
+    font-size: 18px;
+  }
+
+  #fringeCanvas {
+    height: 190px;
+  }
+
+  .measurement-actions button {
+    font-size: 21px;
+  }
+
+  .readout-grid label span {
+    font-size: 21px;
+  }
+
+  .calc-pair,
+  .lab-shell[data-mode="db"] .inversion-card .calc-pair {
+    grid-template-columns: 1fr;
+    padding: 14px 12px 2px;
+  }
+
+  .formula-math-row {
+    justify-content: start;
+    padding-inline: 2px;
+  }
+
+  .formula-math-row math,
+  .lab-shell[data-mode="db"] .formula-math-row math {
+    width: auto;
+    font-size: clamp(24px, 6.2vw, 29px);
+    text-align: left;
+  }
+
+  .formula-group-label {
+    font-size: 20px;
+  }
+
+  .big-result strong,
+  #lambdaResult {
+    font-size: 48px;
+  }
+
+  .analysis-grid span,
+  .analysis-grid .analysis-main-card span,
+  .analysis-grid .analysis-reference-card span {
+    font-size: 24px;
+  }
+
+  .analysis-grid .analysis-error-card > span {
+    font-size: 28px;
+  }
+
+  .analysis-grid strong > .analysis-value-line {
+    font-size: inherit;
   }
 }
