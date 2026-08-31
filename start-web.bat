@@ -5,7 +5,7 @@ REM Keep every path relative to this script so it works after double-clicking.
 cd /d "%~dp0"
 
 set "PORT=5173"
-set "URL=http://127.0.0.1:%PORT%/"
+set "URL=http://127.0.0.1:%PORT%/index.html?module=operation^&v=voice-agent-desktop-v1"
 set "BUNDLED_NODE=%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe"
 
 if exist "%BUNDLED_NODE%" (

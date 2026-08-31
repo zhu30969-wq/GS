@@ -2560,6 +2560,15 @@ button:disabled {
   gap: 12px;
 }
 
+/* 桌面版语音智能体嵌入右栏，展开时推动学生实验卡片下移，不覆盖任何实验内容。 */
+.right-rail.voice-agent-ready {
+  grid-template-rows: max-content max-content minmax(0, 1fr);
+}
+
+.right-rail.voice-agent-ready .student-lab-panel {
+  order: 3;
+}
+
 .right-rail .panel {
   overflow: hidden;
   background:

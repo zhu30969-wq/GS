@@ -1,16 +1,17 @@
-const CACHE_VERSION = "diffraction-grating-v2026-07-18-qr-sync-v27";
+const CACHE_VERSION = "diffraction-grating-v2026-08-31-voice-agent-desktop-v28";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
-  "./src/styles.css?v=parameter-label-inline-v22-20260718",
+  "./src/styles.css?v=voice-agent-desktop-v1-20260831",
   "./src/student-lab.css?v=student-physics-italic-v24-20260718",
   "./src/physics.js",
   "./src/app.js?v=physics-italic-v20-20260718",
   "./src/theory-competition.js?v=competition-theory-symbols-v19-20260718",
   "./src/student-lab.js?v=student-physics-italic-v24-20260718",
   "./src/scene3d.js?v=physics-italic-v20-20260718",
+  "./src/voice-agent.js?v=voice-agent-desktop-v1-20260831",
   "./src/pwa.js?v=sampling-restore-20260603",
   "./vendor/three.module.js",
   "./assets/gs-entry-qr-card.png?v=qr-sync-v2-20260718",
