@@ -577,6 +577,31 @@ const asr = {
   suspended: false,
   supported: Boolean(SR),
 
+  async requestMicrophone() {
+    if (!window.isSecureContext) {
+      ui.setStatus("需要安全连接");
+      ui.setHeard("麦克风只能在 HTTPS 或 127.0.0.1 本地地址中使用。", false);
+      return false;
+    }
+    if (!navigator.mediaDevices?.getUserMedia) return true;
+    try {
+      ui.setStatus("请求麦克风权限");
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // 权限确认后立即释放测试音轨，正式采集由 SpeechRecognition 接管。
+      stream.getTracks().forEach((track) => track.stop());
+      ui.setHeard("麦克风已接入，请开始说话。", false);
+      return true;
+    } catch (error) {
+      const denied = error?.name === "NotAllowedError" || error?.name === "SecurityError";
+      ui.setStatus(denied ? "麦克风被拒绝" : "麦克风不可用");
+      ui.setHeard(denied
+        ? "请允许此网页使用麦克风，然后再次点击语音控制。"
+        : "没有检测到可用麦克风，或麦克风正被其他程序占用。", false);
+      ui.setActive(false);
+      return false;
+    }
+  },
+
   init() {
     if (!this.supported) return;
     const rec = new SR();
@@ -584,6 +609,11 @@ const asr = {
     rec.continuous = true;
     rec.interimResults = true;
     rec.maxAlternatives = 1;
+
+    rec.onstart = () => ui.setStatus("聆听中");
+    rec.onaudiostart = () => ui.setStatus("麦克风已接入");
+    rec.onspeechstart = () => ui.setStatus("正在识别");
+    rec.onspeechend = () => ui.setStatus("处理中");
 
     rec.onresult = (e) => {
       let interim = "", final = "";
@@ -601,6 +631,25 @@ const asr = {
         this.listening = false;
         ui.setStatus("麦克风被拒绝");
         ui.setHeard("请在浏览器地址栏允许麦克风权限，并确认页面是 https 访问。");
+      } else if (e.error === "network") {
+        this.listening = false;
+        ui.setStatus("识别服务未连接");
+        ui.setHeard("在线语音识别连接失败，请检查网络；仍可使用下方快捷按钮。", false);
+      } else if (e.error === "audio-capture") {
+        this.listening = false;
+        ui.setStatus("麦克风不可用");
+        ui.setHeard("没有检测到可用麦克风，或麦克风正被其他程序占用。", false);
+      } else if (e.error === "no-speech") {
+        ui.setStatus("未检测到语音");
+        ui.setHeard("没有听到清晰语音，请靠近麦克风后再说一次。", false);
+      } else if (e.error !== "aborted") {
+        this.listening = false;
+        ui.setStatus("识别失败");
+        ui.setHeard(`语音识别发生错误：${e.error || "未知错误"}。`, false);
+      }
+      if (!this.listening) {
+        ui.setActive(false);
+        wakeLock.release();
       }
     };
 
@@ -654,9 +703,10 @@ const asr = {
     }
   },
 
-  start() {
+  async start() {
     if (!this.supported) { ui.setHeard("当前浏览器不支持语音识别，请用 Chrome 或 Edge 打开。"); return; }
     if (!this.rec) this.init();
+    if (!(await this.requestMicrophone())) return;
     this.listening = true;
     this.suspended = false;
     try { this.rec.start(); } catch (_) { /* 已在运行 */ }
@@ -685,7 +735,7 @@ const asr = {
     try { this.rec?.start(); } catch (_) {}
   },
 
-  toggle() { this.listening ? this.stop() : this.start(); },
+  toggle() { this.listening ? this.stop() : void this.start(); },
 };
 
 /* 平板演示时防止息屏 */
