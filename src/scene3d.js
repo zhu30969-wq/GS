@@ -147,8 +147,9 @@ function makeLine(points, color, opacity = 0.82) {
 }
 
 export class DiffractionScene {
-  constructor(container) {
+  constructor(container, { fitViewport = false } = {}) {
     this.container = container;
+    this.fitViewport = fitViewport;
     this.view = "3d";
     this.displayMode = "rays";
     this.params = null;
@@ -281,7 +282,10 @@ export class DiffractionScene {
   updateOrthoProjection(aspect = this.container.clientWidth / Math.max(1, this.container.clientHeight)) {
     // 2D 视图使用正交相机。缩放时只改变可视范围，不移动物体坐标，
     // 因此光栅常数、屏距和衍射级次的位置关系不会被视觉交互破坏。
-    const halfHeight = ORTHO_BASE_HALF_HEIGHT / this.orthoZoom;
+    const baseHalfHeight = this.fitViewport
+      ? Math.max(ORTHO_BASE_HALF_HEIGHT, 5.8 / Math.max(aspect, 0.1))
+      : ORTHO_BASE_HALF_HEIGHT;
+    const halfHeight = baseHalfHeight / this.orthoZoom;
     this.orthoCamera.left = -halfHeight * aspect;
     this.orthoCamera.right = halfHeight * aspect;
     this.orthoCamera.top = halfHeight;
@@ -313,6 +317,13 @@ export class DiffractionScene {
 
   updateCamera() {
     const target = new THREE.Vector3(0.4, 0.1, 0);
+    const framingScale = this.fitViewport && this.view === "3d"
+      ? Math.max(1, 1.65 / this.camera.aspect)
+      : 1;
+    if (this.fitViewport) {
+      this.scene.fog.near = 8 * framingScale;
+      this.scene.fog.far = 18 * framingScale;
+    }
     if (this.view === "2d") {
       this.orthoCamera.position.set(0.4, 11, 0);
       this.orthoCamera.up.set(0, 0, -1);
@@ -321,10 +332,12 @@ export class DiffractionScene {
     }
 
     const { azimuth, elevation, radius } = this.cameraState;
-    const horizontal = Math.cos(elevation) * radius;
+    // Widen the initial mobile framing without moving instruments or changing the user's zoom.
+    const framedRadius = radius * framingScale;
+    const horizontal = Math.cos(elevation) * framedRadius;
     this.camera.position.set(
       target.x + Math.cos(azimuth) * horizontal,
-      target.y + Math.sin(elevation) * radius,
+      target.y + Math.sin(elevation) * framedRadius,
       target.z + Math.sin(azimuth) * horizontal,
     );
     this.camera.up.set(0, 1, 0);

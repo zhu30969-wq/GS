@@ -32,6 +32,7 @@
     <meta name="theme-color" content="#08121d" />
     <meta name="robots" content="index,follow" />
     <link rel="stylesheet" href="./src/styles.css?v=voice-agent-desktop-v1-20260831" />
+    <link rel="stylesheet" href="./src/operation-layout.css?v=readable-20261011" />
     <link rel="manifest" href="./site.webmanifest" />
     <link rel="icon" href="./assets/icons/site-icon.svg" type="image/svg+xml" />
     <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%23081218"/%3E%3Cpath d="M10 32h44M32 10v44" stroke="%237dc7ff" stroke-width="6" stroke-linecap="round"/%3E%3C/svg%3E' />
@@ -154,12 +155,18 @@
             </div>
           </div>
 
-          <div class="formula-card" aria-label="光栅方程">
-            <h3>光栅方程</h3>
-            <p class="equation">d(sin θⱼ − sin θᵢ) = jλ</p>
-          </div>
-
           <div class="section-guide scene-guide"><span>实验场景</span><em>激光器 → 准直镜 → 光栅架 → CCD屏幕</em></div>
+          <div class="scene-meta">
+            <div class="scene-readout" aria-live="polite">
+              <div><span>光栅常数</span><strong id="sceneD">d = 5.000 μm</strong></div>
+              <div><span>有效缝数</span><strong id="sceneN">N = 40</strong></div>
+              <div><span>CCD 屏距</span><strong id="sceneL">L = 100.0 cm</strong></div>
+            </div>
+            <div class="formula-card" aria-label="光栅方程">
+              <h3>光栅方程</h3>
+              <p class="equation"><var class="physics-variable">d</var>(sin <var class="physics-variable">θ<sub>j</sub></var> − sin <var class="physics-variable">θ<sub>i</sub></var>) = <var class="physics-variable">jλ</var></p>
+            </div>
+          </div>
           <div class="scene-frame">
             <div id="sceneRoot" class="scene-root" aria-label="光栅衍射三维模型"></div>
             <canvas id="sceneOverlay" class="scene-overlay" aria-hidden="true"></canvas>
@@ -168,20 +175,6 @@
               <input id="zoom2dRange" type="range" min="60" max="300" step="10" value="100" aria-label="2D 视图缩放比例" />
               <button id="zoom2dIn" type="button" aria-label="放大 2D 视图">+</button>
               <button id="zoom2dReset" class="zoom2d-reset" type="button" aria-label="重置 2D 视图缩放">100%</button>
-            </div>
-            <div class="scene-readout" aria-live="polite">
-              <div>
-                <span>光栅</span>
-                <strong id="sceneD">d = 5.000 μm</strong>
-              </div>
-              <div>
-                <span>有效缝数</span>
-                <strong id="sceneN">N = 40</strong>
-              </div>
-              <div>
-                <span>CCD屏幕（采样面）</span>
-                <strong id="sceneL">L = 100.0 cm</strong>
-              </div>
             </div>
           </div>
 
@@ -192,7 +185,7 @@
                 <h3>屏幕衍射图样</h3>
                 <span>理论成像</span>
               </div>
-              <canvas id="diffractionPattern" width="720" height="178" aria-label="MATLAB 公式仿真衍射图样"></canvas>
+              <div class="simulation-plot"><canvas id="diffractionPattern" width="720" height="178" aria-label="MATLAB 公式仿真衍射图样"></canvas></div>
             </section>
 
             <section class="simulation-card ccd-card">
@@ -200,18 +193,18 @@
                 <h3>CCD相机视角</h3>
                 <span>灰度采样</span>
               </div>
-              <canvas id="ccdView" width="720" height="178" aria-label="CCD 相机灰度采样效果"></canvas>
+              <div class="simulation-plot"><canvas id="ccdView" width="720" height="178" aria-label="CCD 相机灰度采样效果"></canvas></div>
             </section>
 
             <section class="simulation-card intensity-card">
               <div class="simulation-heading">
-                <h3>真实光强分布</h3>
+                <h3>光强分布</h3>
                 <div class="chart-legend">
                   <span><i class="legend-intensity"></i>理论光强</span>
                   <span><i class="legend-envelope"></i><b id="envelopeLegendText">单缝包络</b></span>
                 </div>
               </div>
-              <canvas id="intensityChart" width="720" height="238" aria-label="真实光强分布图"></canvas>
+              <div class="simulation-plot"><canvas id="intensityChart" width="720" height="238" aria-label="归一化理论光强与单缝衍射包络"></canvas></div>
             </section>
           </div>
 
@@ -241,7 +234,7 @@
             </div>
 
             <p class="student-lab-intro">
-              按正入射条件读取 CCD 上的 ±j 级条纹位置，完成参数反演、误差分析与实验报告生成。
+              正入射条件下，测量 ±j 级条纹位置与中央包络宽度，反演 d、b 或 λ。
             </p>
 
             <div class="student-lab-highlights" aria-label="学生动手实验能力">
@@ -251,8 +244,8 @@
             </div>
 
             <div class="student-lab-entry-actions" aria-label="学生动手实验入口按钮">
-              <a class="student-lab-open primary" href="./student-lab.html?mode=db&v=student-excel-record-table-20260606"><span>实验一</span>测 d、b</a>
-              <a class="student-lab-open" href="./student-lab.html?mode=lambda&v=student-excel-record-table-20260606"><span>实验二</span>测 λ</a>
+              <a class="student-lab-open primary" href="./student-lab.html?mode=db&v=student-excel-record-table-20260606"><span class="lab-action-label">实验一</span><strong class="lab-action-title">测 <var class="physics-variable">d</var>、<var class="physics-variable">b</var></strong></a>
+              <a class="student-lab-open" href="./student-lab.html?mode=lambda&v=student-excel-record-table-20260606"><span class="lab-action-label">实验二</span><strong class="lab-action-title">测 <var class="physics-variable">λ</var></strong></a>
             </div>
 
             <p class="student-lab-footnote">适合学生独立读数、即时核算和提交微课实验记录。</p>
@@ -333,7 +326,7 @@
       </footer>
     </div>
 
-    <script type="module" src="./src/app.js?v=physics-italic-v20-20260718"></script>
+    <script type="module" src="./src/app.js?v=operation-readable-20261011"></script>
     <script type="module" src="./src/voice-agent.js?v=voice-permission-v2-20260901"></script>
     <script type="module" src="./src/pwa.js?v=sampling-restore-20260603"></script>
   </body>

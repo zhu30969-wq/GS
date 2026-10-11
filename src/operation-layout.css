@@ -1,0 +1,309 @@
+/* Main experiment presentation. Theory and student-lab pages retain their own styles. */
+body:not(.theory-mode) {
+  background: #0b0e12;
+}
+
+body:not(.theory-mode) .app-shell {
+  width: min(2048px, 100%);
+  padding: 20px;
+}
+
+body:not(.theory-mode) .topbar {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  padding-bottom: 10px;
+}
+
+body:not(.theory-mode) .brand h1 { font-size: 36px; }
+body:not(.theory-mode) .brand p { font-size: 15px; color: #b3bbc5; }
+body:not(.theory-mode) .module-tabs { width: 400px; }
+body:not(.theory-mode) .module-tabs .tab { min-height: 58px; font-size: 23px; }
+body:not(.theory-mode) .tab.active { background: #202a36; }
+
+#operationModule {
+  --muted: #b2becb;
+  --text: #f0f3f7;
+  grid-template-columns: 352px minmax(0, 1fr) 336px;
+  gap: 16px;
+  font-size: 20px;
+  align-items: stretch;
+}
+
+#operationModule .panel {
+  background: #161b21;
+  border-color: #35404c;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+#operationModule .panel-heading,
+#operationModule .stage-heading {
+  min-height: 64px;
+  padding: 12px 18px;
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+#operationModule .panel-heading h2,
+#operationModule .stage-heading h2,
+#operationModule .student-lab-heading h2 { font-size: 26px; line-height: 1.35; }
+
+#operationModule .text-button { font-size: 20px; min-height: 40px; }
+#operationModule .left-rail { order: 0; }
+#operationModule .parameter-panel { min-height: 0; }
+#operationModule .parameter-panel .control-stack {
+  padding: 18px;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+#operationModule .parameter-panel .control-label {
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  font-size: 24px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+#operationModule .parameter-panel .control-meta { gap: 10px; }
+#operationModule .parameter-panel .control-unit { font-size: 20px; font-weight: 600; color: var(--muted); }
+#operationModule .wavelength-chip { min-width: 0; font-size: 18px; gap: 6px; }
+#operationModule .wavelength-chip i { width: 14px; height: 14px; box-shadow: none; }
+#operationModule .control-row { grid-template-columns: minmax(0, 1fr) 98px; gap: 14px; }
+#operationModule .number-input { min-height: 44px; font-size: 23px; font-weight: 650; background: #0b1117; }
+#operationModule .range-limits { width: calc(100% - 112px); font-size: 18px; margin-top: 3px; }
+#operationModule .order-buttons { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+#operationModule .order-buttons button { min-height: 44px; font-size: 22px; }
+#operationModule .toggle-control { margin: 0; padding: 13px 0; }
+#operationModule .toggle-control strong { font-size: 22px; }
+#operationModule .toggle-control em { font-size: 18px; }
+
+#operationModule .center-stage {
+  display: flex;
+  flex-direction: column;
+  order: 0;
+}
+
+#operationModule .view-toggle { min-width: 228px; }
+#operationModule .view-toggle button { min-height: 42px; font-size: 20px; padding: 0 10px; }
+#operationModule .section-guide {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  padding: 12px 18px;
+  font-size: 21px;
+  line-height: 1.45;
+  flex-shrink: 0;
+}
+
+#operationModule .section-guide::before,
+#operationModule .section-guide::after { content: none; }
+#operationModule .section-guide em { font-size: 18px; font-weight: 550; }
+#operationModule .scene-guide { border-top: 0; }
+#operationModule .pattern-guide { border-top: 1px solid #35404c; }
+
+#operationModule .scene-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 0 18px 14px;
+}
+
+#operationModule .scene-readout {
+  position: static;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 1.2fr;
+  gap: 12px;
+  transform: none;
+  text-align: left;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+#operationModule .scene-readout div { display: block; min-width: 0; padding: 0; }
+#operationModule .scene-readout span { font-size: 20px; font-weight: 550; color: var(--muted); }
+#operationModule .scene-readout strong { margin-top: 4px; font-size: 24px; color: #e5effa; line-height: 1.35; white-space: nowrap; }
+#operationModule .formula-card {
+  position: static;
+  width: auto;
+  margin: 0;
+  padding: 0 0 0 18px;
+  border: 0;
+  border-left: 1px solid #414d59;
+  border-radius: 0;
+  background: none;
+  backdrop-filter: none;
+}
+
+#operationModule .formula-card h3 { color: var(--muted); font-size: 18px; font-weight: 550; margin: 0 0 4px; }
+#operationModule .formula-card .equation { font-size: 23px; line-height: 1.5; white-space: nowrap; }
+#operationModule .formula-card sub { font-size: 0.65em; line-height: 0; vertical-align: -0.22em; }
+#operationModule .scene-frame {
+  height: 300px;
+  min-height: 300px;
+  flex-shrink: 0;
+  border-bottom: 0;
+  background:
+    linear-gradient(#62788e10 1px, transparent 1px),
+    linear-gradient(90deg, #62788e10 1px, transparent 1px), #0b1117;
+  background-size: 32px 32px;
+}
+
+#operationModule .matlab-simulation {
+  flex: 1;
+  min-height: 560px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-template-areas: "pattern chart" "ccd chart";
+  gap: 16px;
+  padding: 0 18px 18px;
+}
+
+#operationModule .simulation-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #0c1218;
+  border: 0;
+  border-radius: 0;
+}
+
+#operationModule .diffraction-card { grid-area: pattern; }
+#operationModule .ccd-card { grid-area: ccd; }
+#operationModule .intensity-card { grid-area: chart; }
+#operationModule .simulation-heading { min-height: 52px; padding: 10px 12px; gap: 6px 12px; flex-wrap: wrap; flex-shrink: 0; align-content: center; }
+#operationModule .simulation-heading h3 { font-size: 24px; line-height: 1.35; }
+#operationModule .simulation-heading span,
+#operationModule .chart-legend span { font-size: 18px; font-weight: 550; }
+#operationModule .chart-legend { flex-wrap: wrap; gap: 8px 14px; }
+#operationModule .chart-legend b { font-weight: inherit; }
+#operationModule .simulation-plot { position: relative; flex: 1; min-height: 190px; }
+#operationModule .intensity-card .simulation-plot { min-height: 350px; }
+#operationModule .simulation-plot canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+#operationModule .right-rail,
+#operationModule .right-rail.voice-agent-ready {
+  order: 0;
+  grid-column: auto;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: max-content max-content minmax(0, 1fr);
+  gap: 14px;
+}
+
+#operationModule .qr-access-card {
+  width: min(264px, calc(100% - 36px));
+  margin: 16px auto;
+  padding: 8px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: none;
+}
+
+#operationModule .student-lab-entry { border-color: #547b9c; background: #182128; box-shadow: none; }
+#operationModule .student-lab-entry::before,
+#operationModule .student-lab-entry::after { content: none; }
+#operationModule .student-lab-heading { padding: 16px 18px; gap: 12px; }
+#operationModule .student-lab-heading h2 { gap: 8px; }
+#operationModule .student-lab-mark { box-shadow: none; flex: 0 0 24px; }
+#operationModule .lab-link { min-height: 44px; font-size: 20px; background: #253b4a; }
+#operationModule .student-lab-intro { padding: 18px; font-size: 22px; font-weight: 550; line-height: 1.65; color: #e0e8ef; }
+#operationModule .student-lab-highlights { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0 18px 16px; gap: 8px; }
+#operationModule .student-lab-highlights span { min-height: 0; border: 0; border-radius: 0; background: none; font-size: 18px; font-weight: 550; color: #b8cbd9; }
+#operationModule .student-lab-entry-actions { flex: 1; grid-template-columns: 1fr; grid-auto-rows: minmax(88px, 1fr); padding: 0 18px 18px; gap: 12px; }
+#operationModule .student-lab-open { grid-template-columns: auto 1fr; place-items: center; gap: 14px; min-height: 88px; padding: 14px 26px 14px 16px; background: #202b34; box-shadow: none; }
+#operationModule .student-lab-open.primary { background: #225b8b; border-color: #7bb5df; box-shadow: none; }
+#operationModule .student-lab-open .lab-action-label { font-size: 20px; color: #d3e4f2; font-weight: 600; }
+#operationModule .student-lab-open .lab-action-title { font-size: 30px; line-height: 1.4; white-space: nowrap; color: #fff; }
+#operationModule .student-lab-open::after { font-size: 18px; right: 10px; top: 10px; }
+#operationModule .student-lab-open:hover { background: #2c4860; border-color: #b4d6ef; }
+#operationModule .student-lab-open.primary:hover { background: #2a6ba1; }
+#operationModule .student-lab-footnote { padding: 0 18px 18px; font-size: 19px; font-weight: 500; color: var(--muted); }
+
+#operationModule :is(button, a, input):focus-visible { outline: 2px solid #a9dcff; outline-offset: 3px; }
+body:not(.theory-mode) .gsv .gsv-mic { font-size: 21px; min-height: 60px; border-radius: 8px; background: #1b232b; box-shadow: none; }
+body:not(.theory-mode) .gsv .gsv-panel { border-radius: 8px; background: #1b232b; }
+body:not(.theory-mode) .gsv .gsv-panel-head { font-size: 22px; }
+body:not(.theory-mode) .gsv .gsv-heard { font-size: 19px; }
+body:not(.theory-mode) .gsv .gsv-parsed { font-size: 16px; overflow-wrap: anywhere; }
+body:not(.theory-mode) .gsv .gsv-chips button { font-size: 18px; min-height: 44px; border-radius: 6px; }
+body:not(.theory-mode) .gsv .gsv-close { width: 40px; height: 40px; font-size: 28px; }
+body:not(.theory-mode) .bottom-status { background: #161b21; box-shadow: none; border-color: #35404c; }
+body:not(.theory-mode) .status-metrics span { font-size: 22px; }
+body:not(.theory-mode) .status-metrics strong { font-size: 28px; }
+
+@media (max-width: 1599px) {
+  html:not(.force-desktop-layout) #operationModule { grid-template-columns: 332px minmax(0, 1fr); }
+  html:not(.force-desktop-layout) #operationModule .right-rail {
+    grid-column: 1 / -1;
+    grid-template-columns: 304px minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  html:not(.force-desktop-layout) #operationModule .qr-access-panel { grid-column: 1; grid-row: 1 / 3; }
+  html:not(.force-desktop-layout) #operationModule .gsv { grid-column: 2; grid-row: 1; }
+  html:not(.force-desktop-layout) #operationModule .student-lab-panel { grid-column: 2; grid-row: 2; }
+  html:not(.force-desktop-layout) #operationModule .student-lab-heading { grid-template-columns: minmax(0, 1fr) auto; }
+  html:not(.force-desktop-layout) #operationModule .student-lab-entry-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html:not(.force-desktop-layout) #operationModule .student-lab-intro { padding-bottom: 12px; }
+}
+
+@media (min-width: 1021px) and (max-width: 1250px) {
+  html:not(.force-desktop-layout) #operationModule .scene-meta { grid-template-columns: minmax(0, 1fr); }
+  html:not(.force-desktop-layout) #operationModule .formula-card { display: flex; align-items: baseline; gap: 14px; border: 0; padding: 0; }
+}
+
+@media (max-width: 1020px) {
+  html:not(.force-desktop-layout) body:not(.theory-mode) .topbar { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  html:not(.force-desktop-layout) body:not(.theory-mode) .module-tabs { width: 100%; }
+  html:not(.force-desktop-layout) #operationModule { grid-template-columns: minmax(0, 1fr); }
+  html:not(.force-desktop-layout) #operationModule .control-stack { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 28px; }
+  html:not(.force-desktop-layout) #operationModule .stage-heading { flex-direction: row; align-items: center; }
+  html:not(.force-desktop-layout) #operationModule .view-toggle { width: auto; }
+  html:not(.force-desktop-layout) #operationModule .student-lab-heading { grid-template-columns: minmax(0, 1fr); }
+  html:not(.force-desktop-layout) #operationModule .student-lab-entry-actions { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 760px) {
+  html:not(.force-desktop-layout) body:not(.theory-mode) .app-shell { padding: 14px 12px 90px; }
+  html:not(.force-desktop-layout) body:not(.theory-mode) .brand h1 { font-size: 30px; }
+  html:not(.force-desktop-layout) body:not(.theory-mode) .brand p { font-size: 13px; }
+  html:not(.force-desktop-layout) #operationModule { width: 100%; max-width: 100%; }
+  html:not(.force-desktop-layout) #operationModule .control-stack { display: flex; gap: 16px; padding: 16px; }
+  html:not(.force-desktop-layout) #operationModule .parameter-panel .control-label { font-size: 24px; }
+  html:not(.force-desktop-layout) #operationModule .stage-heading { flex-wrap: wrap; }
+  html:not(.force-desktop-layout) #operationModule .view-toggle { flex: 1 0 100%; }
+  html:not(.force-desktop-layout) #operationModule .scene-meta { grid-template-columns: minmax(0, 1fr); padding: 0 16px 14px; }
+  html:not(.force-desktop-layout) #operationModule .scene-readout { grid-template-columns: minmax(0, 1fr); gap: 8px; width: auto; box-shadow: none; backdrop-filter: none; }
+  html:not(.force-desktop-layout) #operationModule .scene-readout div { display: flex; justify-content: space-between; gap: 12px; }
+  html:not(.force-desktop-layout) #operationModule .scene-readout strong { margin: 0; }
+  html:not(.force-desktop-layout) #operationModule .formula-card { border: 0; border-top: 1px solid #35404c; padding: 10px 0 0; }
+  html:not(.force-desktop-layout) #operationModule .scene-frame { height: 270px; min-height: 270px; }
+  html:not(.force-desktop-layout) #operationModule .matlab-simulation { min-height: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: "pattern" "ccd" "chart"; padding: 0 12px 12px; }
+  html:not(.force-desktop-layout) #operationModule .simulation-plot { min-height: 210px; }
+  html:not(.force-desktop-layout) #operationModule .intensity-card .simulation-plot { min-height: 350px; }
+  html:not(.force-desktop-layout) #operationModule .right-rail { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
+  html:not(.force-desktop-layout) #operationModule .student-lab-panel { grid-column: 1; grid-row: auto; }
+}
+
+/* The QR entry explicitly requests a desktop viewport; keep the same compact three-column layout. */
+html.force-desktop-layout body:not(.theory-mode) .topbar { grid-template-columns: minmax(0, 1fr) auto !important; }
+html.force-desktop-layout body:not(.theory-mode) .module-tabs { width: 400px !important; }
+html.force-desktop-layout #operationModule { grid-template-columns: 328px minmax(0, 1fr) 328px !important; }
+html.force-desktop-layout #operationModule .right-rail { grid-template-rows: max-content max-content minmax(0, 1fr) !important; }
+html.force-desktop-layout #operationModule .control-row { grid-template-columns: minmax(0, 1fr) 98px !important; }
+html.force-desktop-layout #operationModule .range-limits { width: calc(100% - 112px) !important; }
+html.force-desktop-layout #operationModule .panel-heading,
+html.force-desktop-layout #operationModule .stage-heading { min-height: 64px !important; padding: 12px 18px !important; }
+html.force-desktop-layout #operationModule .scene-readout { position: static !important; display: grid !important; grid-template-columns: 1.2fr 0.8fr 1.2fr !important; gap: 12px !important; transform: none !important; text-align: left !important; }
+html.force-desktop-layout #operationModule .scene-frame { height: 300px !important; min-height: 300px !important; }
+html.force-desktop-layout #operationModule .matlab-simulation { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr) !important; padding: 0 18px 18px !important; gap: 16px !important; }
+html.force-desktop-layout #operationModule .simulation-plot canvas { width: 100% !important; height: 100% !important; margin: 0 !important; }

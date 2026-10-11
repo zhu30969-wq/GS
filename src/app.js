@@ -919,8 +919,8 @@ async function initDeferredScene() {
   state.sceneLoading = true;
 
   try {
-    const { DiffractionScene } = await import("./scene3d.js?v=physics-italic-v20-20260718");
-    const loadedScene = new DiffractionScene(sceneRoot);
+    const { DiffractionScene } = await import("./scene3d.js?v=operation-readable-20261011");
+    const loadedScene = new DiffractionScene(sceneRoot, { fitViewport: true });
     loadedScene.setView(state.view);
     loadedScene.setDisplayMode(state.mode);
     loadedScene.set2dZoom(state.zoom2d);
@@ -1184,7 +1184,7 @@ function drawDiffractionPattern() {
   const grid = "rgba(152, 172, 194, 0.12)";
   const laserColor = wavelengthToColor(state.params.lambdaNm);
   const domain = stableVisibleDomainCm(state.params);
-  const plot = { left: 46, top: 24, width: width - 70, height: height - 58 };
+  const plot = { left: 20, top: 18, width: width - 40, height: height - 62 };
   const centerY = plot.top + plot.height / 2;
 
   ctx.clearRect(0, 0, width, height);
@@ -1253,8 +1253,8 @@ function drawDiffractionPattern() {
 
   ctx.fillStyle = text;
   // 屏幕坐标标题是中文教学信息，字号高于数值刻度以便投屏阅读。
-  fillPhysicsCanvasText(ctx, "屏幕位置 x (cm)", plot.left + plot.width / 2, height - 9, {
-    size: 17,
+  fillPhysicsCanvasText(ctx, "屏幕位置 x (cm)", plot.left + plot.width / 2, height - 13, {
+    size: 20,
     weight: 600,
   });
 }
@@ -1268,7 +1268,13 @@ function drawCcdView() {
   const canvas = ccdCanvas;
   const { ctx, width, height } = configureCanvas(canvas);
   const domain = stableVisibleDomainCm(state.params);
-  const sensor = { left: 18, top: 18, width: width - 36, height: height - 44 };
+  const caption = "CCD采样：像素化 · 读出噪声 · 8-bit量化";
+  ctx.font = `600 18px ${UI_FONT_STACK}`;
+  const captionLines = ctx.measureText(caption).width <= width - 28
+    ? [caption]
+    : ["CCD采样：像素化 · 读出噪声", "8-bit 量化"];
+  const captionHeight = captionLines.length * 26;
+  const sensor = { left: 18, top: 18, width: width - 36, height: height - 32 - captionHeight };
   const columns = 128;
   const rows = 34;
   const pixelW = sensor.width / columns;
@@ -1310,11 +1316,11 @@ function drawCcdView() {
   }
 
   ctx.fillStyle = "#c9d8e8";
-  // CCD 采样说明属于实验条件说明，使用大号中文，避免被误认为无关脚注。
-  ctx.font = `600 16px ${UI_FONT_STACK}`;
+  ctx.font = `600 18px ${UI_FONT_STACK}`;
   ctx.textAlign = "center";
-  // 保留真实 CCD 采样的三个关键因素，同时压缩措辞，保证大号中文在窄画布中完整显示。
-  ctx.fillText("CCD采样：像素化 · 读出噪声 · 8-bit量化", width / 2, height - 10);
+  captionLines.forEach((line, index) => {
+    ctx.fillText(line, width / 2, height - 12 - (captionLines.length - 1 - index) * 26);
+  });
 }
 
 function drawIntensityChart() {
@@ -1326,14 +1332,14 @@ function drawIntensityChart() {
   const muted = cssVar("--muted") || "#98a8bb";
   const laserColor = wavelengthToColor(state.params.lambdaNm);
   const grid = "rgba(151, 177, 205, 0.16)";
-  const plot = { left: 52, top: 18, right: 16, bottom: 40 };
+  const plot = { left: 50, top: 40, right: 24, bottom: 66 };
   const plotW = width - plot.left - plot.right;
   const plotH = height - plot.top - plot.bottom;
   const domain = stableVisibleDomainCm(state.params);
 
   ctx.strokeStyle = grid;
   ctx.lineWidth = 1;
-  ctx.font = `12px ${NUMBER_FONT_STACK}`;
+  ctx.font = `500 18px ${NUMBER_FONT_STACK}`;
   ctx.fillStyle = muted;
   ctx.textAlign = "right";
   ctx.textBaseline = "middle";
@@ -1347,7 +1353,10 @@ function drawIntensityChart() {
     ctx.fillText(yValue.toFixed(1), plot.left - 9, y);
   }
 
-  const xStep = domain <= 20 ? 5 : domain <= 60 ? 20 : domain <= 160 ? 40 : domain <= 300 ? 80 : 100;
+  let xStep = domain <= 20 ? 5 : domain <= 60 ? 20 : domain <= 160 ? 40 : domain <= 300 ? 80 : 100;
+  // Only thin tick labels on narrow plots; the physical domain and curve samples stay unchanged.
+  const tickSpacing = ctx.measureText(String(-Math.ceil(domain))).width + 22;
+  while ((xStep / (2 * domain)) * plotW < tickSpacing && xStep < 2 * domain) xStep *= 2;
   const firstX = Math.ceil(-domain / xStep) * xStep;
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
@@ -1400,11 +1409,11 @@ function drawIntensityChart() {
   ctx.stroke();
 
   ctx.fillStyle = text;
-  ctx.textAlign = "center";
   ctx.textBaseline = "bottom";
-  // 光强分布横轴标题同步采用大号中文。
+  ctx.textAlign = "left";
   ctx.font = `600 18px ${UI_FONT_STACK}`;
-  ctx.fillText("位置 (cm)", plot.left + plotW / 2, height - 3);
+  ctx.fillText("归一化光强", plot.left, 25);
+  fillPhysicsCanvasText(ctx, "位置 x (cm)", plot.left + plotW / 2, height - 5, { size: 20 });
 }
 
 function drawRayDiagram() {
@@ -1525,14 +1534,14 @@ function renderAll() {
   updateOrderButtons();
   updateReadouts();
   updateTip();
+  // Typeset dynamic variables before measuring plots: math fonts can change the readout height.
+  typesetExperimentSymbols($("operationModule"));
+  typesetExperimentSymbols(document.querySelector(".bottom-status"));
   drawDiffractionPattern();
   drawCcdView();
   drawIntensityChart();
   drawRayDiagram();
   scene.update(state.params);
-  // 动态读数会在每次参数变化时重写文本，因此渲染末尾重新应用变量斜体。
-  typesetExperimentSymbols($("operationModule"));
-  typesetExperimentSymbols(document.querySelector(".bottom-status"));
 }
 
 function scheduleRenderAll() {
@@ -1611,9 +1620,11 @@ const deferredSceneStart = () => {
 };
 requestAnimationFrame(() => window.setTimeout(deferredSceneStart, 0));
 
-// 浏览器字体或容器尺寸变更后，重绘 canvas 可避免坐标轴文字发虚。
-window.addEventListener("resize", () => {
+// Observe the plot containers, so opening the voice panel cannot stretch an old canvas bitmap.
+const plotResizeObserver = new ResizeObserver(() => {
+  if (state.module !== "operation") return;
   drawDiffractionPattern();
   drawCcdView();
   drawIntensityChart();
 });
+document.querySelectorAll("#operationModule .simulation-plot").forEach((plot) => plotResizeObserver.observe(plot));
