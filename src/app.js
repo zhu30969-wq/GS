@@ -919,7 +919,7 @@ async function initDeferredScene() {
   state.sceneLoading = true;
 
   try {
-    const { DiffractionScene } = await import("./scene3d.js?v=operation-readable-20261011");
+    const { DiffractionScene } = await import("./scene3d.js?v=operation-readable-20261011-r2");
     const loadedScene = new DiffractionScene(sceneRoot, { fitViewport: true });
     loadedScene.setView(state.view);
     loadedScene.setDisplayMode(state.mode);

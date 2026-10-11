@@ -283,7 +283,7 @@ export class DiffractionScene {
     // 2D 视图使用正交相机。缩放时只改变可视范围，不移动物体坐标，
     // 因此光栅常数、屏距和衍射级次的位置关系不会被视觉交互破坏。
     const baseHalfHeight = this.fitViewport
-      ? Math.max(ORTHO_BASE_HALF_HEIGHT, 5.8 / Math.max(aspect, 0.1))
+      ? Math.max(ORTHO_BASE_HALF_HEIGHT, 6.4 / Math.max(aspect, 0.1))
       : ORTHO_BASE_HALF_HEIGHT;
     const halfHeight = baseHalfHeight / this.orthoZoom;
     this.orthoCamera.left = -halfHeight * aspect;
