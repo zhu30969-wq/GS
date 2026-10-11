@@ -32,7 +32,7 @@
     <meta name="theme-color" content="#08121d" />
     <meta name="robots" content="index,follow" />
     <link rel="stylesheet" href="./src/styles.css?v=voice-agent-desktop-v1-20260831" />
-    <link rel="stylesheet" href="./src/operation-layout.css?v=readable-20261011" />
+    <link rel="stylesheet" href="./src/operation-layout.css?v=student-entry-20261011" />
     <link rel="manifest" href="./site.webmanifest" />
     <link rel="icon" href="./assets/icons/site-icon.svg" type="image/svg+xml" />
     <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%23081218"/%3E%3Cpath d="M10 32h44M32 10v44" stroke="%237dc7ff" stroke-width="6" stroke-linecap="round"/%3E%3C/svg%3E' />
@@ -229,26 +229,32 @@
 
           <section id="studentLabPanel" class="panel student-lab-panel student-lab-entry" aria-label="学生动手实验入口">
             <div class="panel-heading student-lab-heading">
-              <h2><span class="student-lab-mark" aria-hidden="true"></span>学生动手实验平台</h2>
-              <a id="studentLabLink" class="lab-link" href="./student-lab.html?mode=lambda&v=student-excel-record-table-20260606">打开独立页面</a>
+              <h2>学生动手实验</h2>
             </div>
-
-            <p class="student-lab-intro">
-              正入射条件下，测量 ±j 级条纹位置与中央包络宽度，反演 d、b 或 λ。
-            </p>
-
-            <div class="student-lab-highlights" aria-label="学生动手实验能力">
-              <span>步骤引导</span>
-              <span>实时计算</span>
-              <span>报告生成</span>
-            </div>
-
-            <div class="student-lab-entry-actions" aria-label="学生动手实验入口按钮">
-              <a class="student-lab-open primary" href="./student-lab.html?mode=db&v=student-excel-record-table-20260606"><span class="lab-action-label">实验一</span><strong class="lab-action-title">测 <var class="physics-variable">d</var>、<var class="physics-variable">b</var></strong></a>
-              <a class="student-lab-open" href="./student-lab.html?mode=lambda&v=student-excel-record-table-20260606"><span class="lab-action-label">实验二</span><strong class="lab-action-title">测 <var class="physics-variable">λ</var></strong></a>
-            </div>
-
-            <p class="student-lab-footnote">适合学生独立读数、即时核算和提交微课实验记录。</p>
+            <nav class="student-lab-entry-actions" aria-label="选择反演实验">
+              <a class="student-lab-open" href="./student-lab.html?mode=db&v=student-excel-record-table-20260606" aria-label="实验一：测量光栅常数 d 与缝宽 b">
+                <span class="lab-action-top">
+                  <span class="lab-action-label">实验一</span>
+                  <span class="lab-action-symbols"><var class="physics-variable">d</var><span class="lab-symbol-separator">、</span><var class="physics-variable">b</var></span>
+                </span>
+                <strong class="lab-action-title">测光栅参数</strong>
+                <span class="lab-action-bottom">
+                  <span class="lab-action-detail">光栅常数与缝宽</span>
+                  <svg class="lab-action-icon lucide lucide-arrow-up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                </span>
+              </a>
+              <a class="student-lab-open" href="./student-lab.html?mode=lambda&v=student-excel-record-table-20260606" aria-label="实验二：测量激光波长 λ">
+                <span class="lab-action-top">
+                  <span class="lab-action-label">实验二</span>
+                  <span class="lab-action-symbols"><var class="physics-variable">λ</var></span>
+                </span>
+                <strong class="lab-action-title">测激光波长</strong>
+                <span class="lab-action-bottom">
+                  <span class="lab-action-detail">已知光栅常数 <var class="physics-variable">d</var></span>
+                  <svg class="lab-action-icon lucide lucide-arrow-up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                </span>
+              </a>
+            </nav>
           </section>
         </aside>
       </main>
