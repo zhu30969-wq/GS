@@ -152,14 +152,43 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 #operationModule .formula-card .equation { font-size: 23px; line-height: 1.5; white-space: nowrap; }
 #operationModule .formula-card sub { font-size: 0.65em; line-height: 0; vertical-align: -0.22em; }
 #operationModule .scene-frame {
-  height: 300px;
-  min-height: 300px;
-  flex: 1 0 300px;
+  height: 380px;
+  min-height: 380px;
+  flex: 1 0 380px;
   border-bottom: 0;
   background:
     linear-gradient(#62788e10 1px, transparent 1px),
     linear-gradient(90deg, #62788e10 1px, transparent 1px), #0b1117;
   background-size: 32px 32px;
+}
+
+#operationModule .scene-reset {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: #dce9f5;
+  border: 1px solid #596a7b;
+  border-radius: 6px;
+  background: #1b2731;
+  cursor: pointer;
+}
+#operationModule .scene-reset[hidden] { display: none; }
+#operationModule .scene-reset:hover { background: #304355; border-color: #9bcaff; }
+#operationModule .scene-scale-note {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  padding: 3px 7px;
+  background: #101820c9;
+  color: #c2d0dc;
+  font-size: 17px;
+  line-height: 1.4;
 }
 
 #operationModule .matlab-simulation {
@@ -327,7 +356,7 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   html:not(.force-desktop-layout) #operationModule .scene-readout div { display: flex; justify-content: space-between; gap: 12px; }
   html:not(.force-desktop-layout) #operationModule .scene-readout strong { margin: 0; }
   html:not(.force-desktop-layout) #operationModule .formula-card { border: 0; border-top: 1px solid #35404c; padding: 10px 0 0; }
-  html:not(.force-desktop-layout) #operationModule .scene-frame { height: 270px; min-height: 270px; flex-basis: 270px; }
+  html:not(.force-desktop-layout) #operationModule .scene-frame { height: 330px; min-height: 330px; flex-basis: 330px; }
   html:not(.force-desktop-layout) #operationModule .matlab-simulation { min-height: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: "pattern" "ccd" "chart"; padding: 0 12px 12px; }
   html:not(.force-desktop-layout) #operationModule .simulation-plot { min-height: 210px; }
   html:not(.force-desktop-layout) #operationModule .intensity-card .simulation-plot { min-height: 350px; }
@@ -348,6 +377,6 @@ html.force-desktop-layout #operationModule .range-limits { width: calc(100% - 11
 html.force-desktop-layout #operationModule .panel-heading,
 html.force-desktop-layout #operationModule .stage-heading { min-height: 64px !important; padding: 12px 18px !important; }
 html.force-desktop-layout #operationModule .scene-readout { position: static !important; display: grid !important; grid-template-columns: 1.2fr 0.8fr 1.2fr !important; gap: 12px !important; transform: none !important; text-align: left !important; }
-html.force-desktop-layout #operationModule .scene-frame { height: 300px !important; min-height: 300px !important; }
+html.force-desktop-layout #operationModule .scene-frame { height: 380px !important; min-height: 380px !important; }
 html.force-desktop-layout #operationModule .matlab-simulation { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr) !important; padding: 0 18px 18px !important; gap: 16px !important; }
 html.force-desktop-layout #operationModule .simulation-plot canvas { width: 100% !important; height: 100% !important; margin: 0 !important; }

@@ -1,10 +1,13 @@
 import * as THREE from "../vendor/three.module.js";
-import { intensityAt, orderRows, stableVisibleDomainCm, toRad, wavelengthToColor } from "./physics.js";
+import { diffractionAngle, intensityAt, maximumOrder, stableVisibleDomainCm, toRad, wavelengthToColor } from "./physics.js";
+import { createSensorTexture } from "./scene-sensor.js";
 
-const LASER_COLOR = 0xff2f46;
 const CYAN = 0x79cfff;
 const OPTICAL_AXIS_Y = 0;
 const LASER_EXIT_LOCAL_X = 0.66;
+const TABLE_Y = -1.65;
+const SCREEN_HALF_WIDTH = 2.25;
+const DEFAULT_CAMERA = Object.freeze({ azimuth: 1.98, elevation: 0.38, radius: 9.4 });
 const MIN_2D_ZOOM = 0.6;
 const MAX_2D_ZOOM = 3;
 const ORTHO_BASE_HALF_HEIGHT = 4.2;
@@ -67,72 +70,17 @@ function makeTextSprite(text, options = {}) {
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
   const material = new THREE.SpriteMaterial({
     map: texture,
     transparent: true,
     depthTest: false,
+    depthWrite: false,
+    toneMapped: false,
   });
   const sprite = new THREE.Sprite(material);
   sprite.scale.set(width / 185, height / 185, 1);
   return sprite;
-}
-
-function makeGlowTexture(color = { r: 255, g: 47, b: 70 }) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 128;
-  canvas.height = 128;
-  const ctx = canvas.getContext("2d");
-  const { r, g, b } = color;
-  const gradient = ctx.createRadialGradient(64, 64, 2, 64, 64, 62);
-  gradient.addColorStop(0, "rgba(255,255,255,1)");
-  gradient.addColorStop(0.12, `rgba(${r},${g},${b},0.95)`);
-  gradient.addColorStop(0.42, `rgba(${r},${g},${b},0.35)`);
-  gradient.addColorStop(1, `rgba(${r},${g},${b},0)`);
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, 128, 128);
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  return texture;
-}
-
-function makeScreenSpotTexture(color = { r: 255, g: 47, b: 70 }, selected = false) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 128;
-  canvas.height = 384;
-  const ctx = canvas.getContext("2d");
-  const { r, g, b } = color;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // CCD/光屏是二维探测面。这里只画贴在屏面上的窄纵向亮纹，
-  // 不再使用大面积径向光斑，避免误导成“空气中发光云团”。
-  const vertical = ctx.createLinearGradient(64, 46, 64, 338);
-  vertical.addColorStop(0, `rgba(${r},${g},${b},0)`);
-  vertical.addColorStop(0.32, `rgba(${r},${g},${b},${selected ? 0.18 : 0.12})`);
-  vertical.addColorStop(0.5, `rgba(${r},${g},${b},${selected ? 0.78 : 0.50})`);
-  vertical.addColorStop(0.68, `rgba(${r},${g},${b},${selected ? 0.18 : 0.12})`);
-  vertical.addColorStop(1, `rgba(${r},${g},${b},0)`);
-
-  const horizontal = ctx.createLinearGradient(34, 0, 94, 0);
-  horizontal.addColorStop(0, `rgba(${r},${g},${b},0)`);
-  horizontal.addColorStop(0.38, `rgba(${r},${g},${b},${selected ? 0.38 : 0.24})`);
-  horizontal.addColorStop(0.5, "rgba(255,255,255,0.92)");
-  horizontal.addColorStop(0.62, `rgba(${r},${g},${b},${selected ? 0.38 : 0.24})`);
-  horizontal.addColorStop(1, `rgba(${r},${g},${b},0)`);
-
-  ctx.fillStyle = vertical;
-  ctx.fillRect(45, 36, 38, 312);
-  ctx.globalCompositeOperation = "lighter";
-  ctx.fillStyle = horizontal;
-  ctx.fillRect(34, 68, 60, 248);
-  ctx.globalCompositeOperation = "source-over";
-
-  ctx.fillStyle = `rgba(${r},${g},${b},${selected ? 0.16 : 0.08})`;
-  ctx.fillRect(58, 22, 12, 340);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  return texture;
 }
 
 function makeLine(points, color, opacity = 0.82) {
@@ -142,8 +90,42 @@ function makeLine(points, color, opacity = 0.82) {
     transparent: true,
     opacity,
     depthWrite: false,
+    toneMapped: false,
   });
   return new THREE.Line(geometry, material);
+}
+
+function machinedBox(width, height, depth, bevel = 0.025) {
+  const b = Math.min(bevel, width / 5, height / 5, depth / 5);
+  const w = width / 2 - b, h = height / 2 - b;
+  const shape = new THREE.Shape();
+  shape.moveTo(-w, -h);
+  shape.lineTo(w, -h);
+  shape.lineTo(w, h);
+  shape.lineTo(-w, h);
+  shape.closePath();
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth: depth - 2 * b, steps: 1, bevelEnabled: true,
+    bevelThickness: b, bevelSize: b, bevelSegments: 2,
+  });
+  geometry.center();
+  return geometry;
+}
+
+function addPart(group, geometry, material, x = 0, y = 0, z = 0) {
+  const part = new THREE.Mesh(geometry, material);
+  part.position.set(x, y, z);
+  part.castShadow = !material.transparent;
+  part.receiveShadow = true;
+  group.add(part);
+  return part;
+}
+
+function addBolt(group, material, x, y, z, axis = "y", radius = 0.045) {
+  const bolt = addPart(group, new THREE.CylinderGeometry(radius, radius, 0.024, 6), material, x, y, z);
+  if (axis === "x") bolt.rotation.z = Math.PI / 2;
+  if (axis === "z") bolt.rotation.x = Math.PI / 2;
+  return bolt;
 }
 
 export class DiffractionScene {
@@ -153,22 +135,26 @@ export class DiffractionScene {
     this.view = "3d";
     this.displayMode = "rays";
     this.params = null;
-    this.time = 0;
     this.drag = { active: false, x: 0, y: 0 };
-    this.cameraState = { azimuth: 0.78, elevation: 0.48, radius: 8.4 };
+    this.cameraState = { ...DEFAULT_CAMERA };
     this.orthoZoom = 1;
 
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog(0x071017, 8, 18);
+    this.scene.fog = new THREE.Fog(0x111820, 20, 46);
 
-    this.camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    this.camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
     this.orthoCamera = new THREE.OrthographicCamera(-6, 6, 4, -4, 0.1, 100);
     this.activeCamera = this.camera;
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    this.renderer.setClearColor(0x000000, 0);
+    this.renderer.setClearColor(0x111820, 1);
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.1;
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.shadowMap.autoUpdate = false;
     this.container.appendChild(this.renderer.domElement);
 
     this.root = new THREE.Group();
@@ -177,8 +163,8 @@ export class DiffractionScene {
     this.dynamic = new THREE.Group();
     this.scene.add(this.dynamic);
 
-    this.spots = [];
-    this.selectedPulse = null;
+    this.needsRender = true;
+    this.updateKey = "";
 
     this.addLighting();
     this.addStaticFloor();
@@ -187,40 +173,50 @@ export class DiffractionScene {
     this.animate();
 
     window.addEventListener("resize", () => this.resize());
+    this.resizeObserver = new ResizeObserver(() => this.resize());
+    this.resizeObserver.observe(this.container);
   }
 
   addLighting() {
-    const ambient = new THREE.AmbientLight(0x9fb6d4, 0.56);
-    this.scene.add(ambient);
-
-    const key = new THREE.DirectionalLight(0xcde7ff, 1.25);
-    key.position.set(-3, 5, 4);
+    this.scene.add(new THREE.HemisphereLight(0xe5edf5, 0x44515e, 1.6));
+    const key = new THREE.DirectionalLight(0xfff3df, 2.6);
+    key.position.set(-3, 7, 5);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024, 1024);
+    Object.assign(key.shadow.camera, { left: -8, right: 8, top: 6, bottom: -6, near: 0.5, far: 24 });
+    key.shadow.camera.updateProjectionMatrix();
+    key.shadow.normalBias = 0.025;
+    key.shadow.bias = -0.0003;
+    key.shadow.radius = 3;
     this.scene.add(key);
-
-    this.rimLight = new THREE.PointLight(LASER_COLOR, 2.2, 8);
-    this.rimLight.position.set(-3.8, 0.6, 0);
-    this.scene.add(this.rimLight);
+    const fill = new THREE.DirectionalLight(0xc4def6, 1.2);
+    fill.position.set(-5, 3, -6);
+    this.scene.add(fill);
+    const edge = new THREE.DirectionalLight(0xe7f0ff, 1.5);
+    edge.position.set(6, 4, 1);
+    this.scene.add(edge);
   }
 
   addStaticFloor() {
-    const grid = new THREE.GridHelper(12, 22, 0x31506b, 0x1b2b3b);
-    grid.position.set(0.7, -1.22, 0);
+    const grid = new THREE.GridHelper(22, 44, 0x405064, 0x27333f);
+    grid.position.set(0, TABLE_Y - 0.2, 0);
     grid.material.transparent = true;
-    grid.material.opacity = 0.34;
+    grid.material.opacity = 0.28;
     this.root.add(grid);
 
-    const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(14, 9),
-      new THREE.MeshBasicMaterial({
-        color: 0x0a1018,
-        transparent: true,
-        opacity: 0.34,
-        side: THREE.DoubleSide,
-      }),
-    );
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -1.23;
-    this.root.add(floor);
+    const bench = addPart(this.root, machinedBox(11.8, 0.16, 6.6, 0.04),
+      new THREE.MeshStandardMaterial({ color: 0x35404a, metalness: 0.32, roughness: 0.65 }),
+      -0.55, TABLE_Y - 0.08, 0);
+    bench.castShadow = false;
+    const holes = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.026, 0.026, 0.003, 10),
+      new THREE.MeshBasicMaterial({ color: 0x10171d }), 23 * 13);
+    const matrix = new THREE.Matrix4();
+    let index = 0;
+    for (let ix = 0; ix < 23; ix++) for (let iz = 0; iz < 13; iz++) {
+      matrix.makeTranslation(-6.05 + ix * 0.5, TABLE_Y + 0.002, -3 + iz * 0.5);
+      holes.setMatrixAt(index++, matrix);
+    }
+    this.root.add(holes);
   }
 
   bindPointerCamera() {
@@ -291,6 +287,7 @@ export class DiffractionScene {
     this.orthoCamera.top = halfHeight;
     this.orthoCamera.bottom = -halfHeight;
     this.orthoCamera.updateProjectionMatrix();
+    this.needsRender = true;
   }
 
   set2dZoom(value) {
@@ -307,7 +304,15 @@ export class DiffractionScene {
   setView(view) {
     this.view = view;
     this.activeCamera = view === "2d" ? this.orthoCamera : this.camera;
+    this.placeLabels();
     this.updateCamera();
+  }
+
+  placeLabels() {
+    this.dynamic.children.forEach((part) => {
+      if (!part.userData.planPosition) return;
+      part.position.copy(this.view === "2d" ? part.userData.planPosition : part.userData.spatialPosition);
+    });
   }
 
   setDisplayMode(mode) {
@@ -316,16 +321,31 @@ export class DiffractionScene {
   }
 
   updateCamera() {
-    const target = new THREE.Vector3(0.4, 0.1, 0);
-    const framingScale = this.fitViewport && this.view === "3d"
-      ? Math.max(1, 1.65 / this.camera.aspect)
-      : 1;
+    this.needsRender = true;
+    const target = new THREE.Vector3(-0.65, -0.15, 0);
+    let fittedRadius = DEFAULT_CAMERA.radius;
+    if (this.fitViewport && this.framePoints) {
+      const { azimuth, elevation } = DEFAULT_CAMERA;
+      const direction = new THREE.Vector3(Math.cos(azimuth) * Math.cos(elevation), Math.sin(elevation), Math.sin(azimuth) * Math.cos(elevation));
+      const right = new THREE.Vector3(Math.sin(azimuth), 0, -Math.cos(azimuth));
+      const up = new THREE.Vector3().crossVectors(direction, right);
+      const vertical = Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2)) * 0.88;
+      // Fit once against the default orientation; orbiting does not pump the camera zoom.
+      for (const corner of this.framePoints) {
+        const point = corner.clone().sub(target);
+        fittedRadius = Math.max(fittedRadius, point.dot(direction) + Math.max(
+          Math.abs(point.dot(right)) / (vertical * this.camera.aspect),
+          Math.abs(point.dot(up)) / vertical,
+        ));
+      }
+    }
+    const framingScale = fittedRadius / DEFAULT_CAMERA.radius;
     if (this.fitViewport) {
-      this.scene.fog.near = 8 * framingScale;
-      this.scene.fog.far = 18 * framingScale;
+      this.scene.fog.near = 20 * framingScale;
+      this.scene.fog.far = 46 * framingScale;
     }
     if (this.view === "2d") {
-      this.orthoCamera.position.set(0.4, 11, 0);
+      this.orthoCamera.position.set(-0.65, 11, 0);
       this.orthoCamera.up.set(0, 0, -1);
       this.orthoCamera.lookAt(target);
       return;
@@ -344,28 +364,33 @@ export class DiffractionScene {
     this.camera.lookAt(target);
   }
 
+  resetCamera() {
+    this.cameraState = { ...DEFAULT_CAMERA };
+    this.updateCamera();
+  }
+
   clearDynamic() {
-    while (this.dynamic.children.length) {
-      const child = this.dynamic.children.pop();
-      child.traverse?.((object) => {
-        object.geometry?.dispose?.();
-        if (Array.isArray(object.material)) {
-          object.material.forEach((material) => {
-            material.map?.dispose?.();
-            material.dispose?.();
-          });
-        } else {
-          object.material?.map?.dispose?.();
-          object.material?.dispose?.();
-        }
+    const geometries = new Set(), materials = new Set(), textures = new Set();
+    this.dynamic.traverse((object) => {
+      if (object.geometry) geometries.add(object.geometry);
+      const list = Array.isArray(object.material) ? object.material : [object.material];
+      list.filter(Boolean).forEach((material) => {
+        materials.add(material);
+        if (material.map) textures.add(material.map);
       });
-    }
-    this.spots = [];
-    this.selectedPulse = null;
+    });
+    this.dynamic.clear();
+    textures.forEach((texture) => texture.dispose());
+    materials.forEach((material) => material.dispose());
+    geometries.forEach((geometry) => geometry.dispose());
   }
 
   update(params) {
     this.params = { ...params };
+    const key = [params.lambdaNm, params.gratingUm, params.slitUm, params.slitCount,
+      params.distanceCm, params.incidenceDeg, params.diffractionEnabled, this.displayMode].join("|");
+    if (key === this.updateKey) return;
+    this.updateKey = key;
     this.clearDynamic();
 
     const thetaI = toRad(params.incidenceDeg);
@@ -374,106 +399,115 @@ export class DiffractionScene {
     const collimatorX = laserX + 1.45;
     const screenX = gratingX + 2.05 + (params.distanceCm / 200) * 3.15;
     const domain = stableVisibleDomainCm(params);
-    const screenHalf = 2.25;
-    const zScale = screenHalf / domain;
-    // 入射光线必须通过激光器出射口、准直镜中心和光栅中心。
-    // 先按光栅中心反推任意 x 位置处的 z 坐标，再把激光器模型摆到
-    // “红色出射口”正好落在这条光线上，避免光线从机身内部或偏上方冒出。
+    const zScale = SCREEN_HALF_WIDTH / domain;
+    // Rotate around the laser's center, then transform its aperture onto the incident axis.
     const incidentZAt = (x) => -Math.tan(thetaI) * (gratingX - x);
     const laserExitX = laserX + Math.cos(thetaI) * LASER_EXIT_LOCAL_X;
-    const laserExitZ = incidentZAt(laserExitX);
-    const laserModelZ = laserExitZ + Math.sin(thetaI) * LASER_EXIT_LOCAL_X;
+    const laserModelZ = incidentZAt(laserX);
+    const laserExitZ = laserModelZ + Math.sin(thetaI) * LASER_EXIT_LOCAL_X;
     const collimatorZ = incidentZAt(collimatorX);
     const laserColor = wavelengthToColor(params.lambdaNm);
-    this.rimLight?.color.setHex(laserColor.three);
 
     this.addOpticalRail(laserX, screenX);
-    this.addLaser(laserX, laserModelZ, thetaI, params.lambdaNm, laserColor);
-    this.addCollimator(collimatorX, collimatorZ, thetaI, laserColor);
-    this.addGrating(gratingX, params.gratingUm);
-    this.addScreen(screenX, params.distanceCm);
-    this.addDimensionArrow(gratingX, screenX, -2.55, `L = ${params.distanceCm.toFixed(1)} cm`);
+    this.addLaser(laserX, laserModelZ, thetaI, laserColor);
+    this.addCollimator(collimatorX, collimatorZ, thetaI);
+    this.addGrating(gratingX, params);
+    this.addScreen(screenX, params, domain, laserColor);
+    this.addDimensionArrow(gratingX, screenX, 2.86, `L = ${params.distanceCm.toFixed(1)} cm`);
 
     const gratingPoint = new THREE.Vector3(gratingX, OPTICAL_AXIS_Y, 0);
     const laserPoint = new THREE.Vector3(laserExitX, OPTICAL_AXIS_Y, laserExitZ);
     const collimatorPoint = new THREE.Vector3(collimatorX, OPTICAL_AXIS_Y, collimatorZ);
-    this.dynamic.add(makeLine([laserPoint, collimatorPoint], laserColor.three, 0.82));
-    this.dynamic.add(makeLine([collimatorPoint, gratingPoint], laserColor.three, 0.92));
+    this.addBeam(laserPoint, collimatorPoint, laserColor.three, 0.9);
+    this.addBeam(collimatorPoint, gratingPoint, laserColor.three, 0.9);
 
-    const rows = orderRows(params);
-    rows.forEach((row) => {
-      if (!row.valid) return;
-      const visibleScreenCm = Math.max(-domain, Math.min(domain, row.screenCm));
-      const z = visibleScreenCm * zScale;
-      const onScreen = Math.abs(row.screenCm) <= domain;
-      const endpoint = new THREE.Vector3(screenX - 0.035, OPTICAL_AXIS_Y, z);
-      const selected = row.order === params.order;
-      const peak = onScreen ? intensityAt(params, row.screenCm) : 0;
-      const opacity = onScreen ? (selected ? Math.max(0.22, 0.36 + peak * 0.56) : Math.max(0.10, peak * 0.42)) : 0.18;
-      const ray = makeLine([gratingPoint, endpoint], laserColor.three, opacity);
-      this.dynamic.add(ray);
-
-      if (onScreen && peak > 0.006) {
-        const spot = this.addScreenSpot(screenX - 0.07, z, selected, row.order, laserColor, peak);
-        this.spots.push(spot);
-      }
-
-      if (selected && onScreen) {
-        const pulse = new THREE.Mesh(
-          new THREE.SphereGeometry(0.052, 20, 20),
-          new THREE.MeshBasicMaterial({ color: laserColor.three }),
-        );
-        pulse.userData = { start: gratingPoint.clone(), end: endpoint.clone() };
-        this.selectedPulse = pulse;
-        this.dynamic.add(pulse);
-      }
+    maximumOrder(params).forEach((order) => {
+      const row = diffractionAngle(params, order);
+      if (!row.valid || Math.abs(row.screenCm) > domain) return;
+      const peak = intensityAt(params, row.screenCm);
+      if (peak < 0.003) return;
+      const endpoint = new THREE.Vector3(screenX - 0.15, OPTICAL_AXIS_Y, row.screenCm * zScale);
+      this.addBeam(gratingPoint, endpoint, laserColor.three, 0.1 + Math.sqrt(peak) * 0.7);
     });
+    this.renderer.shadowMap.needsUpdate = true;
+    this.placeLabels();
+    this.framePoints = [];
+    const names = ["laser", "collimator", "grating-holder", "ccd-detector"];
+    this.dynamic.children.filter((part) => names.includes(part.name)).forEach((part) => {
+      const bounds = new THREE.Box3().setFromObject(part).expandByScalar(0.1);
+      bounds.max.y += 0.6;
+      for (const x of [bounds.min.x, bounds.max.x])
+        for (const y of [bounds.min.y, bounds.max.y])
+          for (const z of [bounds.min.z, bounds.max.z]) this.framePoints.push(new THREE.Vector3(x, y, z));
+    });
+    this.updateCamera();
+    this.needsRender = true;
+  }
 
-    if (this.displayMode === "intensity") {
-      this.addIntensityBands(screenX, params, domain, zScale, laserColor);
-    }
+  addBeam(start, end, color, opacity) {
+    const direction = new THREE.Vector3().subVectors(end, start);
+    const length = direction.length();
+    if (length < 0.001) return;
+    const beam = new THREE.Group();
+    beam.name = "optical-path";
+    beam.userData = { start: start.clone(), end: end.clone() };
+    beam.position.copy(start).add(end).multiplyScalar(0.5);
+    beam.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+    [
+      [0.008, opacity], [0.025, opacity * 0.13],
+    ].forEach(([radius, alpha]) => {
+      const part = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, length, 10),
+        new THREE.MeshBasicMaterial({ color, transparent: true, opacity: alpha,
+          blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+      beam.add(part);
+    });
+    this.dynamic.add(beam);
   }
 
   addOpticalRail(laserX, screenX) {
     const group = new THREE.Group();
-    const railMaterial = new THREE.MeshStandardMaterial({ color: 0x1a2633, metalness: 0.56, roughness: 0.3 });
-    const tickMaterial = new THREE.MeshBasicMaterial({ color: 0x6f8499, transparent: true, opacity: 0.62 });
+    const railMaterial = new THREE.MeshStandardMaterial({ color: 0x93a2b1, metalness: 0.6, roughness: 0.3 });
+    const tickMaterial = new THREE.MeshBasicMaterial({ color: 0x96acbf, transparent: true, opacity: 0.58 });
     const length = screenX - laserX + 1.15;
     const centerX = (screenX + laserX) / 2 - 0.1;
 
     [-0.56, 0.56].forEach((z) => {
-      const rail = new THREE.Mesh(new THREE.BoxGeometry(length, 0.055, 0.055), railMaterial);
-      rail.position.set(centerX, -1.5, z);
+      const rail = new THREE.Mesh(new THREE.BoxGeometry(length, 0.025, 0.035), railMaterial);
+      rail.position.set(centerX, TABLE_Y + 0.012, z);
       group.add(rail);
     });
 
     const tickCount = Math.floor(length / 0.42);
     for (let i = 0; i <= tickCount; i += 1) {
       const tick = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.05, i % 5 === 0 ? 0.42 : 0.22), tickMaterial);
-      tick.position.set(centerX - length / 2 + i * 0.42, -1.44, 0);
+      tick.position.set(centerX - length / 2 + i * 0.42, TABLE_Y + 0.004, 0);
+      tick.scale.y = 0.04;
       group.add(tick);
     }
 
     this.dynamic.add(group);
   }
 
-  addLaser(x, z, thetaI, lambdaNm, laserColor) {
+  addLaser(x, z, thetaI, laserColor) {
     const group = new THREE.Group();
+    group.name = "laser";
     group.position.set(x, OPTICAL_AXIS_Y, z);
     group.rotation.y = -thetaI;
 
     const body = new THREE.Mesh(
-      new THREE.BoxGeometry(1.05, 0.58, 0.78),
+      machinedBox(1.05, 0.58, 0.78, 0.04),
       new THREE.MeshStandardMaterial({
-        color: 0x111923,
-        metalness: 0.55,
+        color: 0x687888,
+        metalness: 0.38,
         roughness: 0.32,
       }),
     );
+    body.castShadow = true;
+    body.receiveShadow = true;
     group.add(body);
 
-    const detailMaterial = new THREE.MeshStandardMaterial({ color: 0x243140, metalness: 0.5, roughness: 0.34 });
-    const finMaterial = new THREE.MeshStandardMaterial({ color: 0x344356, metalness: 0.58, roughness: 0.3 });
+    const detailMaterial = new THREE.MeshStandardMaterial({ color: 0x294965, metalness: 0.35, roughness: 0.34 });
+    const finMaterial = new THREE.MeshStandardMaterial({ color: 0x34414e, metalness: 0.48, roughness: 0.3 });
     for (let i = 0; i < 7; i += 1) {
       const fin = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.16, 0.72), finMaterial);
       fin.position.set(-0.38 + i * 0.11, 0.37, 0);
@@ -490,11 +524,11 @@ export class DiffractionScene {
     const face = new THREE.Mesh(
       new THREE.CylinderGeometry(0.27, 0.27, 0.08, 48),
       new THREE.MeshStandardMaterial({
-        color: 0x1d2b3a,
-        metalness: 0.62,
+        color: 0x34414b,
+        metalness: 0.42,
         roughness: 0.25,
         emissive: laserColor.three,
-        emissiveIntensity: 0.12,
+        emissiveIntensity: 0.025,
       }),
     );
     face.rotation.z = Math.PI / 2;
@@ -502,12 +536,16 @@ export class DiffractionScene {
     group.add(face);
 
     const lens = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.16, 0.16, 0.09, 42),
-      new THREE.MeshBasicMaterial({ color: laserColor.three }),
+      new THREE.CylinderGeometry(0.095, 0.095, 0.04, 36),
+      new THREE.MeshBasicMaterial({ color: laserColor.three, toneMapped: false }),
     );
     lens.rotation.z = Math.PI / 2;
     lens.position.x = LASER_EXIT_LOCAL_X;
+    lens.name = "laser-aperture";
     group.add(lens);
+    const apertureRim = addPart(group, new THREE.TorusGeometry(0.135, 0.026, 10, 40),
+      new THREE.MeshStandardMaterial({ color: 0xb6c3ce, metalness: 0.65, roughness: 0.22 }), 0.678, 0, 0);
+    apertureRim.rotation.y = Math.PI / 2;
 
     const screwMaterial = new THREE.MeshStandardMaterial({ color: 0x95a6b8, metalness: 0.75, roughness: 0.22 });
     [-1, 1].forEach((yy) => {
@@ -527,253 +565,241 @@ export class DiffractionScene {
     group.add(indicator);
 
     const stand = new THREE.Mesh(
-      new THREE.BoxGeometry(0.28, 0.86, 0.38),
-      new THREE.MeshStandardMaterial({ color: 0x16202b, metalness: 0.42, roughness: 0.44 }),
+      machinedBox(0.28, 1.12, 0.38),
+      new THREE.MeshStandardMaterial({ color: 0x516170, metalness: 0.45, roughness: 0.35 }),
     );
-    stand.position.set(-0.2, -0.73, 0);
+    stand.position.set(-0.2, -0.87, 0);
+    stand.castShadow = true;
     group.add(stand);
 
     const base = new THREE.Mesh(
-      new THREE.BoxGeometry(1.12, 0.18, 0.86),
-      new THREE.MeshStandardMaterial({ color: 0x0d151e, metalness: 0.48, roughness: 0.36 }),
+      machinedBox(1.12, 0.18, 0.86),
+      new THREE.MeshStandardMaterial({ color: 0x3b4856, metalness: 0.42, roughness: 0.36 }),
     );
-    base.position.set(-0.18, -1.25, 0);
+    base.position.set(-0.18, TABLE_Y + 0.09, 0);
+    base.castShadow = true;
+    base.receiveShadow = true;
     group.add(base);
+    [-0.58, 0.22].forEach((xx) => [-0.3, 0.3].forEach((zz) => addBolt(group, screwMaterial, xx, TABLE_Y + 0.19, zz)));
+    [-0.28, 0.1].forEach((xx) => [-0.12, 0.12].forEach((yy) => addBolt(group, screwMaterial, xx, yy, 0.425, "z", 0.025)));
+    const heightLock = addPart(group, new THREE.CylinderGeometry(0.105, 0.105, 0.13, 20), detailMaterial, -0.2, -0.85, 0.25);
+    heightLock.rotation.x = Math.PI / 2;
 
-    const label = makeTextSprite(`激光器\nλ = ${lambdaNm.toFixed(0)} nm`, {
-      color: laserColor.hex,
-      fontSize: 36,
-      width: 270,
-      height: 98,
+    const label = makeTextSprite("激光器", {
+      color: "#e0eaf4",
+      fontSize: 48,
+      width: 210,
+      height: 76,
     });
-    label.position.set(x + 0.05, -1.15, z + 0.7);
-    label.scale.multiplyScalar(0.62);
+    label.position.set(x, 0.92, z);
+    label.userData = { spatialPosition: label.position.clone(), planPosition: new THREE.Vector3(x, 0.1, z + 0.85) };
+    label.scale.multiplyScalar(1.05);
     this.dynamic.add(label);
     this.dynamic.add(group);
   }
 
-  addCollimator(x, z, thetaI, laserColor) {
+  addCollimator(x, z, thetaI) {
     const group = new THREE.Group();
+    group.name = "collimator";
     group.position.set(x, OPTICAL_AXIS_Y, z);
     group.rotation.y = -thetaI;
 
     const glassMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xc6f0ff,
-      roughness: 0.06,
-      metalness: 0.02,
-      transmission: 0.42,
+      color: 0xb1d4e5,
+      roughness: 0.08,
+      metalness: 0,
+      transmission: 0.35,
+      ior: 1.52,
       transparent: true,
-      opacity: 0.34,
-      emissive: laserColor.three,
-      emissiveIntensity: 0.05,
+      opacity: 0.26,
+      depthWrite: false,
+      side: THREE.DoubleSide,
     });
 
-    const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.46, 0.055, 64), glassMaterial);
-    lens.rotation.z = Math.PI / 2;
+    const lens = new THREE.Mesh(new THREE.SphereGeometry(0.46, 40, 24), glassMaterial);
+    lens.scale.x = 0.19;
     group.add(lens);
 
-    const ringMaterial = new THREE.MeshStandardMaterial({ color: 0x3b4b5c, metalness: 0.68, roughness: 0.24 });
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.48, 0.035, 12, 64), ringMaterial);
+    const ringMaterial = new THREE.MeshStandardMaterial({ color: 0x91a5b9, metalness: 0.56, roughness: 0.24 });
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.48, 0.055, 12, 56), ringMaterial);
     ring.rotation.y = Math.PI / 2;
+    ring.position.x = -0.04;
+    ring.castShadow = true;
     group.add(ring);
+    const backRing = ring.clone();
+    backRing.position.x = 0.04;
+    group.add(backRing);
+    for (let i = 0; i < 3; i++) {
+      const angle = i * Math.PI * 2 / 3;
+      addBolt(group, ringMaterial, -0.09, Math.cos(angle) * 0.51, Math.sin(angle) * 0.51, "x", 0.035);
+    }
 
-    const holder = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.18, 0.12), ringMaterial);
-    holder.position.y = -0.72;
+    const holder = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.94, 24), ringMaterial);
+    holder.position.y = -0.97;
+    holder.castShadow = true;
     group.add(holder);
+    const clampMaterial = new THREE.MeshStandardMaterial({ color: 0x364759, metalness: 0.45, roughness: 0.32 });
+    addPart(group, new THREE.CylinderGeometry(0.12, 0.12, 0.34, 24), clampMaterial, 0, -1.23, 0);
+    const knob = addPart(group, new THREE.CylinderGeometry(0.09, 0.09, 0.12, 20), clampMaterial, 0, -1.23, 0.17);
+    knob.rotation.x = Math.PI / 2;
 
     const base = new THREE.Mesh(
-      new THREE.BoxGeometry(0.64, 0.14, 0.72),
-      new THREE.MeshStandardMaterial({ color: 0x101923, metalness: 0.46, roughness: 0.36 }),
+      machinedBox(0.72, 0.18, 0.78),
+      clampMaterial,
     );
-    base.position.y = -1.38;
+    base.position.y = TABLE_Y + 0.09;
+    base.castShadow = true;
+    base.receiveShadow = true;
     group.add(base);
+    [-0.23, 0.23].forEach((xx) => addBolt(group, ringMaterial, xx, TABLE_Y + 0.19, 0.23));
 
     const label = makeTextSprite("准直镜", {
       color: "#cceaff",
-      fontSize: 34,
-      width: 180,
-      height: 72,
+      fontSize: 48,
+      width: 210,
+      height: 76,
     });
-    label.position.set(x, -1.22, z + 0.62);
-    label.scale.multiplyScalar(0.5);
+    label.position.set(x, 1.15, z - 0.1);
+    label.userData = { spatialPosition: label.position.clone(), planPosition: new THREE.Vector3(x, 0.1, z + 0.9) };
+    label.scale.multiplyScalar(1.05);
     this.dynamic.add(label);
     this.dynamic.add(group);
   }
 
-  addGrating(x, dUm) {
+  addGrating(x, params) {
     const group = new THREE.Group();
+    group.name = "grating-holder";
     group.position.set(x, 0, 0);
 
     const glass = new THREE.Mesh(
-      new THREE.BoxGeometry(0.08, 2.85, 1.5),
+      new THREE.BoxGeometry(0.065, 1.98, 1.5),
       new THREE.MeshStandardMaterial({
-        color: 0xa8c7ee,
+        color: 0xb6d6ea,
         metalness: 0.12,
         roughness: 0.12,
         transparent: true,
-        opacity: 0.25,
+        opacity: 0.15,
+        depthWrite: false,
       }),
     );
     group.add(glass);
 
-    const frameMaterial = new THREE.MeshStandardMaterial({ color: 0x1c2936, metalness: 0.44, roughness: 0.28 });
-    const top = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.09, 1.66), frameMaterial);
-    top.position.y = 1.47;
+    const frameMaterial = new THREE.MeshStandardMaterial({ color: 0x738ba1, metalness: 0.48, roughness: 0.28 });
+    const top = new THREE.Mesh(machinedBox(0.14, 0.12, 1.72), frameMaterial);
+    top.position.y = 1.05;
     group.add(top);
     const bottom = top.clone();
-    bottom.position.y = -1.47;
+    bottom.position.y = -1.05;
     group.add(bottom);
-    const left = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.94, 0.08), frameMaterial);
+    const left = new THREE.Mesh(machinedBox(0.14, 2.1, 0.12), frameMaterial);
     left.position.z = -0.83;
     group.add(left);
     const right = left.clone();
     right.position.z = 0.83;
     group.add(right);
 
-    const barMaterial = new THREE.MeshStandardMaterial({
-      color: 0xd8e9ff,
-      metalness: 0.18,
-      roughness: 0.3,
-      emissive: 0x101a24,
-    });
-    for (let i = -12; i <= 12; i += 1) {
-      const bar = new THREE.Mesh(new THREE.BoxGeometry(0.045, 2.62, 0.014), barMaterial);
-      bar.position.z = i * 0.06;
-      group.add(bar);
-    }
+    const ruling = document.createElement("canvas");
+    ruling.width = 1024;
+    ruling.height = 64;
+    const context = ruling.getContext("2d");
+    const count = Math.max(2, Math.round(params.slitCount));
+    const period = ruling.width / count;
+    const opaqueFraction = 1 - Math.min(1, params.slitUm / params.gratingUm);
+    context.fillStyle = "rgba(194,215,231,0.85)";
+    for (let i = 0; i < count; i++) context.fillRect(i * period, 0, period * opaqueFraction, ruling.height);
+    const rulingTexture = new THREE.CanvasTexture(ruling);
+    rulingTexture.colorSpace = THREE.SRGBColorSpace;
+    rulingTexture.anisotropy = 4;
+    const bars = addPart(group, new THREE.PlaneGeometry(1.5, 1.96),
+      new THREE.MeshBasicMaterial({ map: rulingTexture, transparent: true, side: THREE.DoubleSide,
+        depthWrite: false, toneMapped: false }), -0.036, 0, 0);
+    bars.rotation.y = -Math.PI / 2;
 
-    const baseMaterial = new THREE.MeshStandardMaterial({ color: 0x151f2b, metalness: 0.52, roughness: 0.34 });
-    const base = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.12, 1.45), baseMaterial);
-    base.position.set(0, -1.56, 0);
+    const baseMaterial = new THREE.MeshStandardMaterial({ color: 0x3c5065, metalness: 0.46, roughness: 0.34 });
+    const base = new THREE.Mesh(machinedBox(0.8, 0.18, 1.62), baseMaterial);
+    base.position.set(0, TABLE_Y + 0.09, 0);
+    base.castShadow = true;
+    base.receiveShadow = true;
     group.add(base);
 
-    const post = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.68, 0.18), baseMaterial);
-    post.position.set(0, -1.18, 0);
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.105, 0.105, 0.42, 24), frameMaterial);
+    post.position.set(0, -1.27, 0);
+    post.castShadow = true;
     group.add(post);
 
-    const knobMaterial = new THREE.MeshStandardMaterial({ color: 0x7d8da0, metalness: 0.72, roughness: 0.24 });
+    const knobMaterial = new THREE.MeshStandardMaterial({ color: 0xb6c5d3, metalness: 0.6, roughness: 0.24 });
     [-1, 1].forEach((side) => {
       const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.115, 0.12, 32), knobMaterial);
       knob.rotation.x = Math.PI / 2;
-      knob.position.set(0, 1.08 * side, 0.96);
+      knob.position.set(0, 0.78 * side, 0.96);
       group.add(knob);
       const clamp = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.16, 0.18), baseMaterial);
-      clamp.position.set(0, 1.08 * side, 0.84);
+      clamp.position.set(0, 0.78 * side, 0.84);
       group.add(clamp);
     });
 
-    const label = makeTextSprite(`光栅架\nd = ${dUm.toFixed(3)} μm`, {
-      color: "#9ed2ff",
-      fontSize: 34,
-      width: 250,
-      height: 86,
+    [-0.27, 0.27].forEach((xx) => [-0.58, 0.58].forEach((zz) => addBolt(group, knobMaterial, xx, TABLE_Y + 0.19, zz)));
+    const label = makeTextSprite("光栅架", {
+      color: "#cde6fa",
+      fontSize: 48,
+      width: 210,
+      height: 76,
     });
-    label.position.set(x, -1.42, 1.08);
-    label.scale.multiplyScalar(0.54);
+    label.position.set(x, 1.68, 0);
+    label.userData = { spatialPosition: label.position.clone(), planPosition: new THREE.Vector3(x, 0.1, 1.2) };
+    label.scale.multiplyScalar(1.05);
     this.dynamic.add(label);
     this.dynamic.add(group);
   }
 
-  addScreen(x, distanceCm) {
+  addScreen(x, params, domain, laserColor) {
     const group = new THREE.Group();
+    group.name = "ccd-detector";
     group.position.x = x;
-
-    const screen = new THREE.Mesh(
-      new THREE.PlaneGeometry(4.9, 3.18),
-      new THREE.MeshStandardMaterial({
-        color: 0x141b25,
-        roughness: 0.72,
-        metalness: 0.08,
-        side: THREE.DoubleSide,
-      }),
-    );
-    screen.rotation.y = Math.PI / 2;
-    group.add(screen);
-
-    const pixelMaterial = new THREE.MeshBasicMaterial({ color: 0x8fb2d8, transparent: true, opacity: 0.16 });
-    for (let i = -10; i <= 10; i += 1) {
-      const vLine = new THREE.Mesh(new THREE.BoxGeometry(0.01, 2.92, 0.006), pixelMaterial);
-      vLine.position.set(-0.052, 0, i * 0.23);
-      group.add(vLine);
-    }
-    for (let j = -5; j <= 5; j += 1) {
-      const hLine = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.006, 4.62), pixelMaterial);
-      hLine.position.set(-0.054, j * 0.26, 0);
-      group.add(hLine);
-    }
-
-    const edgeMaterial = new THREE.MeshStandardMaterial({ color: 0x526070, metalness: 0.42, roughness: 0.32 });
-    const horizontal = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.05, 5.05), edgeMaterial);
-    horizontal.position.y = 1.62;
-    group.add(horizontal);
-    const horizontalBottom = horizontal.clone();
-    horizontalBottom.position.y = -1.62;
-    group.add(horizontalBottom);
-
-    const vertical = new THREE.Mesh(new THREE.BoxGeometry(0.08, 3.25, 0.05), edgeMaterial);
-    vertical.position.z = -2.52;
-    group.add(vertical);
-    const verticalRight = vertical.clone();
-    verticalRight.position.z = 2.52;
-    group.add(verticalRight);
-
-    const standMaterial = new THREE.MeshStandardMaterial({ color: 0x182331, metalness: 0.55, roughness: 0.32 });
-    const stand = new THREE.Mesh(new THREE.BoxGeometry(0.18, 1.05, 0.22), standMaterial);
-    stand.position.set(0.08, -2.12, 0);
-    group.add(stand);
-    const base = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.16, 1.25), standMaterial);
-    base.position.set(0.08, -2.7, 0);
-    group.add(base);
-
-    const tickMaterial = new THREE.MeshBasicMaterial({ color: 0x8fb2d8, transparent: true, opacity: 0.64 });
-    const rulerLine = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.012, 4.25), tickMaterial);
-    rulerLine.position.set(-0.046, -1.34, 0);
-    group.add(rulerLine);
-    for (let i = -8; i <= 8; i += 1) {
-      const isMajor = i % 5 === 0;
-      const tick = new THREE.Mesh(new THREE.BoxGeometry(0.014, isMajor ? 0.17 : 0.1, 0.012), tickMaterial);
-      tick.position.set(-0.052, -1.34 + tick.geometry.parameters.height / 2, i * 0.24);
-      group.add(tick);
-    }
-
-    const label = makeTextSprite(`CCD屏幕\nL = ${distanceCm.toFixed(1)} cm`, {
-      color: "#cfe7ff",
-      fontSize: 34,
-      width: 260,
-      height: 86,
+    const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0x2c3a48, metalness: 0.35, roughness: 0.36 });
+    const trimMaterial = new THREE.MeshStandardMaterial({ color: 0xa3b4c3, metalness: 0.6, roughness: 0.25 });
+    addPart(group, machinedBox(0.22, 2.5, 5.0, 0.035), bodyMaterial, 0.01);
+    const sensor = addPart(group, new THREE.PlaneGeometry(4.5, 2.12),
+      new THREE.MeshBasicMaterial({ map: createSensorTexture(params, domain, laserColor),
+        toneMapped: false, side: THREE.DoubleSide }), -0.15);
+    sensor.rotation.y = -Math.PI / 2;
+    sensor.name = "sensor-irradiance";
+    sensor.userData.domainCm = domain;
+    sensor.castShadow = false;
+    sensor.receiveShadow = false;
+    [-1, 1].forEach((side) => {
+      addPart(group, machinedBox(0.1, 0.08, 5.02), trimMaterial, -0.07, side * 1.23, 0);
+      addPart(group, machinedBox(0.1, 2.5, 0.08), trimMaterial, -0.07, 0, side * 2.48);
+      [-1, 1].forEach((other) => addBolt(group, trimMaterial, -0.124, side * 1.13, other * 2.36, "x", 0.04));
     });
-    label.position.set(x - 0.08, 1.9, 0.72);
-    label.scale.multiplyScalar(0.54);
+    for (let i = -5; i <= 5; i++) addPart(group, new THREE.BoxGeometry(0.08, 1.5, 0.045), bodyMaterial, 0.16, 0, i * 0.27);
+    const connector = addPart(group, new THREE.CylinderGeometry(0.09, 0.09, 0.2, 20), trimMaterial, 0.24, -0.76, 0.8);
+    connector.rotation.z = Math.PI / 2;
+    addPart(group, machinedBox(0.3, 0.28, 0.36), bodyMaterial, 0.18, -0.76, -0.5);
+    addPart(group, machinedBox(0.28, 0.3, 0.32), trimMaterial, 0.08, -1.36, 0);
+    addPart(group, machinedBox(1.04, 0.18, 1.64), bodyMaterial, 0.08, TABLE_Y + 0.09, 0);
+    [-0.27, 0.43].forEach((xx) => [-0.6, 0.6].forEach((zz) => addBolt(group, trimMaterial, xx, TABLE_Y + 0.19, zz)));
+    const tickMaterial = new THREE.MeshBasicMaterial({ color: 0xa8c1d5, transparent: true, opacity: 0.62, toneMapped: false });
+    addPart(group, new THREE.BoxGeometry(0.008, 0.01, 4.5), tickMaterial, -0.154, -1.12, 0);
+    for (let i = -8; i <= 8; i += 1) {
+      const height = i % 4 === 0 ? 0.09 : 0.045;
+      addPart(group, new THREE.BoxGeometry(0.008, height, 0.009), tickMaterial, -0.154, -1.12 + height / 2, i * 4.5 / 16);
+    }
+    const label = makeTextSprite("CCD 采样面", {
+      color: "#e0eaf4",
+      fontSize: 48,
+      width: 350,
+      height: 76,
+    });
+    label.position.set(x, 1.83, 0);
+    label.userData = { spatialPosition: label.position.clone(), planPosition: new THREE.Vector3(x, 0.1, 2.96) };
+    label.scale.multiplyScalar(1.05);
     this.dynamic.add(label);
     this.dynamic.add(group);
-  }
-
-  addScreenSpot(x, z, selected, order, laserColor, peak = 1) {
-    const texture = makeScreenSpotTexture(laserColor, selected || order === 0);
-    const baseOpacity = Math.min(0.9, 0.16 + peak * (selected || order === 0 ? 0.78 : 0.55));
-    const width = selected || order === 0 ? 0.22 : 0.16;
-    const height = selected || order === 0 ? 1.14 : 0.92;
-    const spot = new THREE.Mesh(
-      new THREE.PlaneGeometry(width, height),
-      new THREE.MeshBasicMaterial({
-        map: texture,
-        color: 0xffffff,
-        transparent: true,
-        opacity: baseOpacity,
-        side: THREE.DoubleSide,
-        depthTest: false,
-        depthWrite: false,
-      }),
-    );
-    spot.rotation.y = Math.PI / 2;
-    spot.position.set(x, 0, z);
-    spot.userData.baseOpacity = baseOpacity;
-    this.dynamic.add(spot);
-    return spot;
   }
 
   addDimensionArrow(x0, x1, z, labelText) {
-    const y = -1.02;
+    const y = TABLE_Y + 0.055;
     const line = makeLine([new THREE.Vector3(x0, y, z), new THREE.Vector3(x1, y, z)], CYAN, 0.72);
     this.dynamic.add(line);
 
@@ -794,52 +820,16 @@ export class DiffractionScene {
       width: 320,
       height: 76,
     });
-    label.position.set((x0 + x1) / 2, y + 0.13, z - 0.18);
-    label.scale.multiplyScalar(0.56);
+    label.position.set((x0 + x1) / 2, y + 0.14, z + 0.2);
+    label.scale.multiplyScalar(0.9);
     this.dynamic.add(label);
-  }
-
-  addIntensityBands(screenX, params, domain, zScale, laserColor) {
-    const group = new THREE.Group();
-    const sampleCount = 58;
-    for (let i = 0; i < sampleCount; i += 1) {
-      const t = i / (sampleCount - 1);
-      const cm = -domain + 2 * domain * t;
-      const intensity = intensityAt(params, cm);
-      const z = cm * zScale;
-      const band = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.035, 2.8),
-        new THREE.MeshBasicMaterial({
-          color: laserColor.three,
-          transparent: true,
-          opacity: intensity * 0.09,
-          side: THREE.DoubleSide,
-          depthWrite: false,
-        }),
-      );
-      band.rotation.y = Math.PI / 2;
-      band.position.set(screenX - 0.065, 0, z);
-      group.add(band);
-    }
-    this.dynamic.add(group);
   }
 
   animate() {
     requestAnimationFrame(() => this.animate());
-    this.time += 0.016;
-    for (const spot of this.spots) {
-      const base = spot.userData.baseOpacity ?? 0.64;
-      spot.material.opacity = base + Math.sin(this.time * 3.6) * 0.045;
+    if (this.needsRender) {
+      this.renderer.render(this.scene, this.activeCamera);
+      this.needsRender = false;
     }
-
-    if (this.selectedPulse) {
-      const { start, end } = this.selectedPulse.userData;
-      const t = (Math.sin(this.time * 2.2) + 1) / 2;
-      this.selectedPulse.position.lerpVectors(start, end, t);
-      const scale = 0.7 + Math.sin(this.time * 8) * 0.16;
-      this.selectedPulse.scale.setScalar(scale);
-    }
-
-    this.renderer.render(this.scene, this.activeCamera);
   }
 }

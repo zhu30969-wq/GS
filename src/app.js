@@ -567,6 +567,7 @@ function bindControls() {
 
   $("view3d").addEventListener("click", () => setView("3d"));
   $("view2d").addEventListener("click", () => setView("2d"));
+  $("resetSceneView").addEventListener("click", () => scene.resetCamera?.());
   bind2dZoomControls();
 
   document.querySelectorAll(".mode-buttons button").forEach((button) => {
@@ -772,6 +773,8 @@ function setView(view) {
   state.view = view;
   $("view3d").classList.toggle("active", view === "3d");
   $("view2d").classList.toggle("active", view === "2d");
+  $("resetSceneView").hidden = view !== "3d";
+  $("sceneScaleNote").hidden = view !== "3d";
   scene.setView(view);
   scene.set2dZoom?.(state.zoom2d);
   update2dZoomVisibility();
@@ -911,7 +914,7 @@ async function initDeferredScene() {
   state.sceneLoading = true;
 
   try {
-    const { DiffractionScene } = await import("./scene3d.js?v=operation-readable-20261011-r2");
+    const { DiffractionScene } = await import("./scene3d.js?v=optics-studio-20261018");
     const loadedScene = new DiffractionScene(sceneRoot, { fitViewport: true });
     loadedScene.setView(state.view);
     loadedScene.setDisplayMode(state.mode);
