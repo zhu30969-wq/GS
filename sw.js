@@ -1,22 +1,20 @@
-const CACHE_VERSION = "diffraction-grating-v2026-10-11-student-entry";
+const CACHE_VERSION = "diffraction-grating-v2026-10-18-focused-layout";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
   "./src/styles.css?v=voice-agent-desktop-v1-20260831",
-  "./src/operation-layout.css?v=student-entry-20261011",
+  "./src/operation-layout.css?v=focused-layout-20261018",
   "./src/student-lab.css?v=student-physics-italic-v24-20260718",
   "./src/physics.js",
-  "./src/app.js?v=operation-readable-20261011-r2",
+  "./src/app.js?v=focused-layout-20261018",
   "./src/theory-competition.js?v=competition-theory-symbols-v19-20260718",
   "./src/student-lab.js?v=student-physics-italic-v24-20260718",
   "./src/scene3d.js?v=physics-italic-v20-20260718",
   "./src/scene3d.js?v=operation-readable-20261011-r2",
-  "./src/voice-agent.js?v=voice-permission-v2-20260901",
   "./src/pwa.js?v=sampling-restore-20260603",
   "./vendor/three.module.js",
-  "./assets/gs-entry-qr-card.png?v=qr-sync-v2-20260718",
   "./assets/icons/site-icon.svg",
 ];
 

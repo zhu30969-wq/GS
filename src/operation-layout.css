@@ -16,7 +16,7 @@ body:not(.theory-mode) .topbar {
 
 body:not(.theory-mode) .brand h1 { font-size: 36px; }
 body:not(.theory-mode) .brand p { font-size: 15px; color: #b3bbc5; }
-body:not(.theory-mode) .module-tabs { width: 400px; }
+body:not(.theory-mode) .module-tabs { width: 400px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 body:not(.theory-mode) .module-tabs .tab { min-height: 58px; font-size: 23px; }
 body:not(.theory-mode) .tab.active { background: #202a36; }
 
@@ -24,6 +24,10 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   --muted: #b2becb;
   --text: #f0f3f7;
   grid-template-columns: 352px minmax(0, 1fr) 336px;
+  grid-template-areas:
+    "parameters scene students"
+    "parameters sampling sampling";
+  grid-template-rows: auto auto;
   gap: 16px;
   font-size: 20px;
   align-items: stretch;
@@ -49,7 +53,7 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 #operationModule .student-lab-heading h2 { font-size: 26px; line-height: 1.35; }
 
 #operationModule .text-button { font-size: 20px; min-height: 40px; }
-#operationModule .left-rail { order: 0; }
+#operationModule .left-rail { grid-area: parameters; order: 0; }
 #operationModule .parameter-panel { min-height: 0; }
 #operationModule .parameter-panel .control-stack {
   padding: 18px;
@@ -73,16 +77,23 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 #operationModule .control-row { grid-template-columns: minmax(0, 1fr) 98px; gap: 14px; }
 #operationModule .number-input { min-height: 44px; font-size: 23px; font-weight: 650; background: #0b1117; }
 #operationModule .range-limits { width: calc(100% - 112px); font-size: 18px; margin-top: 3px; }
-#operationModule .order-buttons { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
-#operationModule .order-buttons button { min-height: 44px; font-size: 22px; }
 #operationModule .toggle-control { margin: 0; padding: 13px 0; }
 #operationModule .toggle-control strong { font-size: 22px; }
 #operationModule .toggle-control em { font-size: 18px; }
 
 #operationModule .center-stage {
+  grid-area: scene;
   display: flex;
   flex-direction: column;
   order: 0;
+}
+
+#operationModule .sampling-stage {
+  grid-area: sampling;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
 }
 
 #operationModule .view-toggle { min-width: 228px; }
@@ -101,7 +112,7 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 #operationModule .section-guide::after { content: none; }
 #operationModule .section-guide em { font-size: 18px; font-weight: 550; }
 #operationModule .scene-guide { border-top: 0; }
-#operationModule .pattern-guide { border-top: 1px solid #35404c; }
+#operationModule .pattern-guide { border-top: 0; }
 
 #operationModule .scene-meta {
   display: grid;
@@ -144,7 +155,7 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 #operationModule .scene-frame {
   height: 300px;
   min-height: 300px;
-  flex-shrink: 0;
+  flex: 1 0 300px;
   border-bottom: 0;
   background:
     linear-gradient(#62788e10 1px, transparent 1px),
@@ -191,26 +202,16 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   margin: 0;
 }
 
-#operationModule .right-rail,
-#operationModule .right-rail.voice-agent-ready {
+#operationModule .right-rail {
   order: 0;
-  grid-column: auto;
+  grid-area: students;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: max-content max-content minmax(0, 1fr);
-  gap: 14px;
-}
-
-#operationModule .qr-access-card {
-  width: min(264px, calc(100% - 36px));
-  margin: 16px auto;
-  padding: 8px;
-  border-radius: 6px;
-  background: #fff;
-  box-shadow: none;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
 }
 
 #operationModule .student-lab-entry {
-  align-self: start;
+  align-self: stretch;
   border-color: #4b6175;
   background: #161d25;
   box-shadow: none;
@@ -224,7 +225,7 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 }
 #operationModule .student-lab-heading h2 { font-size: 28px; line-height: 1.4; }
 #operationModule .student-lab-entry-actions {
-  flex: 0 0 auto;
+  flex: 1 0 auto;
   grid-template-columns: minmax(0, 1fr);
   grid-auto-rows: 1fr;
   padding: 0;
@@ -282,27 +283,15 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 #studentLabPanel .student-lab-open:focus-visible { outline: 2px solid #a9dcff; outline-offset: -4px; background: #213243; }
 
 #operationModule :is(button, a, input):focus-visible { outline: 2px solid #a9dcff; outline-offset: 3px; }
-body:not(.theory-mode) .gsv .gsv-mic { font-size: 21px; min-height: 60px; border-radius: 8px; background: #1b232b; box-shadow: none; }
-body:not(.theory-mode) .gsv .gsv-panel { border-radius: 8px; background: #1b232b; }
-body:not(.theory-mode) .gsv .gsv-panel-head { font-size: 22px; }
-body:not(.theory-mode) .gsv .gsv-heard { font-size: 19px; }
-body:not(.theory-mode) .gsv .gsv-parsed { font-size: 16px; overflow-wrap: anywhere; }
-body:not(.theory-mode) .gsv .gsv-chips button { font-size: 18px; min-height: 44px; border-radius: 6px; }
-body:not(.theory-mode) .gsv .gsv-close { width: 40px; height: 40px; font-size: 28px; }
-body:not(.theory-mode) .bottom-status { background: #161b21; box-shadow: none; border-color: #35404c; }
-body:not(.theory-mode) .status-metrics span { font-size: 22px; }
-body:not(.theory-mode) .status-metrics strong { font-size: 28px; }
 
 @media (max-width: 1599px) {
-  html:not(.force-desktop-layout) #operationModule { grid-template-columns: 332px minmax(0, 1fr); }
-  html:not(.force-desktop-layout) #operationModule .right-rail {
-    grid-column: 1 / -1;
-    grid-template-columns: 304px minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
+  html:not(.force-desktop-layout) #operationModule {
+    grid-template-columns: 332px minmax(0, 1fr);
+    grid-template-areas:
+      "parameters scene"
+      "parameters sampling"
+      "students students";
   }
-  html:not(.force-desktop-layout) #operationModule .qr-access-panel { grid-column: 1; grid-row: 1 / 3; }
-  html:not(.force-desktop-layout) #operationModule .gsv { grid-column: 2; grid-row: 1; }
-  html:not(.force-desktop-layout) #operationModule .student-lab-panel { grid-column: 2; grid-row: 2; }
   html:not(.force-desktop-layout) #operationModule .student-lab-entry-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   html:not(.force-desktop-layout) #operationModule .student-lab-open + .student-lab-open::before { top: 24px; bottom: 24px; left: 0; right: auto; width: 1px; height: auto; }
 }
@@ -315,16 +304,18 @@ body:not(.theory-mode) .status-metrics strong { font-size: 28px; }
 @media (max-width: 1020px) {
   html:not(.force-desktop-layout) body:not(.theory-mode) .topbar { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   html:not(.force-desktop-layout) body:not(.theory-mode) .module-tabs { width: 100%; }
-  html:not(.force-desktop-layout) #operationModule { grid-template-columns: minmax(0, 1fr); }
+  html:not(.force-desktop-layout) #operationModule {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "parameters" "scene" "sampling" "students";
+  }
   html:not(.force-desktop-layout) #operationModule .control-stack { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 28px; }
+  html:not(.force-desktop-layout) #operationModule .toggle-control { grid-column: 1 / -1; }
   html:not(.force-desktop-layout) #operationModule .stage-heading { flex-direction: row; align-items: center; }
   html:not(.force-desktop-layout) #operationModule .view-toggle { width: auto; }
-  html:not(.force-desktop-layout) #operationModule .student-lab-entry-actions { grid-template-columns: minmax(0, 1fr); }
-  html:not(.force-desktop-layout) #operationModule .student-lab-open + .student-lab-open::before { top: 0; bottom: auto; left: 22px; right: 22px; width: auto; height: 1px; }
 }
 
 @media (max-width: 760px) {
-  html:not(.force-desktop-layout) body:not(.theory-mode) .app-shell { padding: 14px 12px 90px; }
+  html:not(.force-desktop-layout) body:not(.theory-mode) .app-shell { padding: 14px 12px 24px; }
   html:not(.force-desktop-layout) body:not(.theory-mode) .brand h1 { font-size: 30px; }
   html:not(.force-desktop-layout) body:not(.theory-mode) .brand p { font-size: 13px; }
   html:not(.force-desktop-layout) #operationModule { width: 100%; max-width: 100%; }
@@ -337,19 +328,22 @@ body:not(.theory-mode) .status-metrics strong { font-size: 28px; }
   html:not(.force-desktop-layout) #operationModule .scene-readout div { display: flex; justify-content: space-between; gap: 12px; }
   html:not(.force-desktop-layout) #operationModule .scene-readout strong { margin: 0; }
   html:not(.force-desktop-layout) #operationModule .formula-card { border: 0; border-top: 1px solid #35404c; padding: 10px 0 0; }
-  html:not(.force-desktop-layout) #operationModule .scene-frame { height: 270px; min-height: 270px; }
+  html:not(.force-desktop-layout) #operationModule .scene-frame { height: 270px; min-height: 270px; flex-basis: 270px; }
   html:not(.force-desktop-layout) #operationModule .matlab-simulation { min-height: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: "pattern" "ccd" "chart"; padding: 0 12px 12px; }
   html:not(.force-desktop-layout) #operationModule .simulation-plot { min-height: 210px; }
   html:not(.force-desktop-layout) #operationModule .intensity-card .simulation-plot { min-height: 350px; }
-  html:not(.force-desktop-layout) #operationModule .right-rail { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
-  html:not(.force-desktop-layout) #operationModule .student-lab-panel { grid-column: 1; grid-row: auto; }
 }
 
-/* The QR entry explicitly requests a desktop viewport; keep the same compact three-column layout. */
+@media (max-width: 620px) {
+  html:not(.force-desktop-layout) #operationModule .student-lab-entry-actions { grid-template-columns: minmax(0, 1fr); }
+  html:not(.force-desktop-layout) #operationModule .student-lab-open + .student-lab-open::before { top: 0; bottom: auto; left: 22px; right: 22px; width: auto; height: 1px; }
+}
+
+/* Preserve existing desktop-mode links while using the updated shared sampling row. */
 html.force-desktop-layout body:not(.theory-mode) .topbar { grid-template-columns: minmax(0, 1fr) auto !important; }
 html.force-desktop-layout body:not(.theory-mode) .module-tabs { width: 400px !important; }
 html.force-desktop-layout #operationModule { grid-template-columns: 328px minmax(0, 1fr) 328px !important; }
-html.force-desktop-layout #operationModule .right-rail { grid-template-rows: max-content max-content minmax(0, 1fr) !important; }
+html.force-desktop-layout #operationModule .right-rail { grid-area: students !important; grid-template-rows: minmax(0, 1fr) !important; }
 html.force-desktop-layout #operationModule .control-row { grid-template-columns: minmax(0, 1fr) 98px !important; }
 html.force-desktop-layout #operationModule .range-limits { width: calc(100% - 112px) !important; }
 html.force-desktop-layout #operationModule .panel-heading,

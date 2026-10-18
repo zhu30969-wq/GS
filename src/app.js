@@ -555,14 +555,6 @@ function bindControls() {
     setRangeFill(range);
   });
 
-  document.querySelectorAll("#orderButtons button").forEach((button) => {
-    button.addEventListener("click", () => {
-      if (button.disabled) return;
-      state.params.order = Number(button.dataset.order);
-      renderAll();
-    });
-  });
-
   $("resetParams").addEventListener("click", resetParameters);
   $("resetExperiment")?.addEventListener("click", resetExperiment);
   $("startButton")?.addEventListener("click", startExperiment);
@@ -934,19 +926,10 @@ async function initDeferredScene() {
   }
 }
 
-function updateOrderButtons() {
-  const buttons = document.querySelectorAll("#orderButtons button");
-  buttons.forEach((button) => {
-    const order = Number(button.dataset.order);
-    const exists = diffractionAngle(state.params, order).valid;
-    button.disabled = !exists;
-    button.classList.toggle("active", order === state.params.order);
-  });
-
+function normalizeOrder() {
   if (!diffractionAngle(state.params, state.params.order).valid) {
     const fallback = ORDER_VALUES.find((order) => diffractionAngle(state.params, order).valid) ?? 0;
     state.params.order = fallback;
-    buttons.forEach((button) => button.classList.toggle("active", Number(button.dataset.order) === fallback));
   }
 }
 
@@ -961,25 +944,7 @@ function updateReadouts() {
   $("sceneD").textContent = `d = ${state.params.gratingUm.toFixed(3)} μm`;
   $("sceneL").textContent = `L = ${state.params.distanceCm.toFixed(1)} cm`;
   $("sceneN").textContent = `N = ${state.params.slitCount.toFixed(0)}`;
-  $("statusLambda").textContent = `${state.params.lambdaNm.toFixed(0)} nm`;
-  $("statusD").textContent = `${state.params.gratingUm.toFixed(3)} μm`;
-  $("statusL").textContent = `${state.params.distanceCm.toFixed(1)} cm`;
-  $("statusM").textContent = `j = ${state.params.order}`;
-  $("statusN").textContent = `${state.params.slitCount.toFixed(0)} 缝`;
   $("envelopeLegendText").textContent = state.params.diffractionEnabled === false ? "包络关闭" : "单缝包络";
-
-  const measurement = simulatedMeasurement(state.params);
-  $("centralWidth").textContent = measurement.measuredWidthMm === null ? "未启用" : numberFormat(measurement.measuredWidthMm, 2);
-  $("calculatedA").textContent = measurement.calculatedSlitUm === null ? "未启用" : numberFormat(measurement.calculatedSlitUm, 1);
-  $("theoryA").textContent = `${state.params.slitUm.toFixed(1)}`;
-  $("relativeError").textContent = measurement.relativeError === null ? "--" : `${(measurement.relativeError * 100).toFixed(2)}%`;
-
-  const warnings = geometryWarnings(state.params);
-  const diffractionOff = state.params.diffractionEnabled === false;
-  $("conclusionText").textContent = warnings.length ? "参数需校验" : diffractionOff ? "仅干涉项" : "符合理论值";
-  $("conclusionIcon").textContent = warnings.length ? "!" : diffractionOff ? "i" : "✓";
-  $("conclusionText").classList.toggle("physics-warning", warnings.length > 0);
-  $("conclusionIcon").classList.toggle("physics-warning", warnings.length > 0);
 }
 
 function updateTip() {
@@ -1531,12 +1496,11 @@ function csvCell(value) {
 
 function renderAll() {
   state.renderPending = false;
-  updateOrderButtons();
+  normalizeOrder();
   updateReadouts();
   updateTip();
   // Typeset dynamic variables before measuring plots: math fonts can change the readout height.
   typesetExperimentSymbols($("operationModule"));
-  typesetExperimentSymbols(document.querySelector(".bottom-status"));
   drawDiffractionPattern();
   drawCcdView();
   drawIntensityChart();

@@ -32,7 +32,7 @@
     <meta name="theme-color" content="#08121d" />
     <meta name="robots" content="index,follow" />
     <link rel="stylesheet" href="./src/styles.css?v=voice-agent-desktop-v1-20260831" />
-    <link rel="stylesheet" href="./src/operation-layout.css?v=student-entry-20261011" />
+    <link rel="stylesheet" href="./src/operation-layout.css?v=focused-layout-20261018" />
     <link rel="manifest" href="./site.webmanifest" />
     <link rel="icon" href="./assets/icons/site-icon.svg" type="image/svg+xml" />
     <link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%23081218"/%3E%3Cpath d="M10 32h44M32 10v44" stroke="%237dc7ff" stroke-width="6" stroke-linecap="round"/%3E%3C/svg%3E' />
@@ -96,17 +96,6 @@
                 <span class="range-limits"><span>10</span><span>200</span></span>
               </label>
 
-              <div class="order-control" aria-label="衍射级次选择">
-                <span class="control-label"><span class="control-name">衍射级次</span><var class="physics-variable control-symbol">j</var><span class="control-meta" aria-hidden="true"></span></span>
-                <div class="order-buttons" id="orderButtons">
-                  <button type="button" data-order="-2">-2</button>
-                  <button type="button" data-order="-1">-1</button>
-                  <button type="button" data-order="0">0</button>
-                  <button class="active" type="button" data-order="1">1</button>
-                  <button type="button" data-order="2">2</button>
-                </div>
-              </div>
-
               <label class="range-control" for="slit">
                 <span class="control-label"><span class="control-name">缝宽</span><var class="physics-variable control-symbol">b</var><span class="control-meta"><span class="control-unit">(μm)</span></span></span>
                 <span class="control-row">
@@ -125,14 +114,6 @@
                 <span class="range-limits"><span>2</span><span>200</span></span>
               </label>
 
-              <label class="toggle-control" for="diffractionToggle">
-                <span>
-                  <strong>是否考虑衍射</strong>
-                  <em>启用单缝 sinc² 包络</em>
-                </span>
-                <input id="diffractionToggle" type="checkbox" checked />
-              </label>
-
               <label class="range-control" for="incidence">
                 <span class="control-label"><span class="control-name">入射角</span><var class="physics-variable control-symbol">θ</var><span class="control-meta"><span class="control-unit">(°)</span></span></span>
                 <span class="control-row">
@@ -140,6 +121,14 @@
                   <input id="incidenceNumber" class="number-input" type="number" min="-30" max="30" step="0.1" value="0.0" />
                 </span>
                 <span class="range-limits"><span>-30</span><span>30</span></span>
+              </label>
+
+              <label class="toggle-control" for="diffractionToggle">
+                <span>
+                  <strong>是否考虑衍射</strong>
+                  <em>启用单缝 sinc² 包络</em>
+                </span>
+                <input id="diffractionToggle" type="checkbox" checked />
               </label>
             </div>
           </section>
@@ -178,6 +167,9 @@
             </div>
           </div>
 
+        </section>
+
+        <section class="sampling-stage panel" aria-label="仿真与采样">
           <div class="section-guide pattern-guide"><span>仿真与采样</span><em>CCD 视角 + 光强分布</em></div>
           <div class="matlab-simulation" aria-label="MATLAB 公式仿真衍射图样和光强分布">
             <section class="simulation-card diffraction-card">
@@ -210,23 +202,7 @@
 
         </section>
 
-        <aside class="right-rail" aria-label="扫码访问与学生动手实验">
-          <section class="panel result-panel qr-access-panel">
-            <div class="panel-heading">
-              <h2><span class="line-icon">╬</span>扫码访问</h2>
-            </div>
-            <figure class="qr-access-card">
-              <img src="./assets/gs-entry-qr-card.png?v=qr-sync-v2-20260718" alt="光栅衍射交互实验电脑同版网页二维码，微信或 QQ 扫码进入网页" loading="lazy" decoding="async" />
-            </figure>
-            <dl class="result-list result-data-cache" aria-hidden="true">
-              <div><dt>测得包络中央宽度 (mm)</dt><dd id="centralWidth">--</dd></div>
-              <div><dt>反算缝宽 b (μm)</dt><dd id="calculatedA">--</dd></div>
-              <div><dt>理论缝宽 b (μm)</dt><dd id="theoryA">--</dd></div>
-              <div><dt>相对误差</dt><dd id="relativeError">--</dd></div>
-            </dl>
-            <p class="conclusion result-data-cache" aria-hidden="true">实验结论：<span id="conclusionText">符合理论值</span><span id="conclusionIcon">✓</span></p>
-          </section>
-
+        <aside class="right-rail" aria-label="学生动手实验">
           <section id="studentLabPanel" class="panel student-lab-panel student-lab-entry" aria-label="学生动手实验入口">
             <div class="panel-heading student-lab-heading">
               <h2>学生动手实验</h2>
@@ -321,19 +297,9 @@
         </section>
       </main>
 
-      <footer class="bottom-status panel" aria-label="实验状态栏">
-        <div class="status-metrics">
-          <div><span>当前波长</span><strong id="statusLambda">650 nm</strong></div>
-          <div><span>光栅常数</span><strong id="statusD">5.000 μm</strong></div>
-          <div><span>屏距</span><strong id="statusL">100.0 cm</strong></div>
-          <div><span>有效缝数</span><strong id="statusN">40 缝</strong></div>
-          <div><span>衍射级次</span><strong id="statusM">j = 1</strong></div>
-        </div>
-      </footer>
     </div>
 
-    <script type="module" src="./src/app.js?v=operation-readable-20261011-r2"></script>
-    <script type="module" src="./src/voice-agent.js?v=voice-permission-v2-20260901"></script>
+    <script type="module" src="./src/app.js?v=focused-layout-20261018"></script>
     <script type="module" src="./src/pwa.js?v=sampling-restore-20260603"></script>
   </body>
 </html>
