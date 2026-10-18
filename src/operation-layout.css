@@ -111,7 +111,6 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 #operationModule .section-guide::before,
 #operationModule .section-guide::after { content: none; }
 #operationModule .section-guide em { font-size: 18px; font-weight: 550; }
-#operationModule .scene-guide { border-top: 0; }
 #operationModule .pattern-guide { border-top: 0; }
 
 #operationModule .scene-meta {
@@ -119,7 +118,7 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px;
   align-items: center;
-  padding: 0 18px 14px;
+  padding: 14px 18px;
 }
 
 #operationModule .scene-readout {
@@ -323,7 +322,7 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   html:not(.force-desktop-layout) #operationModule .parameter-panel .control-label { font-size: 24px; }
   html:not(.force-desktop-layout) #operationModule .stage-heading { flex-wrap: wrap; }
   html:not(.force-desktop-layout) #operationModule .view-toggle { flex: 1 0 100%; }
-  html:not(.force-desktop-layout) #operationModule .scene-meta { grid-template-columns: minmax(0, 1fr); padding: 0 16px 14px; }
+  html:not(.force-desktop-layout) #operationModule .scene-meta { grid-template-columns: minmax(0, 1fr); padding: 14px 16px; }
   html:not(.force-desktop-layout) #operationModule .scene-readout { grid-template-columns: minmax(0, 1fr); gap: 8px; width: auto; box-shadow: none; backdrop-filter: none; }
   html:not(.force-desktop-layout) #operationModule .scene-readout div { display: flex; justify-content: space-between; gap: 12px; }
   html:not(.force-desktop-layout) #operationModule .scene-readout strong { margin: 0; }

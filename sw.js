@@ -1,11 +1,11 @@
-const CACHE_VERSION = "diffraction-grating-v2026-10-18-focused-layout";
+const CACHE_VERSION = "diffraction-grating-v2026-10-18-scene-clean";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
   "./src/styles.css?v=voice-agent-desktop-v1-20260831",
-  "./src/operation-layout.css?v=focused-layout-20261018",
+  "./src/operation-layout.css?v=scene-clean-20261018",
   "./src/student-lab.css?v=student-physics-italic-v24-20260718",
   "./src/physics.js",
   "./src/app.js?v=focused-layout-20261018",
