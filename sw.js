@@ -1,4 +1,4 @@
-const CACHE_VERSION = "diffraction-grating-v2026-10-19-theory-layout";
+const CACHE_VERSION = "diffraction-grating-v2026-10-19-theory-screen";
 
 const CORE_ASSETS = [
   "./",
@@ -6,11 +6,12 @@ const CORE_ASSETS = [
   "./student-lab.html",
   "./src/styles.css?v=voice-agent-desktop-v1-20260831",
   "./src/operation-layout.css?v=optics-studio-20261018",
-  "./src/theory-layout.css?v=theory-layout-20261019",
+  "./src/theory-layout.css?v=theory-screen-20261019",
+  "./src/theory-presentation.js?v=theory-screen-20261019",
   "./src/student-lab.css?v=student-physics-italic-v24-20260718",
   "./src/physics.js",
-  "./src/app.js?v=optics-studio-20261018",
-  "./src/theory-competition.js?v=competition-theory-symbols-v19-20260718",
+  "./src/app.js?v=theory-screen-20261019",
+  "./src/theory-competition.js?v=theory-screen-20261019",
   "./src/student-lab.js?v=student-physics-italic-v24-20260718",
   "./src/scene3d.js?v=physics-italic-v20-20260718",
   "./src/scene3d.js?v=optics-studio-20261018",

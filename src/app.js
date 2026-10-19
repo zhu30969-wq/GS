@@ -24,7 +24,12 @@ import {
   initializeCompetitionTheoryInteractions,
   renderCompetitionTheoryVisuals,
   typesetCompetitionTheorySymbols,
-} from "./theory-competition.js?v=competition-theory-symbols-v19-20260718";
+} from "./theory-competition.js?v=theory-screen-20261019";
+import {
+  initializeTheoryPresentation,
+  showTheoryPresentation,
+  stepTheoryPresentation,
+} from "./theory-presentation.js?v=theory-screen-20261019";
 
 const UI_FONT_STACK = '"HarmonyOS Sans SC", "MiSans", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif';
 const NUMBER_FONT_STACK = '"Bahnschrift", "DIN Alternate", "Segoe UI", "Microsoft YaHei UI", sans-serif';
@@ -587,8 +592,8 @@ function bindControls() {
     button.addEventListener("click", () => setTheorySlide(Number(button.dataset.theorySlide)));
   });
 
-  $("theoryPrev").addEventListener("click", () => setTheorySlide(state.theorySlide - 1));
-  $("theoryNext").addEventListener("click", () => setTheorySlide(state.theorySlide + 1));
+  $("theoryPrev").addEventListener("click", () => stepTheoryPresentation(-1));
+  $("theoryNext").addEventListener("click", () => stepTheoryPresentation(1));
 
   $("themeToggle")?.addEventListener("click", () => {
     document.body.classList.toggle("light-mode");
@@ -633,7 +638,7 @@ function setModule(module) {
   }
 }
 
-function setTheorySlide(index) {
+function setTheorySlide(index, section = 0) {
   const maxIndex = theoryPages.length - 1;
   const nextIndex = Math.max(0, Math.min(maxIndex, Number(index) || 0));
   state.theorySlide = nextIndex;
@@ -654,8 +659,7 @@ function setTheorySlide(index) {
   typesetCompetitionTheorySymbols($("theorySummaryText"));
   $("theoryProgressText").textContent = `${nextIndex + 1} / ${theoryPages.length}`;
   $("theoryProgressBar").style.width = `${((nextIndex + 1) / theoryPages.length) * 100}%`;
-  $("theoryPrev").disabled = nextIndex === 0;
-  $("theoryNext").disabled = nextIndex === maxIndex;
+  showTheoryPresentation(nextIndex, section);
   renderCompetitionTheoryVisuals(nextIndex);
 }
 
@@ -1573,6 +1577,7 @@ function applyInitialRouteState() {
 }
 
 hydrateTheoryVisuals();
+initializeTheoryPresentation(setTheorySlide);
 bindControls();
 applyInitialRouteState();
 renderAll();

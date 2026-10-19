@@ -194,3 +194,728 @@ html.force-desktop-layout body.theory-mode #theoryModule.theory-shell {
 html.force-desktop-layout body.theory-mode #theoryModule .theory-heading {
   padding-inline: 28px !important;
 }
+
+/* Present complete knowledge units instead of shrinking a long document. */
+body.theory-presenting #theoryModule .theory-screen[hidden] {
+  display: none !important;
+}
+
+body.theory-presenting #theoryModule .theory-screen {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 16px;
+}
+
+body.theory-presenting #theoryModule .theory-sections {
+  display: flex;
+  gap: 4px;
+  padding: 0 20px;
+  border-bottom: 1px solid #e1e2e4;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+body.theory-presenting #theoryModule .theory-sections button {
+  flex: 0 0 auto;
+  min-height: 58px;
+  padding: 10px 18px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: #555b62;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+body.theory-presenting #theoryModule .theory-sections button[aria-selected="true"] {
+  border-bottom-color: #d47a00;
+  color: #9b5800;
+  background: #fff8ed;
+}
+
+body.theory-presenting #theoryModule .theory-sections button:focus-visible {
+  outline: 2px solid #ae6400;
+  outline-offset: -5px;
+}
+
+body.theory-presenting #theoryModule .theory-section-status {
+  align-self: center;
+  margin-right: 8px;
+  color: #666c73;
+  font: 700 24px/1.4 "Bahnschrift", "Segoe UI", sans-serif;
+  white-space: nowrap;
+}
+
+body.theory-presenting #theoryModule .theory-canvas-frame {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  place-items: center;
+}
+
+body.theory-presenting #theoryModule .theory-canvas-frame canvas {
+  flex: none;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  aspect-ratio: auto;
+}
+
+body.theory-mode.theory-screen-mode {
+  min-height: 0;
+}
+
+body.theory-mode.theory-screen-mode .app-shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: min(2200px, 100%);
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  padding: 12px 16px;
+}
+
+body.theory-mode.theory-screen-mode .topbar {
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 76px;
+  gap: 24px;
+  padding: 0 0 6px;
+}
+
+body.theory-mode.theory-screen-mode .module-tabs {
+  width: 400px;
+}
+
+html:not(.force-desktop-layout) body.theory-mode.theory-screen-mode .topbar {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+html:not(.force-desktop-layout) body.theory-mode.theory-screen-mode .module-tabs {
+  width: 400px;
+}
+
+body.theory-screen-mode #theoryModule.theory-shell {
+  grid-template-columns: 240px minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  overflow: visible;
+}
+
+body.theory-screen-mode #theoryModule .theory-rail {
+  position: static;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: visible;
+}
+
+body.theory-screen-mode #theoryModule .theory-rail-head {
+  padding: 20px 18px;
+}
+
+body.theory-screen-mode #theoryModule .theory-nav {
+  align-content: start;
+  padding-block: 12px;
+}
+
+body.theory-screen-mode #theoryModule .theory-nav button {
+  min-height: 76px;
+  padding-inline: 18px;
+  font-size: 28px;
+}
+
+body.theory-screen-mode #theoryModule .theory-progress {
+  margin: 10px 18px 18px;
+}
+
+body.theory-screen-mode #theoryModule .theory-main {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  padding-bottom: 0;
+}
+
+body.theory-screen-mode #theoryModule .theory-heading {
+  min-height: 0;
+  padding: 8px 20px;
+}
+
+body.theory-screen-mode #theoryModule .theory-heading p {
+  font-size: 16px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+body.theory-screen-mode #theoryModule .theory-heading h2 {
+  font-size: 62px;
+  line-height: 1.05;
+}
+
+body.theory-screen-mode #theoryModule .theory-controls .secondary-button {
+  min-height: 50px;
+  font-size: 24px;
+}
+
+body.theory-screen-mode #theoryModule .theory-stage,
+body.theory-screen-mode #theoryModule .theory-slide.active,
+body.theory-screen-mode #theoryModule .competition-page {
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  overflow: visible;
+}
+
+body.theory-screen-mode #theoryModule .theory-visual.competition-page {
+  padding: 16px 20px;
+}
+
+body.theory-screen-mode #theoryModule .theory-screen {
+  height: 100%;
+  min-height: 0;
+}
+
+body.theory-screen-mode #theoryModule .theory-screen > .paper-section,
+body.theory-screen-mode #theoryModule .theory-screen > .formula-card-blue,
+body.theory-screen-mode #theoryModule .theory-screen > .formula-card-red {
+  flex: 1 1 0;
+  min-height: 0;
+  margin: 0;
+  padding: 18px 22px;
+  box-shadow: none;
+}
+
+body.theory-screen-mode #theoryModule .section-title {
+  flex-shrink: 0;
+  margin-bottom: 12px;
+}
+
+body.theory-screen-mode #theoryModule .section-title strong {
+  font-size: 36px;
+  line-height: 1.25;
+}
+
+body.theory-screen-mode #theoryModule .section-title small {
+  font-size: 24px;
+}
+
+body.theory-screen-mode #theoryModule .section-title div {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+body.theory-screen-mode.theory-presenting #theoryModule .theory-screen :is(p, li),
+body.theory-screen-mode #theoryModule .chapter-lead > p {
+  font-size: 28px;
+  line-height: 1.5;
+}
+
+body.theory-screen-mode #theoryModule .theory-screen p {
+  flex-shrink: 0;
+  height: auto;
+  min-height: 0;
+  margin-block: 10px 0;
+}
+
+body.theory-screen-mode #theoryModule .screen-structure .concept-mode-bar,
+body.theory-screen-mode #theoryModule .screen-intensity .width-mode-bar {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+  margin: 0;
+}
+
+body.theory-screen-mode #theoryModule .concept-mode-bar button,
+body.theory-screen-mode #theoryModule .width-mode-bar button {
+  min-height: 52px;
+  font-size: 26px;
+}
+
+body.theory-screen-mode #theoryModule .diagram-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 8px 24px;
+}
+
+body.theory-screen-mode #theoryModule .diagram-section .section-title {
+  grid-column: 1 / -1;
+}
+
+body.theory-screen-mode #theoryModule .diagram-section .equation-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-self: center;
+  margin: 0;
+}
+
+body.theory-screen-mode #theoryModule .equation-pair > div {
+  min-height: 0;
+  gap: 4px;
+  padding: 10px;
+}
+
+body.theory-screen-mode #theoryModule .equation-pair > div + div {
+  border-left: 0;
+  border-top: 1px solid #d9dadd;
+}
+
+body.theory-screen-mode #theoryModule .equation-pair strong {
+  font-size: 48px;
+  line-height: 1.15;
+}
+
+body.theory-screen-mode #theoryModule .equation-pair span {
+  font-size: 26px;
+  line-height: 1.3;
+}
+
+body.theory-screen-mode #theoryModule .symbol-section {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+body.theory-screen-mode #theoryModule .theory-symbol-table {
+  height: 100%;
+  font-size: 30px;
+}
+
+body.theory-screen-mode #theoryModule .theory-symbol-table th,
+body.theory-screen-mode #theoryModule .theory-symbol-table td {
+  padding: 6px 16px;
+  line-height: 1.3;
+}
+
+body.theory-screen-mode #theoryModule .theory-symbol-table th:first-child,
+body.theory-screen-mode #theoryModule .theory-symbol-table td:first-child {
+  width: 120px;
+  font-size: 40px;
+  line-height: 1.15;
+}
+
+body.theory-screen-mode #theoryModule .screen-path > .paper-section,
+body.theory-screen-mode #theoryModule .screen-phase > .paper-section,
+body.theory-screen-mode #theoryModule .screen-intensity > .paper-section,
+body.theory-screen-mode #theoryModule .screen-measurement > .paper-section {
+  display: flex;
+  flex-direction: column;
+}
+
+body.theory-screen-mode #theoryModule .theory-canvas-frame {
+  flex: 1 1 0;
+}
+
+body.theory-screen-mode #theoryModule .formula-box,
+body.theory-screen-mode #theoryModule .measurement-equations,
+body.theory-screen-mode #theoryModule .figure-caption,
+body.theory-screen-mode #theoryModule .method-note {
+  flex: 0 0 auto;
+}
+
+body.theory-screen-mode #theoryModule .formula-box strong {
+  font-size: 48px;
+}
+
+body.theory-screen-mode #theoryModule .formula-box span {
+  font-size: 26px;
+}
+
+body.theory-screen-mode #theoryModule .principle-steps {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1fr);
+  gap: 18px 26px;
+  padding: 0;
+}
+
+body.theory-screen-mode #theoryModule .numbered-principle {
+  align-content: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+body.theory-screen-mode #theoryModule .numbered-principle h3,
+body.theory-screen-mode #theoryModule .signed-angle-note strong {
+  font-size: 34px;
+}
+
+body.theory-screen-mode #theoryModule .inline-equation,
+body.theory-screen-mode #theoryModule .signed-angle-note > span {
+  font-size: 40px;
+}
+
+body.theory-screen-mode #theoryModule .numbered-principle small {
+  font-size: 26px;
+}
+
+body.theory-screen-mode #theoryModule .signed-angle-note {
+  display: grid;
+  align-content: center;
+  min-height: 0;
+  padding: 18px;
+}
+
+body.theory-screen-mode #theoryModule .screen-formulas {
+  justify-content: center;
+}
+
+body.theory-screen-mode #theoryModule .screen-formulas > article {
+  flex: 0 1 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  align-content: center;
+}
+
+body.theory-screen-mode #theoryModule .screen-formulas h3 {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 36px;
+}
+
+body.theory-screen-mode #theoryModule .screen-formulas > article > p {
+  grid-column: 1 / -1;
+  min-height: max-content;
+  margin: 0;
+}
+
+body.theory-screen-mode #theoryModule .formula-lines {
+  align-content: center;
+  gap: 16px;
+  padding: 16px 18px;
+}
+
+body.theory-screen-mode #theoryModule .formula-lines.soft {
+  margin: 0;
+}
+
+body.theory-screen-mode #theoryModule .formula-lines strong {
+  font-size: 36px;
+  line-height: 1.45;
+}
+
+body.theory-screen-mode #theoryModule .formula-lines span {
+  font-size: 26px;
+}
+
+body.theory-screen-mode #theoryModule .measurement-equations {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 12px;
+}
+
+body.theory-screen-mode #theoryModule .measurement-equations.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body.theory-screen-mode #theoryModule .measurement-equations span {
+  font-size: 24px;
+}
+
+body.theory-screen-mode #theoryModule .measurement-equations strong {
+  font-size: 34px;
+}
+
+body.theory-screen-mode #theoryModule .screen-fit > .paper-section {
+  display: flex;
+  flex-direction: column;
+}
+
+body.theory-screen-mode #theoryModule .fitting-grid {
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 20px;
+}
+
+body.theory-screen-mode #theoryModule .fitting-grid .theory-canvas-frame {
+  height: 100%;
+}
+
+body.theory-screen-mode #theoryModule .fit-formulas strong {
+  font-size: 40px;
+}
+
+body.theory-screen-mode #theoryModule .fit-formulas small {
+  font-size: 26px;
+  line-height: 1.5;
+}
+
+body.theory-screen-mode #theoryModule .fit-steps {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 36px;
+  margin: 0;
+  padding: 0;
+}
+
+body.theory-screen-mode #theoryModule .screen-fit-steps {
+  justify-content: center;
+}
+
+body.theory-screen-mode #theoryModule .screen-fit-steps li {
+  padding-left: 54px;
+}
+
+body.theory-screen-mode #theoryModule .screen-fit-steps li::before {
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+}
+
+body.theory-screen-mode #theoryModule .screen-origin,
+body.theory-screen-mode #theoryModule .screen-priority,
+body.theory-screen-mode #theoryModule .screen-reduction,
+body.theory-screen-mode #theoryModule .screen-uncertainty {
+  justify-content: center;
+}
+
+body.theory-screen-mode #theoryModule :is(.screen-origin, .screen-priority, .screen-reduction, .screen-uncertainty) > .paper-section {
+  flex: 0 1 auto;
+}
+
+body.theory-screen-mode #theoryModule .error-flow {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+}
+
+body.theory-screen-mode #theoryModule .error-flow > i {
+  display: none;
+}
+
+body.theory-screen-mode #theoryModule .error-flow article {
+  min-height: 230px;
+  padding: 20px 14px;
+}
+
+body.theory-screen-mode #theoryModule .error-flow article b,
+body.theory-screen-mode #theoryModule .error-flow article strong {
+  font-size: 34px;
+}
+
+body.theory-screen-mode #theoryModule .uncertainty-layout {
+  gap: 22px;
+}
+
+body.theory-screen-mode #theoryModule .uncertainty-formulas strong,
+body.theory-screen-mode #theoryModule .uncertainty-formulas > strong:first-child,
+body.theory-screen-mode #theoryModule .uncertainty-equation math {
+  font-size: 40px;
+}
+
+body.theory-screen-mode #theoryModule .priority-cards {
+  min-height: 0;
+}
+
+body.theory-screen-mode #theoryModule .priority-cards strong,
+body.theory-screen-mode #theoryModule .reduction-grid h3 {
+  font-size: 32px;
+}
+
+body.theory-screen-mode #theoryModule .priority-cards article {
+  justify-content: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+body.theory-screen-mode #theoryModule .priority-cards :is(p, strong) {
+  margin: 0;
+}
+
+body.theory-screen-mode #theoryModule .reduction-grid > div {
+  padding-block: 0;
+}
+
+body.theory-screen-mode #theoryModule .reduction-grid h3 {
+  margin-bottom: 10px;
+}
+
+body.theory-screen-mode #theoryModule .reduction-grid ul {
+  gap: 8px;
+}
+
+body.theory-screen-mode #theoryModule .screen-assumptions {
+  justify-content: center;
+}
+
+body.theory-screen-mode #theoryModule .screen-model {
+  justify-content: center;
+}
+
+body.theory-screen-mode #theoryModule .screen-model > .paper-section {
+  flex: 0 1 auto;
+  padding: 28px 36px;
+}
+
+body.theory-screen-mode #theoryModule .intensity-model h3 {
+  margin: 0 0 24px;
+  font-size: 36px;
+}
+
+body.theory-screen-mode #theoryModule .screen-assumptions > .paper-section {
+  flex: 0 1 auto;
+  padding: 28px 36px;
+}
+
+body.theory-screen-mode #theoryModule .uncertainty-assumptions h3 {
+  margin: 0 0 24px;
+  font-size: 36px;
+}
+
+body.theory-screen-mode #theoryModule .uncertainty-assumptions ul {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+}
+
+body.theory-screen-mode #theoryModule .screen-geometry,
+body.theory-screen-mode #theoryModule .screen-reading,
+body.theory-screen-mode #theoryModule .screen-conditions {
+  justify-content: center;
+  gap: 24px;
+}
+
+body.theory-screen-mode #theoryModule .exact-geometry-note {
+  display: grid;
+  justify-items: center;
+  gap: 28px;
+  padding: 36px;
+}
+
+body.theory-screen-mode #theoryModule .exact-geometry-note > strong {
+  font-size: 36px;
+}
+
+body.theory-screen-mode #theoryModule .exact-geometry-note > span {
+  font-size: 60px;
+}
+
+body.theory-screen-mode #theoryModule .theory-note,
+body.theory-screen-mode #theoryModule .theory-summary {
+  grid-template-columns: 200px minmax(0, 1fr);
+  min-height: 0;
+  margin: 0;
+  padding: 24px;
+}
+
+body.theory-screen-mode #theoryModule .theory-note strong,
+body.theory-screen-mode #theoryModule .theory-summary h3,
+body.theory-screen-mode #theoryModule .teaching-callout strong,
+body.theory-screen-mode #theoryModule .core-conclusion strong,
+body.theory-screen-mode #theoryModule .critical-warning strong {
+  font-size: 32px;
+}
+
+body.theory-screen-mode #theoryModule .theory-note span {
+  font-size: 28px;
+  line-height: 1.6;
+}
+
+body.theory-screen-mode #theoryModule .theory-summary p {
+  margin: 0;
+}
+
+@media (max-width: 1200px) {
+  body.theory-screen-mode #theoryModule.theory-shell {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+
+  body.theory-screen-mode #theoryModule .theory-nav button {
+    padding-inline: 12px;
+    font-size: 26px;
+  }
+
+  body.theory-screen-mode #theoryModule .theory-rail-head {
+    padding-inline: 14px;
+  }
+
+  body.theory-screen-mode #theoryModule .theory-heading {
+    flex-wrap: wrap;
+  }
+
+  body.theory-screen-mode #theoryModule .theory-controls {
+    margin-left: auto;
+  }
+
+  body.theory-screen-mode #theoryModule .diagram-section {
+    grid-template-columns: minmax(0, 1fr) 260px;
+  }
+
+  body.theory-screen-mode #theoryModule .equation-pair strong {
+    font-size: 44px;
+  }
+}
+
+/* Narrow devices keep readable type and page controls, with natural overflow. */
+@media (max-width: 1023px), (max-height: 719px) {
+  body.theory-presenting #theoryModule .theory-screen > .paper-section {
+    margin: 0;
+  }
+
+  body.theory-presenting #theoryModule .theory-canvas-frame {
+    width: 100%;
+    height: auto;
+  }
+
+  body.theory-presenting #theoryModule .theory-sections {
+    padding-inline: 12px;
+  }
+
+  body.theory-presenting #theoryModule .theory-sections button {
+    min-height: 48px;
+    padding: 8px 12px;
+    font-size: 20px;
+  }
+
+  body.theory-presenting #theoryModule .theory-section-status {
+    font-size: 20px;
+  }
+
+  body.theory-presenting #theoryModule .theory-note,
+  body.theory-presenting #theoryModule .theory-summary {
+    margin-inline: 0;
+  }
+}
+
+html.force-desktop-layout body.theory-mode.theory-screen-mode .app-shell {
+  width: clamp(1560px, 100vw, 2200px) !important;
+  padding: 12px 16px !important;
+}
+
+html.force-desktop-layout body.theory-screen-mode #theoryModule.theory-shell {
+  grid-template-columns: 240px minmax(0, 1fr) !important;
+}
+
+html.force-desktop-layout body.theory-screen-mode #theoryModule .theory-heading {
+  padding: 10px 20px !important;
+}
+
+/* Recover vertical room on laptops without reducing the text size. */
+@media (max-height: 820px) {
+  body.theory-screen-mode #theoryModule .theory-heading p {
+    display: none;
+  }
+
+  body.theory-screen-mode #theoryModule .theory-sections button {
+    min-height: 50px;
+    padding-block: 8px;
+  }
+
+  body.theory-screen-mode #theoryModule .theory-visual.competition-page {
+    padding-block: 8px;
+  }
+
+  body.theory-screen-mode #theoryModule .theory-screen > .paper-section,
+  body.theory-screen-mode #theoryModule .theory-screen > .formula-card-blue,
+  body.theory-screen-mode #theoryModule .theory-screen > .formula-card-red {
+    padding: 12px 18px;
+  }
+}

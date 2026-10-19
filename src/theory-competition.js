@@ -492,7 +492,8 @@ function drawTransmissionGrating(ctx) {
   drawDimension(ctx, startX + period, startX + period * 2, 76, "d  光栅常数");
   drawDimension(ctx, startX, startX + period * 5, 520, "W  有效照明宽度", "#2f6fc2");
   label(ctx, "N 个等间距狭缝", 535, 582, { size: 23, color: "#3d4650" });
-  label(ctx, "不透光区域", 226, 308, { size: 20, color: "#ffffff" });
+  label(ctx, "不透光区域", 84, 308, { size: 24, color: "#3d4650" });
+  drawArrow(ctx, 164, 308, 183, 308, "#59606a", 2);
 }
 
 function drawReflectionGrating(ctx) {
@@ -616,32 +617,38 @@ function gratingFactor(alpha, count) {
 }
 
 function drawFringeWidth() {
-  const prepared = prepareCanvas("fringeWidthCanvas", 1500, 720);
+  const canvas = document.getElementById("fringeWidthCanvas");
+  const presentation = document.body.classList.contains("theory-screen-mode");
+  const width = presentation ? canvas.clientWidth : 1500;
+  const height = presentation ? canvas.clientHeight : 720;
+  const prepared = prepareCanvas("fringeWidthCanvas", width, height);
   withLogicalScale(prepared, (ctx) => {
-    const width = 1500;
-    const height = 720;
-    const plot = { left: 128, right: 1445, top: 66, bottom: 602 };
+    const plot = presentation
+      ? { left: 100, right: width - 28, top: 52, bottom: height - 60 }
+      : { left: 128, right: 1445, top: 66, bottom: 602 };
+    const tickSize = presentation ? 22 / 1.22 : 24;
+    const titleSize = presentation ? 26 / 1.22 : 29;
     ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = "#e1e3e6"; ctx.lineWidth = 1.5;
     for (let index = 0; index <= 5; index += 1) {
       const y = plot.top + (plot.bottom - plot.top) * index / 5;
       ctx.beginPath(); ctx.moveTo(plot.left, y); ctx.lineTo(plot.right, y); ctx.stroke();
-      label(ctx, (1 - index / 5).toFixed(1), plot.left - 26, y, { size: 24, color: "#5c6269", align: "right" });
+      label(ctx, (1 - index / 5).toFixed(1), plot.left - 16, y, { size: tickSize, color: "#5c6269", align: "right" });
     }
     for (let degree = -40; degree <= 40; degree += 10) {
       const x = plot.left + (degree + 40) / 80 * (plot.right - plot.left);
       ctx.beginPath(); ctx.moveTo(x, plot.top); ctx.lineTo(x, plot.bottom); ctx.stroke();
-      label(ctx, String(degree), x, plot.bottom + 31, { size: 24, color: "#5c6269" });
+      label(ctx, String(degree), x, plot.bottom + (presentation ? 20 : 31), { size: tickSize, color: "#5c6269" });
     }
     ctx.strokeStyle = "#202327"; ctx.lineWidth = 2.5;
     ctx.beginPath(); ctx.moveTo(plot.left, plot.top); ctx.lineTo(plot.left, plot.bottom); ctx.lineTo(plot.right, plot.bottom); ctx.stroke();
     // 纵轴标题旋转后与刻度区分离，避免 I/I₀ 挤压到画布左边缘。
     ctx.save();
-    ctx.translate(40, (plot.top + plot.bottom) / 2);
+    ctx.translate(presentation ? 24 : 40, (plot.top + plot.bottom) / 2);
     ctx.rotate(-Math.PI / 2);
-    label(ctx, "归一化光强 I / I₀", 0, 0, { size: 29, color: "#24282d" });
+    label(ctx, "归一化光强 I / I₀", 0, 0, { size: titleSize, color: "#24282d" });
     ctx.restore();
-    label(ctx, "衍射角 θ (°)", (plot.left + plot.right) / 2, 681, { size: 29, color: "#24282d" });
+    label(ctx, "衍射角 θ (°)", (plot.left + plot.right) / 2, presentation ? height - 14 : 681, { size: titleSize, color: "#24282d" });
 
     const lambda = 0.65;
     const slit = 2.0;
@@ -678,19 +685,24 @@ function drawFringeWidth() {
       const halfZero = Math.asin(lambda / (count * period)) * 180 / Math.PI;
       const x1 = plot.left + (40 - halfZero) / 80 * (plot.right - plot.left);
       const x2 = plot.left + (40 + halfZero) / 80 * (plot.right - plot.left);
-      drawDoubleArrow(ctx, x1, x2, 438, { base: "Δθ", subscript: "0" }, "#2f62d0");
+      drawDoubleArrow(ctx, x1, x2, presentation ? plot.top + (plot.bottom - plot.top) * 0.52 : 438, { base: "Δθ", subscript: "0" }, "#2f62d0", presentation ? 26 : 35);
     }
     const envZero = Math.asin(lambda / slit) * 180 / Math.PI;
     const envX1 = plot.left + (40 - envZero) / 80 * (plot.right - plot.left);
     const envX2 = plot.left + (40 + envZero) / 80 * (plot.right - plot.left);
     if (interactionState.fringeMode !== "grating") {
       ctx.setLineDash([7, 7]); ctx.strokeStyle = "#e34840"; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(envX1, plot.bottom); ctx.lineTo(envX1, plot.top + 120); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(envX2, plot.bottom); ctx.lineTo(envX2, plot.top + 120); ctx.stroke();
+      const markerTop = presentation ? plot.top + (plot.bottom - plot.top) * 0.18 : plot.top + 120;
+      ctx.beginPath(); ctx.moveTo(envX1, plot.bottom); ctx.lineTo(envX1, markerTop); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(envX2, plot.bottom); ctx.lineTo(envX2, markerTop); ctx.stroke();
       ctx.setLineDash([]);
-      drawDoubleArrow(ctx, envX1, envX2, 566, { base: "Δθ", subscript: "env" }, "#e34840");
+      drawDoubleArrow(ctx, envX1, envX2, presentation ? plot.bottom - 18 : 566, { base: "Δθ", subscript: "env" }, "#e34840", presentation ? 26 : 35);
     }
-    drawLegend(ctx, interactionState.fringeMode);
+    if (presentation) {
+      drawPresentationLegend(ctx, interactionState.fringeMode, plot.left);
+    } else {
+      drawLegend(ctx, interactionState.fringeMode);
+    }
   });
 }
 
@@ -701,16 +713,15 @@ function drawCurve(ctx, points, color, width, dash = []) {
   ctx.stroke(); ctx.setLineDash([]);
 }
 
-function drawDoubleArrow(ctx, x1, x2, y, annotation, color) {
+function drawDoubleArrow(ctx, x1, x2, y, annotation, color, textSize = 35) {
   drawArrow(ctx, (x1 + x2) / 2, y, x1, y, color, 2);
   drawArrow(ctx, (x1 + x2) / 2, y, x2, y, color, 2);
-  drawSubscriptAnnotation(ctx, annotation.base, annotation.subscript, (x1 + x2) / 2, y - 32, color);
+  drawSubscriptAnnotation(ctx, annotation.base, annotation.subscript, (x1 + x2) / 2, y - textSize + 3, color, textSize);
 }
 
-function drawSubscriptAnnotation(ctx, base, subscript, x, y, color) {
+function drawSubscriptAnnotation(ctx, base, subscript, x, y, color, baseSize = 35) {
   // 描述性下标 env 使用正体，物理量 Δθ 使用数学斜体，符合科技排版规范。
-  const baseSize = 35;
-  const subscriptSize = 21;
+  const subscriptSize = baseSize * 0.6;
   const mathFont = '"Cambria Math", "Times New Roman", serif';
   ctx.save();
   ctx.font = `italic 500 ${baseSize}px ${mathFont}`;
@@ -729,6 +740,17 @@ function drawSubscriptAnnotation(ctx, base, subscript, x, y, color) {
   ctx.font = `500 ${subscriptSize}px ${mathFont}`;
   ctx.fillText(subscript, startX + baseWidth + 2, y + 10);
   ctx.restore();
+}
+
+function drawPresentationLegend(ctx, mode, left) {
+  const entries = [];
+  if (mode !== "grating") entries.push({ text: "单缝衍射包络", color: "#e34840", dash: [10, 7] });
+  if (mode !== "envelope") entries.push({ text: mode === "grating" ? "有限多缝干涉" : "光栅总强度", color: "#1d2227", dash: [] });
+  entries.forEach((entry, index) => {
+    const x = left + index * 280;
+    drawCurve(ctx, [[x, 18], [x + 44, 18]], entry.color, 3, entry.dash);
+    label(ctx, entry.text, x + 56, 18, { size: 24 / 1.22, align: "left" });
+  });
 }
 
 function drawLegend(ctx, mode) {
