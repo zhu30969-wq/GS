@@ -11,7 +11,7 @@ const SCREEN_HALF_WIDTH = 2.25;
 const DEFAULT_CAMERA = Object.freeze({ azimuth: 1.98, elevation: 0.38, radius: 9.4 });
 const MIN_2D_ZOOM = 0.6;
 const MAX_2D_ZOOM = 3;
-const ORTHO_BASE_HALF_HEIGHT = 4.2;
+const ORTHO_BASE_HALF_HEIGHT = 2.25;
 const SPRITE_TEXT_FONT = '"HarmonyOS Sans SC", "MiSans", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif';
 const SPRITE_MATH_FONT = '"Cambria Math", "STIX Two Math", "Times New Roman", serif';
 const SPRITE_PHYSICS_SYMBOL_PATTERN = /(θ(?:[ⱼᵢ₀₁₂])?|φ|λ|Δ|δ|ρ|α|β|(?<![A-Za-z])(?:d|b|j|N|W|L|I|R|x|y|w|k|u|n)(?:[ⱼᵢ₀₁₂])?(?![A-Za-z]))/gu;
@@ -341,7 +341,7 @@ export class DiffractionScene {
   placeLabels() {
     this.dynamic.children.forEach((part) => {
       if (!part.userData.planPosition) return;
-      part.position.copy(this.view === "2d" ? part.userData.planPosition : part.userData.spatialPosition);
+      part.position.copy(part.userData.spatialPosition);
     });
   }
 
@@ -392,9 +392,12 @@ export class DiffractionScene {
       this.scene.fog.far = 46 * framingScale;
     }
     if (this.view === "2d") {
-      this.orthoCamera.position.set(-0.65, 11, 0);
-      this.orthoCamera.up.set(0, 0, -1);
-      this.orthoCamera.lookAt(target);
+      // Front elevation preserves vertical Y and horizontal X. Transverse Z
+      // diffraction projects onto the optical axis instead of becoming vertical.
+      this.orthoCamera.position.set(-0.65, -0.05, 14);
+      this.orthoCamera.up.set(0, 1, 0);
+      this.orthoCamera.lookAt(-0.65, -0.05, 0);
+      this.orthoCamera.updateMatrixWorld();
       return;
     }
 
@@ -516,15 +519,22 @@ export class DiffractionScene {
   positionStudioLabels() {
     if (!this.studio || !this.hardware) return;
     const width = this.container.clientWidth, height = this.container.clientHeight;
+    const frame = this.container.getBoundingClientRect();
+    const reserved = [...this.container.parentElement.querySelectorAll(".scene-scale-note, .scene-reset")]
+      .filter(element => !element.hidden && element.offsetWidth)
+      .map(element => {
+        const rect = element.getBoundingClientRect();
+        return { left: rect.left - frame.left, right: rect.right - frame.left,
+          top: rect.top - frame.top, bottom: rect.bottom - frame.top };
+      });
     const points = [];
     this.hardware.forEach(group => {
       const label = group.userData.label;
       const show = this.focusName === "all" || this.focusName === group.name;
       label.hidden = !show;
       if (!show) return;
-      const anchor = this.view === "2d"
-        ? new THREE.Vector3(group.position.x, 0, group.position.z - (group.name === "ccd-detector" ? 2.8 : 1.25))
-        : new THREE.Vector3(group.position.x, group.userData.labelHeight + this.explodeAmount * 0.9, group.position.z);
+      const labelHeight = this.view === "2d" && group.name === "collimator" ? 1.7 : group.userData.labelHeight;
+      const anchor = new THREE.Vector3(group.position.x, labelHeight + this.explodeAmount * 0.9, group.position.z);
       anchor.project(this.activeCamera);
       const w = label.offsetWidth;
       points.push({ label, x: Math.max(w / 2 + 8, Math.min(width - w / 2 - 8, (anchor.x + 1) * width / 2)),
@@ -532,11 +542,13 @@ export class DiffractionScene {
     });
     points.sort((a, b) => a.x - b.x);
     points.forEach((p, i) => {
-      const candidates = [0, -38, 38, -76, 76, -114, 114, 152].map(offset => p.y + offset);
+      const step = p.label.offsetHeight + 10;
+      const candidates = [0, -1, 1, -2, 2, -3, 3, 4].map(offset => p.y + offset * step);
       p.y = candidates.find(y => {
         if (y < p.label.offsetHeight + 12 || y > height - 32) return false;
-        if (this.view === "3d" && p.x + p.w / 2 > width - 66 && y - p.label.offsetHeight < 62 && y > 12) return false;
-        return points.slice(0, i).every(other => Math.abs(p.x - other.x) >= (p.w + other.w) / 2 + 8 || Math.abs(y - other.y) >= 35);
+        if (reserved.some(r => p.x + p.w / 2 + 8 > r.left && p.x - p.w / 2 - 8 < r.right &&
+          y + 12 > r.top && y - p.label.offsetHeight - 8 < r.bottom)) return false;
+        return points.slice(0, i).every(other => Math.abs(p.x - other.x) >= (p.w + other.w) / 2 + 8 || Math.abs(y - other.y) >= step);
       }) ?? p.y;
       p.label.style.left = `${p.x}px`; p.label.style.top = `${p.y}px`;
     });
@@ -994,12 +1006,12 @@ export class DiffractionScene {
 
     const label = makeTextSprite(labelText, {
       color: "#9ed2ff",
-      fontSize: 36,
-      width: 320,
-      height: 76,
+      fontSize: this.studio ? 44 : 36,
+      width: this.studio ? 360 : 320,
+      height: this.studio ? 90 : 76,
     });
     label.position.set((x0 + x1) / 2, y + 0.14, z + 0.2);
-    label.scale.multiplyScalar(0.9);
+    label.scale.multiplyScalar(this.studio ? 1.05 : 0.9);
     this.dynamic.add(label);
   }
 

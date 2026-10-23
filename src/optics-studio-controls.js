@@ -12,6 +12,7 @@ export function connectOpticsStudio(scene) {
 
   const synchronize = () => {
     const plan = scene.view === "2d";
+    stage.classList.toggle("front-elevation", plan);
     if (plan) structureMode = false;
     assembled.classList.toggle("active", !structureMode);
     exploded.classList.toggle("active", structureMode);

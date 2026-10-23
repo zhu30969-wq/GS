@@ -1,22 +1,22 @@
-const CACHE_VERSION = "diffraction-grating-v2026-10-23-video-apparatus";
+const CACHE_VERSION = "diffraction-grating-v2026-10-23-front-readable";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./student-lab.html",
   "./src/styles.css?v=voice-agent-desktop-v1-20260831",
-  "./src/operation-layout.css?v=video-apparatus-20261023",
+  "./src/operation-layout.css?v=front-readable-20261023",
   "./src/theory-layout.css?v=theory-screen-20261019",
   "./src/theory-presentation.js?v=theory-screen-20261019",
   "./src/student-lab.css?v=student-physics-italic-v24-20260718",
   "./src/physics.js",
-  "./src/app.js?v=video-apparatus-20261023",
+  "./src/app.js?v=front-readable-20261023",
   "./src/theory-competition.js?v=theory-screen-20261019",
   "./src/student-lab.js?v=student-physics-italic-v24-20260718",
   "./src/scene3d.js?v=physics-italic-v20-20260718",
-  "./src/scene3d.js?v=video-apparatus-20261023",
+  "./src/scene3d.js?v=front-readable-20261023",
   "./src/optics-hardware.js?v=video-apparatus-20261023",
-  "./src/optics-studio-controls.js?v=video-apparatus-20261023",
+  "./src/optics-studio-controls.js?v=front-readable-20261023",
   "./src/scene-sensor.js",
   "./src/pwa.js?v=sampling-restore-20260603",
   "./vendor/three.module.js",

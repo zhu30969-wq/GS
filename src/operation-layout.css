@@ -14,22 +14,22 @@ body:not(.theory-mode) .topbar {
   padding-bottom: 10px;
 }
 
-body:not(.theory-mode) .brand h1 { font-size: 36px; }
-body:not(.theory-mode) .brand p { font-size: 15px; color: #b3bbc5; }
-body:not(.theory-mode) .module-tabs { width: 400px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-body:not(.theory-mode) .module-tabs .tab { min-height: 58px; font-size: 23px; }
+body:not(.theory-mode) .brand h1 { font-size: 44px; }
+body:not(.theory-mode) .brand p { font-size: 18px; color: #b3bbc5; }
+body:not(.theory-mode) .module-tabs { width: 440px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+body:not(.theory-mode) .module-tabs .tab { min-height: 64px; font-size: 28px; }
 body:not(.theory-mode) .tab.active { background: #202a36; }
 
 #operationModule {
   --muted: #b2becb;
   --text: #f0f3f7;
-  grid-template-columns: 352px minmax(0, 1fr) 336px;
+  grid-template-columns: 368px minmax(0, 1fr) 336px;
   grid-template-areas:
     "parameters scene students"
     "parameters sampling sampling";
   grid-template-rows: auto auto;
   gap: 16px;
-  font-size: 20px;
+  font-size: 24px;
   align-items: stretch;
 }
 
@@ -50,14 +50,14 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 
 #operationModule .panel-heading h2,
 #operationModule .stage-heading h2,
-#operationModule .student-lab-heading h2 { font-size: 26px; line-height: 1.35; }
+#operationModule .student-lab-heading h2 { font-size: 32px; line-height: 1.35; }
 
-#operationModule .text-button { font-size: 20px; min-height: 40px; }
+#operationModule .text-button { font-size: 24px; min-height: 44px; }
 #operationModule .left-rail { grid-area: parameters; order: 0; }
 #operationModule .parameter-panel { min-height: 0; }
 #operationModule .parameter-panel .control-stack {
   padding: 18px;
-  gap: 16px;
+  gap: 20px;
   justify-content: space-between;
 }
 
@@ -65,21 +65,21 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   gap: 6px;
   margin-bottom: 8px;
   flex-wrap: wrap;
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 750;
   line-height: 1.4;
 }
 
 #operationModule .parameter-panel .control-meta { gap: 10px; }
-#operationModule .parameter-panel .control-unit { font-size: 20px; font-weight: 600; color: var(--muted); }
-#operationModule .wavelength-chip { min-width: 0; font-size: 18px; gap: 6px; }
+#operationModule .parameter-panel .control-unit { font-size: 24px; font-weight: 600; color: var(--muted); }
+#operationModule .wavelength-chip { min-width: 0; font-size: 22px; gap: 6px; }
 #operationModule .wavelength-chip i { width: 14px; height: 14px; box-shadow: none; }
-#operationModule .control-row { grid-template-columns: minmax(0, 1fr) 98px; gap: 14px; }
-#operationModule .number-input { min-height: 44px; font-size: 23px; font-weight: 650; background: #0b1117; }
-#operationModule .range-limits { width: calc(100% - 112px); font-size: 18px; margin-top: 3px; }
+#operationModule .control-row { grid-template-columns: minmax(0, 1fr) 112px; gap: 14px; }
+#operationModule .number-input { min-height: 50px; font-size: 30px; font-weight: 650; background: #0b1117; }
+#operationModule .range-limits { width: calc(100% - 126px); font-size: 22px; margin-top: 3px; }
 #operationModule .toggle-control { margin: 0; padding: 13px 0; }
-#operationModule .toggle-control strong { font-size: 22px; }
-#operationModule .toggle-control em { font-size: 18px; }
+#operationModule .toggle-control strong { font-size: 28px; }
+#operationModule .toggle-control em { font-size: 22px; }
 
 #operationModule .center-stage {
   grid-area: scene;
@@ -96,21 +96,21 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   overflow: hidden;
 }
 
-#operationModule .view-toggle { min-width: 228px; }
-#operationModule .view-toggle button { min-height: 42px; font-size: 20px; padding: 0 10px; }
+#operationModule .view-toggle { min-width: 270px; }
+#operationModule .view-toggle button { min-height: 46px; font-size: 24px; padding: 0 10px; }
 #operationModule .section-guide {
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 6px 14px;
   padding: 12px 18px;
-  font-size: 21px;
+  font-size: 27px;
   line-height: 1.45;
   flex-shrink: 0;
 }
 
 #operationModule .section-guide::before,
 #operationModule .section-guide::after { content: none; }
-#operationModule .section-guide em { font-size: 18px; font-weight: 550; }
+#operationModule .section-guide em { font-size: 23px; font-weight: 550; }
 #operationModule .pattern-guide { border-top: 0; }
 
 #operationModule .scene-meta {
@@ -118,7 +118,7 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px;
   align-items: center;
-  padding: 14px 18px;
+  padding: 12px 18px;
 }
 
 #operationModule .scene-readout {
@@ -134,8 +134,8 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 }
 
 #operationModule .scene-readout div { display: block; min-width: 0; padding: 0; }
-#operationModule .scene-readout span { font-size: 20px; font-weight: 550; color: var(--muted); }
-#operationModule .scene-readout strong { margin-top: 4px; font-size: 24px; color: #e5effa; line-height: 1.35; white-space: nowrap; }
+#operationModule .scene-readout span { font-size: 24px; font-weight: 550; color: var(--muted); }
+#operationModule .scene-readout strong { margin-top: 4px; font-size: 30px; color: #e5effa; line-height: 1.35; white-space: nowrap; }
 #operationModule .formula-card {
   position: static;
   width: auto;
@@ -148,8 +148,9 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   backdrop-filter: none;
 }
 
-#operationModule .formula-card h3 { color: var(--muted); font-size: 18px; font-weight: 550; margin: 0 0 4px; }
-#operationModule .formula-card .equation { font-size: 23px; line-height: 1.5; white-space: nowrap; }
+#operationModule .formula-card h3 { color: var(--muted); font-size: 23px; font-weight: 550; margin: 0 0 4px; }
+#operationModule .formula-card .equation { display: flex; flex-wrap: wrap; gap: 0 0.25em; font-size: 30px; line-height: 1.5; }
+#operationModule .formula-card .equation > span { white-space: nowrap; }
 #operationModule .formula-card sub { font-size: 0.65em; line-height: 0; vertical-align: -0.22em; }
 #operationModule .scene-frame {
   height: 380px;
@@ -187,13 +188,19 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   padding: 3px 7px;
   background: #101820c9;
   color: #c2d0dc;
-  font-size: 17px;
+  font-size: 21px;
   line-height: 1.4;
 }
+#operationModule .scene-scale-note.front-view { top: 12px; bottom: auto; left: 14px; right: auto; }
+#operationModule .zoom2d-controls { position: static; flex: 1; min-width: 0; width: auto; max-width: 480px; gap: 8px; padding: 0; border: 0; background: transparent; box-shadow: none; backdrop-filter: none; }
+#operationModule .zoom2d-controls:not([hidden]) { display: flex; }
+#operationModule .zoom2d-controls input { flex: 1; min-width: 40px; width: 100px; }
+#operationModule .zoom2d-controls button { min-width: 36px; min-height: 36px; font-size: 23px; }
+#operationModule .zoom2d-controls .zoom2d-reset { min-width: 76px; font-size: 22px; }
 
 #operationModule .matlab-simulation {
   flex: 1;
-  min-height: 560px;
+  min-height: 500px;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
   grid-template-rows: repeat(2, minmax(0, 1fr));
   grid-template-areas: "pattern chart" "ccd chart";
@@ -214,9 +221,9 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 #operationModule .ccd-card { grid-area: ccd; }
 #operationModule .intensity-card { grid-area: chart; }
 #operationModule .simulation-heading { min-height: 52px; padding: 10px 12px; gap: 6px 12px; flex-wrap: wrap; flex-shrink: 0; align-content: center; }
-#operationModule .simulation-heading h3 { font-size: 24px; line-height: 1.35; }
+#operationModule .simulation-heading h3 { font-size: 30px; line-height: 1.35; }
 #operationModule .simulation-heading span,
-#operationModule .chart-legend span { font-size: 18px; font-weight: 550; }
+#operationModule .chart-legend span { font-size: 22px; font-weight: 550; }
 #operationModule .chart-legend { flex-wrap: wrap; gap: 8px 14px; }
 #operationModule .chart-legend b { font-weight: inherit; }
 #operationModule .simulation-plot { position: relative; flex: 1; min-height: 190px; }
@@ -251,7 +258,7 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   padding: 18px 22px;
   border-bottom: 1px solid #394755;
 }
-#operationModule .student-lab-heading h2 { font-size: 28px; line-height: 1.4; }
+#operationModule .student-lab-heading h2 { font-size: 32px; line-height: 1.4; }
 #operationModule .student-lab-entry-actions {
   flex: 1 0 auto;
   grid-template-columns: minmax(0, 1fr);
@@ -265,8 +272,8 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   grid-template-columns: minmax(0, 1fr);
   place-items: stretch;
   align-content: center;
-  gap: 12px;
-  padding: 24px 22px;
+  gap: 16px;
+  padding: 20px;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -292,19 +299,19 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   gap: 12px;
   min-width: 0;
 }
-#operationModule .student-lab-open .lab-action-label { font-size: 20px; line-height: 1.5; color: #c0cedb; font-weight: 550; }
+#operationModule .student-lab-open .lab-action-label { font-size: 26px; line-height: 1.5; color: #c0cedb; font-weight: 550; }
 #operationModule .student-lab-open .lab-action-symbols {
   display: inline-flex;
   align-items: baseline;
   flex-shrink: 0;
-  font-size: 38px;
+  font-size: 46px;
   line-height: 1.2;
   font-weight: 600;
   color: #9bcaff;
 }
 #operationModule .student-lab-open .lab-symbol-separator { font-size: 24px; color: inherit; font-weight: 400; }
-#operationModule .student-lab-open .lab-action-title { font-size: 30px; line-height: 1.4; font-weight: 750; color: #f4f7fb; }
-#operationModule .student-lab-open .lab-action-detail { font-size: 21px; line-height: 1.5; color: #c0cedb; font-weight: 500; }
+#operationModule .student-lab-open .lab-action-title { font-size: 36px; line-height: 1.4; font-weight: 750; color: #f4f7fb; }
+#operationModule .student-lab-open .lab-action-detail { font-size: 26px; line-height: 1.5; color: #c0cedb; font-weight: 500; }
 #operationModule .lab-action-icon { flex: 0 0 26px; color: #9bcaff; }
 #operationModule .student-lab-open:hover { background: #213243; transform: none; }
 #operationModule .student-lab-open:active { background: #293d50; }
@@ -314,7 +321,7 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 
 @media (max-width: 1599px) {
   html:not(.force-desktop-layout) #operationModule {
-    grid-template-columns: 332px minmax(0, 1fr);
+    grid-template-columns: 356px minmax(0, 1fr);
     grid-template-areas:
       "parameters scene"
       "parameters sampling"
@@ -324,7 +331,7 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
   html:not(.force-desktop-layout) #operationModule .student-lab-open + .student-lab-open::before { top: 24px; bottom: 24px; left: 0; right: auto; width: 1px; height: auto; }
 }
 
-@media (min-width: 1021px) and (max-width: 1250px) {
+@media (min-width: 761px) and (max-width: 1799px) {
   html:not(.force-desktop-layout) #operationModule .scene-meta { grid-template-columns: minmax(0, 1fr); }
   html:not(.force-desktop-layout) #operationModule .formula-card { display: flex; align-items: baseline; gap: 14px; border: 0; padding: 0; }
 }
@@ -344,16 +351,16 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 
 @media (max-width: 760px) {
   html:not(.force-desktop-layout) body:not(.theory-mode) .app-shell { padding: 14px 12px 24px; }
-  html:not(.force-desktop-layout) body:not(.theory-mode) .brand h1 { font-size: 30px; }
-  html:not(.force-desktop-layout) body:not(.theory-mode) .brand p { font-size: 13px; }
+  html:not(.force-desktop-layout) body:not(.theory-mode) .brand h1 { font-size: 36px; }
+  html:not(.force-desktop-layout) body:not(.theory-mode) .brand p { font-size: 16px; }
   html:not(.force-desktop-layout) #operationModule { width: 100%; max-width: 100%; }
   html:not(.force-desktop-layout) #operationModule .control-stack { display: flex; gap: 16px; padding: 16px; }
-  html:not(.force-desktop-layout) #operationModule .parameter-panel .control-label { font-size: 24px; }
+  html:not(.force-desktop-layout) #operationModule .parameter-panel .control-label { font-size: 28px; }
   html:not(.force-desktop-layout) #operationModule .stage-heading { flex-wrap: wrap; }
   html:not(.force-desktop-layout) #operationModule .view-toggle { flex: 1 0 100%; }
   html:not(.force-desktop-layout) #operationModule .scene-meta { grid-template-columns: minmax(0, 1fr); padding: 14px 16px; }
   html:not(.force-desktop-layout) #operationModule .scene-readout { grid-template-columns: minmax(0, 1fr); gap: 8px; width: auto; box-shadow: none; backdrop-filter: none; }
-  html:not(.force-desktop-layout) #operationModule .scene-readout div { display: flex; justify-content: space-between; gap: 12px; }
+  html:not(.force-desktop-layout) #operationModule .scene-readout div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; }
   html:not(.force-desktop-layout) #operationModule .scene-readout strong { margin: 0; }
   html:not(.force-desktop-layout) #operationModule .formula-card { border: 0; border-top: 1px solid #35404c; padding: 10px 0 0; }
   html:not(.force-desktop-layout) #operationModule .scene-frame { height: 330px; min-height: 330px; flex-basis: 330px; }
@@ -363,8 +370,19 @@ body:not(.theory-mode) .tab.active { background: #202a36; }
 }
 
 @media (max-width: 620px) {
+  html:not(.force-desktop-layout) #operationModule .front-elevation .scene-scale-note { display: none; }
   html:not(.force-desktop-layout) #operationModule .student-lab-entry-actions { grid-template-columns: minmax(0, 1fr); }
   html:not(.force-desktop-layout) #operationModule .student-lab-open + .student-lab-open::before { top: 0; bottom: auto; left: 22px; right: 22px; width: auto; height: 1px; }
+}
+
+@media (max-width: 400px) {
+  html:not(.force-desktop-layout) #operationModule .panel-heading { padding-inline: 12px; gap: 6px; }
+  html:not(.force-desktop-layout) #operationModule .panel-heading h2 { white-space: nowrap; gap: 6px; }
+  html:not(.force-desktop-layout) #resetParams { padding: 0; white-space: nowrap; font-size: 22px; }
+  html:not(.force-desktop-layout) #operationModule .view-toggle { min-width: 0; }
+  html:not(.force-desktop-layout) #operationModule .view-toggle button { padding-inline: 4px; font-size: 22px; white-space: nowrap; }
+  html:not(.force-desktop-layout) #operationModule .scene-readout div { display: block; }
+  html:not(.force-desktop-layout) #operationModule .scene-readout strong { display: block; margin-top: 2px; text-align: left; }
 }
 
 /* Preserve existing desktop-mode links while using the updated shared sampling row. */
@@ -382,8 +400,12 @@ html.force-desktop-layout #operationModule .matlab-simulation { grid-template-co
 html.force-desktop-layout #operationModule .simulation-plot canvas { width: 100% !important; height: 100% !important; margin: 0 !important; }
 
 /* Instrument controls stay outside the canvas so labels and rays remain visible. */
-#operationModule .scene-frame { background: #090d10; height: 440px; min-height: 440px; flex-basis: 440px; }
+#operationModule .scene-frame { background: #090d10; height: 400px; min-height: 400px; flex-basis: 400px; }
+#operationModule .front-elevation .scene-frame { height: 320px; min-height: 320px; flex-basis: 320px; }
+#operationModule .front-elevation :is(.apparatus-mode, .apparatus-focus, #apparatusRotate) { display: none; }
+#operationModule .front-elevation .apparatus-tools { margin-left: auto; }
 #operationModule .scene-root canvas { touch-action: none; }
+#operationModule .scene-overlay { width: 100%; height: 100%; }
 #operationModule .apparatus-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 #operationModule .apparatus-label {
   position: absolute;
@@ -393,31 +415,31 @@ html.force-desktop-layout #operationModule .simulation-plot canvas { width: 100%
   transform: translate(-50%, -100%);
   white-space: nowrap;
   color: #eef2f2;
-  font-size: 20px;
+  font-size: 24px;
   line-height: 1.5;
   font-weight: 600;
   text-shadow: 0 1px 3px #090d10, 0 1px 8px #090d10;
 }
 #operationModule .apparatus-label[hidden] { display: none; }
-#operationModule .apparatus-label span { color: #a5b9c0; font-size: 13px; font-weight: 500; }
+#operationModule .apparatus-label span { color: #a5b9c0; font-size: 16px; font-weight: 500; }
 #operationModule .apparatus-label::after { content: ""; position: absolute; width: 1px; height: 12px; background: #9aadb866; top: 100%; left: 50%; }
 #operationModule .apparatus-controls { min-width: 0; margin: 0; padding: 12px 16px; border: 0; border-top: 1px solid #303b40; background: #11171b; }
 #operationModule .apparatus-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
 #operationModule .apparatus-mode { display: inline-flex; gap: 0; padding: 3px; border: 1px solid #354148; border-radius: 6px; background: #080d11; }
-#operationModule .apparatus-mode button { min-height: 40px; padding: 6px 14px; border: 0; border-radius: 3px; background: transparent; color: #b4c0c9; font-size: 20px; font-weight: 600; line-height: 1.4; }
+#operationModule .apparatus-mode button { min-height: 44px; padding: 6px 14px; border: 0; border-radius: 3px; background: transparent; color: #b4c0c9; font-size: 24px; font-weight: 600; line-height: 1.4; }
 #operationModule .apparatus-mode button.active { background: #2c3c49; color: #eff6fa; box-shadow: inset 0 0 0 1px #6a879b; }
 #operationModule .structure-mode .apparatus-mode button.active { background: #44392d; box-shadow: inset 0 0 0 1px #a28b6d; color: #f6ecdc; }
-#operationModule .apparatus-focus { display: flex; align-items: center; gap: 8px; margin-left: auto; font-size: 18px; color: #b9c5cd; }
-#operationModule .apparatus-focus select { width: 158px; min-height: 42px; padding: 6px 9px; border: 1px solid #45545e; border-radius: 4px; background: #1c252c; color: #f0f3f5; font: inherit; font-size: 19px; }
+#operationModule .apparatus-focus { display: flex; align-items: center; gap: 8px; margin-left: auto; font-size: 22px; color: #b9c5cd; }
+#operationModule .apparatus-focus select { width: 180px; min-height: 46px; padding: 6px 9px; border: 1px solid #45545e; border-radius: 4px; background: #1c252c; color: #f0f3f5; font: inherit; font-size: 23px; }
 #operationModule .apparatus-tools { display: flex; gap: 7px; }
 #operationModule .apparatus-tools button { width: 42px; height: 42px; display: grid; place-items: center; padding: 0; background: #1b252c; border: 1px solid #45545e; border-radius: 4px; color: #d8e4ec; }
 #operationModule .apparatus-tools button.active { background: #304758; border-color: #97c2d9; color: #fff; }
 #operationModule .apparatus-controls :is(button,select):disabled { opacity: 0.4; cursor: not-allowed; }
-#operationModule .apparatus-expansion { display: grid; grid-template-columns: auto minmax(80px, 1fr) 54px auto; align-items: center; gap: 12px; padding: 12px 2px 0; font-size: 18px; color: #d8dfe3; }
+#operationModule .apparatus-expansion { display: grid; grid-template-columns: auto minmax(80px, 1fr) 62px auto; align-items: center; gap: 12px; padding: 12px 2px 0; font-size: 22px; color: #d8dfe3; }
 #operationModule .apparatus-expansion[hidden] { display: none; }
 #operationModule .apparatus-expansion input { --accent: #bfa17b; width: 100%; height: 5px; margin: 12px 0; accent-color: #bfa17b; }
 #operationModule .apparatus-expansion output { text-align: right; font-variant-numeric: tabular-nums; }
-#operationModule #apparatusState { color: #d7c6af; font-size: 16px; }
+#operationModule #apparatusState { color: #d7c6af; font-size: 20px; }
 #operationModule .center-stage:is(:fullscreen, .apparatus-expanded) {
   display: flex; flex-direction: column; gap: 0; width: 100%; height: 100dvh;
   padding: 0; border: 0; border-radius: 0; background: #090d10; overflow: hidden;
@@ -433,8 +455,22 @@ html.force-desktop-layout #operationModule .simulation-plot canvas { width: 100%
   html:not(.force-desktop-layout) #operationModule .apparatus-mode { flex: 1 0 100%; display: grid; grid-template-columns: 1fr 1fr; }
   html:not(.force-desktop-layout) #operationModule .apparatus-focus { margin-left: 0; flex: 1; }
   html:not(.force-desktop-layout) #operationModule .apparatus-focus select { min-width: 0; width: auto; flex: 1; }
-  html:not(.force-desktop-layout) #operationModule .apparatus-label { font-size: 16px; gap: 4px; }
-  html:not(.force-desktop-layout) #operationModule .apparatus-label span { font-size: 11px; }
+  html:not(.force-desktop-layout) #operationModule .apparatus-label { font-size: 20px; gap: 4px; }
+  html:not(.force-desktop-layout) #operationModule .apparatus-label span { font-size: 13px; }
+  html:not(.force-desktop-layout) #operationModule .front-elevation .scene-frame { height: 240px; min-height: 240px; flex-basis: 240px; }
   html:not(.force-desktop-layout) #operationModule .apparatus-expansion { grid-template-columns: auto minmax(60px, 1fr) 48px; gap: 8px; }
   html:not(.force-desktop-layout) #operationModule #apparatusState { grid-column: 1 / -1; text-align: right; }
+}
+
+@media (max-width: 400px) {
+  html:not(.force-desktop-layout) #operationModule .front-elevation .apparatus-labels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+    justify-items: center;
+    gap: 4px 8px;
+    padding: 8px;
+  }
+  html:not(.force-desktop-layout) #operationModule .front-elevation .apparatus-label { position: static; transform: none; }
+  html:not(.force-desktop-layout) #operationModule .front-elevation .apparatus-label::after { content: none; }
 }

@@ -491,7 +491,7 @@ function hydrateTheoryVisuals() {
 // 和三维建模代码，用户会看到长时间空白。这里先用轻量 2D canvas 占位，
 // 首帧渲染完成后再异步加载真正的 3D 场景。
 let scene = {
-  setView() {},
+  setView() { drawFastScene(state.params); },
   setDisplayMode() {},
   set2dZoom() {
     return state.zoom2d;
@@ -743,7 +743,7 @@ function set2dZoom(value, options = {}) {
   sync2dZoomControls();
 
   if (!options.silent && state.view === "2d") {
-    setText("currentTip", `2D 视图缩放为 ${Math.round(state.zoom2d * 100)}%。可用滚轮、按钮或滑块查看光栅到 CCD 屏幕的俯视光路细节。`);
+    setText("currentTip", `2D 正视图缩放为 ${Math.round(state.zoom2d * 100)}%。可用滚轮、按钮或滑块查看器材与水平光轴。横向衍射分布见下方 CCD 采样和光强分布图。`);
   }
 }
 
@@ -778,14 +778,17 @@ function setView(view) {
   $("view3d").classList.toggle("active", view === "3d");
   $("view2d").classList.toggle("active", view === "2d");
   $("resetSceneView").hidden = view !== "3d";
-  $("sceneScaleNote").hidden = view !== "3d";
+  $("sceneScaleNote").hidden = false;
+  $("sceneScaleNote").textContent = view === "2d" ? "正视投影" : "示意模型";
+  $("sceneScaleNote").classList.toggle("front-view", view === "2d");
+  document.querySelector("#operationModule .center-stage").classList.toggle("front-elevation", view === "2d");
   scene.setView(view);
   scene.set2dZoom?.(state.zoom2d);
   update2dZoomVisibility();
   setText("currentTip",
     view === "3d"
       ? "3D 视图显示激光器、准直镜、光栅架、CCD 屏幕和衍射光束的空间关系。"
-      : "2D 视图从上方查看光路，便于判断不同级次在 CCD 屏幕上的横向位置；可用滚轮、按钮或滑块放大缩小。");
+      : "2D 正视图显示器材立面与水平光轴；横向衍射光线在此投影中重合，条纹位置以下方 CCD 图与光强分布为准。");
 }
 
 function drawFastScene(params) {
@@ -801,6 +804,10 @@ function drawFastScene(params) {
 
   const width = rect.width;
   const height = rect.height;
+  if (state.view === "2d") {
+    drawFastFrontScene(ctx, width, height, params);
+    return;
+  }
   const laserColor = wavelengthToColor(params.lambdaNm);
   const domain = stableVisibleDomainCm(params);
   const left = width * 0.22;
@@ -913,19 +920,45 @@ function drawFastScene(params) {
   ctx.fillText("激光器 → 准直镜 → 光栅架 → CCD屏幕", (left + screenX) / 2, height - 20);
 }
 
+function drawFastFrontScene(ctx, width, height, params) {
+  ctx.clearRect(0, 0, width, height);
+  const axisY = height * 0.47;
+  const benchY = height * 0.78;
+  const xs = [0.17, 0.33, 0.51, 0.82].map(value => value * width);
+  ctx.fillStyle = "#29343d";
+  ctx.fillRect(width * 0.06, benchY, width * 0.88, 8);
+  ctx.strokeStyle = wavelengthToColor(params.lambdaNm).hex;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(xs[0] + 20, axisY); ctx.lineTo(xs[3], axisY); ctx.stroke();
+  const titles = ["激光器", "准直镜", "光栅架", "CCD 采样面"];
+  xs.forEach((x, index) => {
+    const partHeight = index < 2 ? 38 : 100;
+    ctx.fillStyle = "#81929f";
+    ctx.fillRect(x - 3, axisY + partHeight / 2, 6, benchY - axisY - partHeight / 2);
+    ctx.fillStyle = "#465462";
+    ctx.fillRect(x - 22, benchY - 6, 44, 6);
+    ctx.fillRect(x - (index === 0 ? 24 : 6), axisY - partHeight / 2, index === 0 ? 48 : 12, partHeight);
+    ctx.fillStyle = "#e0eaf4";
+    ctx.font = `600 ${width < 600 ? 22 : 24}px ${UI_FONT_STACK}`;
+    ctx.textAlign = "center";
+    if (width < 600) ctx.fillText(titles[index], width * (index % 2 === 0 ? 0.25 : 0.75), 24 + Math.floor(index / 2) * 28);
+    else ctx.fillText(titles[index], x, axisY - partHeight / 2 - 16);
+  });
+}
+
 async function initDeferredScene() {
   if (state.sceneLoading || state.sceneReady) return;
   state.sceneLoading = true;
 
   try {
-    const { DiffractionScene } = await import("./scene3d.js?v=video-apparatus-20261023");
+    const { DiffractionScene } = await import("./scene3d.js?v=front-readable-20261023");
     const loadedScene = new DiffractionScene(sceneRoot, { fitViewport: true, studio: true });
     loadedScene.setView(state.view);
     loadedScene.setDisplayMode(state.mode);
     loadedScene.set2dZoom(state.zoom2d);
     loadedScene.update(state.params);
     scene = loadedScene;
-    const { connectOpticsStudio } = await import("./optics-studio-controls.js?v=video-apparatus-20261023");
+    const { connectOpticsStudio } = await import("./optics-studio-controls.js?v=front-readable-20261023");
     connectOpticsStudio(loadedScene);
     state.sceneReady = true;
     sceneOverlay.classList.add("hidden");
@@ -1158,7 +1191,7 @@ function drawDiffractionPattern() {
   const grid = "rgba(152, 172, 194, 0.12)";
   const laserColor = wavelengthToColor(state.params.lambdaNm);
   const domain = stableVisibleDomainCm(state.params);
-  const plot = { left: 20, top: 18, width: width - 40, height: height - 62 };
+  const plot = { left: 20, top: 14, width: width - 40, height: height - 66 };
   const centerY = plot.top + plot.height / 2;
 
   ctx.clearRect(0, 0, width, height);
@@ -1228,7 +1261,7 @@ function drawDiffractionPattern() {
   ctx.fillStyle = text;
   // 屏幕坐标标题是中文教学信息，字号高于数值刻度以便投屏阅读。
   fillPhysicsCanvasText(ctx, "屏幕位置 x (cm)", plot.left + plot.width / 2, height - 13, {
-    size: 20,
+    size: 26,
     weight: 600,
   });
 }
@@ -1243,11 +1276,17 @@ function drawCcdView() {
   const { ctx, width, height } = configureCanvas(canvas);
   const domain = stableVisibleDomainCm(state.params);
   const caption = "CCD采样：像素化 · 读出噪声 · 8-bit量化";
-  ctx.font = `600 18px ${UI_FONT_STACK}`;
-  const captionLines = ctx.measureText(caption).width <= width - 28
-    ? [caption]
-    : ["CCD采样：像素化 · 读出噪声", "8-bit 量化"];
-  const captionHeight = captionLines.length * 26;
+  ctx.font = `600 22px ${UI_FONT_STACK}`;
+  const captionLines = [];
+  let captionLine = "";
+  for (const word of ["CCD采样：", "像素化", " · 读出噪声", " · 8-bit量化"]) {
+    if (captionLine && ctx.measureText(captionLine + word).width > width - 28) {
+      captionLines.push(captionLine);
+      captionLine = word.replace(/^ · /, "");
+    } else captionLine += word;
+  }
+  if (captionLine) captionLines.push(captionLine);
+  const captionHeight = captionLines.length * 30;
   const sensor = { left: 18, top: 18, width: width - 36, height: height - 32 - captionHeight };
   const columns = 128;
   const rows = 34;
@@ -1290,10 +1329,10 @@ function drawCcdView() {
   }
 
   ctx.fillStyle = "#c9d8e8";
-  ctx.font = `600 18px ${UI_FONT_STACK}`;
+  ctx.font = `600 22px ${UI_FONT_STACK}`;
   ctx.textAlign = "center";
   captionLines.forEach((line, index) => {
-    ctx.fillText(line, width / 2, height - 12 - (captionLines.length - 1 - index) * 26);
+    ctx.fillText(line, width / 2, height - 12 - (captionLines.length - 1 - index) * 30);
   });
 }
 
@@ -1306,14 +1345,14 @@ function drawIntensityChart() {
   const muted = cssVar("--muted") || "#98a8bb";
   const laserColor = wavelengthToColor(state.params.lambdaNm);
   const grid = "rgba(151, 177, 205, 0.16)";
-  const plot = { left: 50, top: 40, right: 24, bottom: 66 };
+  const plot = { left: 58, top: 44, right: 32, bottom: 78 };
   const plotW = width - plot.left - plot.right;
   const plotH = height - plot.top - plot.bottom;
   const domain = stableVisibleDomainCm(state.params);
 
   ctx.strokeStyle = grid;
   ctx.lineWidth = 1;
-  ctx.font = `500 18px ${NUMBER_FONT_STACK}`;
+  ctx.font = `500 22px ${NUMBER_FONT_STACK}`;
   ctx.fillStyle = muted;
   ctx.textAlign = "right";
   ctx.textBaseline = "middle";
@@ -1385,9 +1424,9 @@ function drawIntensityChart() {
   ctx.fillStyle = text;
   ctx.textBaseline = "bottom";
   ctx.textAlign = "left";
-  ctx.font = `600 18px ${UI_FONT_STACK}`;
-  ctx.fillText("归一化光强", plot.left, 25);
-  fillPhysicsCanvasText(ctx, "位置 x (cm)", plot.left + plotW / 2, height - 5, { size: 20 });
+  ctx.font = `600 24px ${UI_FONT_STACK}`;
+  ctx.fillText("归一化光强", plot.left, 29);
+  fillPhysicsCanvasText(ctx, "位置 x (cm)", plot.left + plotW / 2, height - 7, { size: 26 });
 }
 
 function drawRayDiagram() {
