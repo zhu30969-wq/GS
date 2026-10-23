@@ -32,7 +32,7 @@
     <meta name="theme-color" content="#08121d" />
     <meta name="robots" content="index,follow" />
     <link rel="stylesheet" href="./src/styles.css?v=voice-agent-desktop-v1-20260831" />
-    <link rel="stylesheet" href="./src/operation-layout.css?v=optics-studio-20261018" />
+    <link rel="stylesheet" href="./src/operation-layout.css?v=video-apparatus-20261023" />
     <link rel="stylesheet" href="./src/theory-layout.css?v=theory-screen-20261019" />
     <link rel="manifest" href="./site.webmanifest" />
     <link rel="icon" href="./assets/icons/site-icon.svg" type="image/svg+xml" />
@@ -168,7 +168,33 @@
               <button id="zoom2dReset" class="zoom2d-reset" type="button" aria-label="重置 2D 视图缩放">100%</button>
             </div>
           </div>
-
+          <fieldset id="apparatusControls" class="apparatus-controls" aria-label="实验装置查看" disabled>
+            <div class="apparatus-toolbar">
+              <div class="apparatus-mode" role="group" aria-label="模型模式">
+                <button id="apparatusAssembled" type="button" class="active" aria-pressed="true">光路实验</button>
+                <button id="apparatusExploded" type="button" aria-pressed="false">结构拆解</button>
+              </div>
+              <label class="apparatus-focus" for="apparatusFocus"><span>查看</span>
+                <select id="apparatusFocus">
+                  <option value="all">完整装置</option>
+                  <option value="laser">激光器</option>
+                  <option value="collimator">准直镜</option>
+                  <option value="grating-holder">光栅架</option>
+                  <option value="ccd-detector">CCD 采样面</option>
+                </select>
+              </label>
+              <div class="apparatus-tools">
+                <button id="apparatusRotate" type="button" aria-label="自动旋转" aria-pressed="false" title="自动旋转"><svg class="lucide lucide-orbit" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><path d="M14.14 2.23a10 10 0 1 0 7.63 7.63"/></svg></button>
+                <button id="apparatusFullscreen" type="button" aria-label="全屏查看模型" aria-pressed="false" title="全屏查看模型"><svg class="lucide lucide-maximize" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg></button>
+              </div>
+            </div>
+            <div id="apparatusExpansionRow" class="apparatus-expansion" hidden>
+              <label for="apparatusExpansion">展开程度</label>
+              <input id="apparatusExpansion" type="range" min="0" max="100" step="1" value="100" />
+              <output id="apparatusExpansionValue" for="apparatusExpansion">100%</output>
+              <span id="apparatusState" role="status">光路实验</span>
+            </div>
+          </fieldset>
         </section>
 
         <section class="sampling-stage panel" aria-label="仿真与采样">
@@ -301,7 +327,7 @@
 
     </div>
 
-    <script type="module" src="./src/app.js?v=theory-screen-20261019"></script>
+    <script type="module" src="./src/app.js?v=video-apparatus-20261023"></script>
     <script type="module" src="./src/pwa.js?v=sampling-restore-20260603"></script>
   </body>
 </html>

@@ -380,3 +380,61 @@ html.force-desktop-layout #operationModule .scene-readout { position: static !im
 html.force-desktop-layout #operationModule .scene-frame { height: 380px !important; min-height: 380px !important; }
 html.force-desktop-layout #operationModule .matlab-simulation { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr) !important; padding: 0 18px 18px !important; gap: 16px !important; }
 html.force-desktop-layout #operationModule .simulation-plot canvas { width: 100% !important; height: 100% !important; margin: 0 !important; }
+
+/* Instrument controls stay outside the canvas so labels and rays remain visible. */
+#operationModule .scene-frame { background: #090d10; height: 440px; min-height: 440px; flex-basis: 440px; }
+#operationModule .scene-root canvas { touch-action: none; }
+#operationModule .apparatus-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+#operationModule .apparatus-label {
+  position: absolute;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+  color: #eef2f2;
+  font-size: 20px;
+  line-height: 1.5;
+  font-weight: 600;
+  text-shadow: 0 1px 3px #090d10, 0 1px 8px #090d10;
+}
+#operationModule .apparatus-label[hidden] { display: none; }
+#operationModule .apparatus-label span { color: #a5b9c0; font-size: 13px; font-weight: 500; }
+#operationModule .apparatus-label::after { content: ""; position: absolute; width: 1px; height: 12px; background: #9aadb866; top: 100%; left: 50%; }
+#operationModule .apparatus-controls { min-width: 0; margin: 0; padding: 12px 16px; border: 0; border-top: 1px solid #303b40; background: #11171b; }
+#operationModule .apparatus-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+#operationModule .apparatus-mode { display: inline-flex; gap: 0; padding: 3px; border: 1px solid #354148; border-radius: 6px; background: #080d11; }
+#operationModule .apparatus-mode button { min-height: 40px; padding: 6px 14px; border: 0; border-radius: 3px; background: transparent; color: #b4c0c9; font-size: 20px; font-weight: 600; line-height: 1.4; }
+#operationModule .apparatus-mode button.active { background: #2c3c49; color: #eff6fa; box-shadow: inset 0 0 0 1px #6a879b; }
+#operationModule .structure-mode .apparatus-mode button.active { background: #44392d; box-shadow: inset 0 0 0 1px #a28b6d; color: #f6ecdc; }
+#operationModule .apparatus-focus { display: flex; align-items: center; gap: 8px; margin-left: auto; font-size: 18px; color: #b9c5cd; }
+#operationModule .apparatus-focus select { width: 158px; min-height: 42px; padding: 6px 9px; border: 1px solid #45545e; border-radius: 4px; background: #1c252c; color: #f0f3f5; font: inherit; font-size: 19px; }
+#operationModule .apparatus-tools { display: flex; gap: 7px; }
+#operationModule .apparatus-tools button { width: 42px; height: 42px; display: grid; place-items: center; padding: 0; background: #1b252c; border: 1px solid #45545e; border-radius: 4px; color: #d8e4ec; }
+#operationModule .apparatus-tools button.active { background: #304758; border-color: #97c2d9; color: #fff; }
+#operationModule .apparatus-controls :is(button,select):disabled { opacity: 0.4; cursor: not-allowed; }
+#operationModule .apparatus-expansion { display: grid; grid-template-columns: auto minmax(80px, 1fr) 54px auto; align-items: center; gap: 12px; padding: 12px 2px 0; font-size: 18px; color: #d8dfe3; }
+#operationModule .apparatus-expansion[hidden] { display: none; }
+#operationModule .apparatus-expansion input { --accent: #bfa17b; width: 100%; height: 5px; margin: 12px 0; accent-color: #bfa17b; }
+#operationModule .apparatus-expansion output { text-align: right; font-variant-numeric: tabular-nums; }
+#operationModule #apparatusState { color: #d7c6af; font-size: 16px; }
+#operationModule .center-stage:is(:fullscreen, .apparatus-expanded) {
+  display: flex; flex-direction: column; gap: 0; width: 100%; height: 100dvh;
+  padding: 0; border: 0; border-radius: 0; background: #090d10; overflow: hidden;
+}
+#operationModule .center-stage.apparatus-expanded { position: fixed; inset: 0; z-index: 500; }
+#operationModule .center-stage:is(:fullscreen, .apparatus-expanded) .scene-frame { height: auto !important; min-height: 0 !important; flex: 1 1 0 !important; }
+#operationModule .center-stage:is(:fullscreen, .apparatus-expanded) .scene-meta { display: none; }
+#operationModule .center-stage:is(:fullscreen, .apparatus-expanded) .apparatus-controls { flex-shrink: 0; }
+#operationModule .center-stage:is(:fullscreen, .apparatus-expanded) .apparatus-label { font-size: 24px; }
+@media (max-width: 760px) {
+  html:not(.force-desktop-layout) #operationModule .apparatus-controls { padding: 12px; }
+  html:not(.force-desktop-layout) #operationModule .apparatus-toolbar { gap: 10px; }
+  html:not(.force-desktop-layout) #operationModule .apparatus-mode { flex: 1 0 100%; display: grid; grid-template-columns: 1fr 1fr; }
+  html:not(.force-desktop-layout) #operationModule .apparatus-focus { margin-left: 0; flex: 1; }
+  html:not(.force-desktop-layout) #operationModule .apparatus-focus select { min-width: 0; width: auto; flex: 1; }
+  html:not(.force-desktop-layout) #operationModule .apparatus-label { font-size: 16px; gap: 4px; }
+  html:not(.force-desktop-layout) #operationModule .apparatus-label span { font-size: 11px; }
+  html:not(.force-desktop-layout) #operationModule .apparatus-expansion { grid-template-columns: auto minmax(60px, 1fr) 48px; gap: 8px; }
+  html:not(.force-desktop-layout) #operationModule #apparatusState { grid-column: 1 / -1; text-align: right; }
+}

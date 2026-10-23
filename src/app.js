@@ -918,13 +918,15 @@ async function initDeferredScene() {
   state.sceneLoading = true;
 
   try {
-    const { DiffractionScene } = await import("./scene3d.js?v=optics-studio-20261018");
-    const loadedScene = new DiffractionScene(sceneRoot, { fitViewport: true });
+    const { DiffractionScene } = await import("./scene3d.js?v=video-apparatus-20261023");
+    const loadedScene = new DiffractionScene(sceneRoot, { fitViewport: true, studio: true });
     loadedScene.setView(state.view);
     loadedScene.setDisplayMode(state.mode);
     loadedScene.set2dZoom(state.zoom2d);
     loadedScene.update(state.params);
     scene = loadedScene;
+    const { connectOpticsStudio } = await import("./optics-studio-controls.js?v=video-apparatus-20261023");
+    connectOpticsStudio(loadedScene);
     state.sceneReady = true;
     sceneOverlay.classList.add("hidden");
   } catch (error) {

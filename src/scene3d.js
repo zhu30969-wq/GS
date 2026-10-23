@@ -1,6 +1,7 @@
 import * as THREE from "../vendor/three.module.js";
 import { diffractionAngle, intensityAt, maximumOrder, stableVisibleDomainCm, toRad, wavelengthToColor } from "./physics.js";
 import { createSensorTexture } from "./scene-sensor.js";
+import { createOpticalHardware, addStudioEnvironment } from "./optics-hardware.js?v=video-apparatus-20261023";
 
 const CYAN = 0x79cfff;
 const OPTICAL_AXIS_Y = 0;
@@ -129,9 +130,15 @@ function addBolt(group, material, x, y, z, axis = "y", radius = 0.045) {
 }
 
 export class DiffractionScene {
-  constructor(container, { fitViewport = false } = {}) {
+  constructor(container, { fitViewport = false, studio = false } = {}) {
     this.container = container;
     this.fitViewport = fitViewport;
+    this.studio = studio;
+    this.explodeAmount = 0;
+    this.explodeTarget = 0;
+    this.focusName = "all";
+    this.autoRotate = false;
+    this.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     this.view = "3d";
     this.displayMode = "rays";
     this.params = null;
@@ -156,6 +163,15 @@ export class DiffractionScene {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.shadowMap.autoUpdate = false;
     this.container.appendChild(this.renderer.domElement);
+    this.renderer.domElement.setAttribute("aria-label", "光栅衍射实验装置三维模型");
+    if (studio) {
+      this.renderer.setClearColor(0x090d10, 1);
+      this.scene.fog.color.set(0x090d10);
+      this.environmentTarget = addStudioEnvironment(this.scene, this.renderer);
+      this.labelLayer = document.createElement("div");
+      this.labelLayer.className = "apparatus-labels";
+      this.container.appendChild(this.labelLayer);
+    }
 
     this.root = new THREE.Group();
     this.scene.add(this.root);
@@ -198,14 +214,14 @@ export class DiffractionScene {
   }
 
   addStaticFloor() {
-    const grid = new THREE.GridHelper(22, 44, 0x405064, 0x27333f);
+    const grid = new THREE.GridHelper(22, 44, this.studio ? 0x344142 : 0x405064, this.studio ? 0x1c2428 : 0x27333f);
     grid.position.set(0, TABLE_Y - 0.2, 0);
     grid.material.transparent = true;
-    grid.material.opacity = 0.28;
+    grid.material.opacity = this.studio ? 0.15 : 0.28;
     this.root.add(grid);
 
     const bench = addPart(this.root, machinedBox(11.8, 0.16, 6.6, 0.04),
-      new THREE.MeshStandardMaterial({ color: 0x35404a, metalness: 0.32, roughness: 0.65 }),
+      new THREE.MeshStandardMaterial({ color: this.studio ? 0x252b2e : 0x35404a, metalness: 0.32, roughness: 0.65 }),
       -0.55, TABLE_Y - 0.08, 0);
     bench.castShadow = false;
     const holes = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.026, 0.026, 0.003, 10),
@@ -217,11 +233,16 @@ export class DiffractionScene {
       holes.setMatrixAt(index++, matrix);
     }
     this.root.add(holes);
+    if (this.studio) {
+      const edge = new THREE.MeshStandardMaterial({ color: 0x717b80, metalness: 0.7, roughness: 0.3 });
+      [-3.3, 3.3].forEach(z => addPart(this.root, machinedBox(11.8, 0.04, 0.025, 0.005), edge, -0.55, TABLE_Y - 0.05, z));
+    }
   }
 
   bindPointerCamera() {
     this.renderer.domElement.addEventListener("pointerdown", (event) => {
       if (this.view !== "3d") return;
+      this.setAutoRotate(false);
       this.drag.active = true;
       this.drag.x = event.clientX;
       this.drag.y = event.clientY;
@@ -247,6 +268,7 @@ export class DiffractionScene {
         // 浏览器可能已自动释放 pointer capture；无需中断渲染。
       }
     });
+    this.renderer.domElement.addEventListener("pointercancel", () => { this.drag.active = false; });
 
     this.renderer.domElement.addEventListener("wheel", (event) => {
       if (this.view === "2d") {
@@ -303,9 +325,17 @@ export class DiffractionScene {
 
   setView(view) {
     this.view = view;
+    if (view === "2d") {
+      this.explodeAmount = this.explodeTarget = 0;
+      this.autoRotate = false;
+      this.focusName = "all";
+      this.applyExplode();
+    }
     this.activeCamera = view === "2d" ? this.orthoCamera : this.camera;
     this.placeLabels();
     this.updateCamera();
+    this.applyStudioVisibility();
+    this.dispatchStudioState();
   }
 
   placeLabels() {
@@ -323,7 +353,16 @@ export class DiffractionScene {
   updateCamera() {
     this.needsRender = true;
     const target = new THREE.Vector3(-0.65, -0.15, 0);
+    if (this.studio) target.y += this.explodeAmount * 0.25;
     let fittedRadius = DEFAULT_CAMERA.radius;
+    let focusBounds = null;
+    if (this.studio && this.focusName !== "all") {
+      const focused = this.dynamic.getObjectByName(this.focusName);
+      if (focused) {
+        focusBounds = new THREE.Box3().setFromObject(focused).expandByScalar(0.15);
+        focusBounds.getCenter(target);
+      }
+    }
     if (this.fitViewport && this.framePoints) {
       const { azimuth, elevation } = DEFAULT_CAMERA;
       const direction = new THREE.Vector3(Math.cos(azimuth) * Math.cos(elevation), Math.sin(elevation), Math.sin(azimuth) * Math.cos(elevation));
@@ -338,6 +377,14 @@ export class DiffractionScene {
           Math.abs(point.dot(up)) / vertical,
         ));
       }
+    }
+    if (focusBounds) {
+      const size = focusBounds.getSize(new THREE.Vector3());
+      const sphereRadius = size.length() / 2;
+      const halfFov = Math.min(THREE.MathUtils.degToRad(this.camera.fov / 2), Math.atan(Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2)) * this.camera.aspect));
+      fittedRadius = sphereRadius / Math.sin(halfFov) * 1.12;
+    } else if (this.studio) {
+      fittedRadius *= 1 + this.explodeAmount * 0.14;
     }
     const framingScale = fittedRadius / DEFAULT_CAMERA.radius;
     if (this.fitViewport) {
@@ -362,11 +409,137 @@ export class DiffractionScene {
     );
     this.camera.up.set(0, 1, 0);
     this.camera.lookAt(target);
+    this.camera.updateMatrixWorld();
   }
 
   resetCamera() {
     this.cameraState = { ...DEFAULT_CAMERA };
+    this.focusName = "all";
+    this.setAutoRotate(false);
     this.updateCamera();
+    this.applyStudioVisibility();
+    this.dispatchStudioState();
+  }
+
+  setFocus(name) {
+    if (!this.studio || this.view !== "3d") return;
+    this.focusName = ["laser", "collimator", "grating-holder", "ccd-detector"].includes(name) ? name : "all";
+    this.cameraState = { ...DEFAULT_CAMERA, azimuth: this.focusName === "ccd-detector" ? 2.5 : DEFAULT_CAMERA.azimuth };
+    this.applyStudioVisibility();
+    this.updateCamera();
+    this.dispatchStudioState();
+  }
+
+  setAutoRotate(enabled) {
+    this.autoRotate = Boolean(enabled && this.studio && this.view === "3d");
+    this.dispatchStudioState();
+  }
+
+  setExplode(value) {
+    if (!this.studio || this.view !== "3d") return;
+    this.explodeTarget = Math.max(0, Math.min(1, Number(value) || 0));
+    if (this.reducedMotion) this.explodeAmount = this.explodeTarget;
+    this.applyExplode();
+    this.updateCamera();
+    this.dispatchStudioState();
+  }
+
+  dispatchStudioState() {
+    if (!this.studio) return;
+    this.container.dispatchEvent(new CustomEvent("studiostatechange", { detail: {
+      view: this.view, focus: this.focusName, explosion: this.explodeTarget, rotating: this.autoRotate,
+    } }));
+  }
+
+  applyExplode() {
+    if (!this.studio) return;
+    const measuring = this.explodeAmount < 0.001 && this.explodeTarget === 0;
+    this.dynamic.traverse(part => {
+      if (part.userData.explodeOffset) {
+        part.position.copy(part.userData.assembledPosition).addScaledVector(part.userData.explodeOffset, this.explodeAmount);
+      }
+      if (part.name === "optical-path" || part.name === "sensor-irradiance" || part.name === "detector-scale") part.visible = measuring;
+      if (part.name === "sensor-inactive") part.visible = !measuring;
+      if (part.name === "explosion-guides") part.visible = this.explodeAmount > 0.02;
+    });
+    for (const { guide, part } of this.explosionGuides || []) {
+      const positions = guide.geometry.attributes.position;
+      positions.setXYZ(1, part.position.x, part.position.y, part.position.z);
+      positions.needsUpdate = true;
+      guide.computeLineDistances();
+    }
+    this.renderer.shadowMap.needsUpdate = true;
+    this.needsRender = true;
+    this.applyStudioVisibility();
+  }
+
+  applyStudioVisibility() {
+    if (!this.studio || !this.hardware) return;
+    const complete = this.focusName === "all";
+    this.hardware.forEach(group => { group.visible = complete || group.name === this.focusName; });
+    this.dynamic.children.forEach(part => {
+      if (this.hardware.includes(part)) return;
+      part.visible = complete && (part.name !== "optical-path" || (this.explodeAmount < 0.001 && this.explodeTarget === 0));
+    });
+    this.renderer.shadowMap.needsUpdate = true;
+    this.needsRender = true;
+  }
+
+  addStudioHardware(positions, thetaI, params, domain, color) {
+    this.hardware = createOpticalHardware(params, domain, color);
+    this.explosionGuides = [];
+    this.labelLayer.replaceChildren();
+    const names = ["激光器", "准直镜", "光栅架", "CCD 采样面"];
+    this.hardware.forEach((group, index) => {
+      group.position.set(...positions[index]);
+      if (index < 2) group.rotation.y = -thetaI;
+      const moving = [];
+      group.traverse(part => { if (part.userData.explodeOffset) moving.push(part); });
+      moving.forEach(part => {
+        const guide = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]),
+          new THREE.LineDashedMaterial({ color: 0x75898d, dashSize: 0.05, gapSize: 0.045, transparent: true, opacity: 0.45, depthWrite: false }));
+        guide.name = "explosion-guides";
+        group.add(guide);
+        this.explosionGuides.push({ guide, part });
+      });
+      this.dynamic.add(group);
+      const label = document.createElement("span");
+      label.className = "apparatus-label";
+      const number = document.createElement("span"); number.textContent = `0${index + 1}`;
+      label.append(number, document.createTextNode(names[index]));
+      this.labelLayer.append(label);
+      group.userData.label = label;
+      group.userData.labelHeight = [0.85, 0.95, 1.5, 1.65][index];
+    });
+  }
+
+  positionStudioLabels() {
+    if (!this.studio || !this.hardware) return;
+    const width = this.container.clientWidth, height = this.container.clientHeight;
+    const points = [];
+    this.hardware.forEach(group => {
+      const label = group.userData.label;
+      const show = this.focusName === "all" || this.focusName === group.name;
+      label.hidden = !show;
+      if (!show) return;
+      const anchor = this.view === "2d"
+        ? new THREE.Vector3(group.position.x, 0, group.position.z - (group.name === "ccd-detector" ? 2.8 : 1.25))
+        : new THREE.Vector3(group.position.x, group.userData.labelHeight + this.explodeAmount * 0.9, group.position.z);
+      anchor.project(this.activeCamera);
+      const w = label.offsetWidth;
+      points.push({ label, x: Math.max(w / 2 + 8, Math.min(width - w / 2 - 8, (anchor.x + 1) * width / 2)),
+        y: Math.max(label.offsetHeight + 12, Math.min(height - 32, (1 - anchor.y) * height / 2)), w });
+    });
+    points.sort((a, b) => a.x - b.x);
+    points.forEach((p, i) => {
+      const candidates = [0, -38, 38, -76, 76, -114, 114, 152].map(offset => p.y + offset);
+      p.y = candidates.find(y => {
+        if (y < p.label.offsetHeight + 12 || y > height - 32) return false;
+        if (this.view === "3d" && p.x + p.w / 2 > width - 66 && y - p.label.offsetHeight < 62 && y > 12) return false;
+        return points.slice(0, i).every(other => Math.abs(p.x - other.x) >= (p.w + other.w) / 2 + 8 || Math.abs(y - other.y) >= 35);
+      }) ?? p.y;
+      p.label.style.left = `${p.x}px`; p.label.style.top = `${p.y}px`;
+    });
   }
 
   clearDynamic() {
@@ -409,10 +582,14 @@ export class DiffractionScene {
     const laserColor = wavelengthToColor(params.lambdaNm);
 
     this.addOpticalRail(laserX, screenX);
-    this.addLaser(laserX, laserModelZ, thetaI, laserColor);
-    this.addCollimator(collimatorX, collimatorZ, thetaI);
-    this.addGrating(gratingX, params);
-    this.addScreen(screenX, params, domain, laserColor);
+    if (this.studio) {
+      this.addStudioHardware([[laserX, 0, laserModelZ], [collimatorX, 0, collimatorZ], [gratingX, 0, 0], [screenX, 0, 0]], thetaI, params, domain, laserColor);
+    } else {
+      this.addLaser(laserX, laserModelZ, thetaI, laserColor);
+      this.addCollimator(collimatorX, collimatorZ, thetaI);
+      this.addGrating(gratingX, params);
+      this.addScreen(screenX, params, domain, laserColor);
+    }
     this.addDimensionArrow(gratingX, screenX, 2.86, `L = ${params.distanceCm.toFixed(1)} cm`);
 
     const gratingPoint = new THREE.Vector3(gratingX, OPTICAL_AXIS_Y, 0);
@@ -440,6 +617,7 @@ export class DiffractionScene {
         for (const y of [bounds.min.y, bounds.max.y])
           for (const z of [bounds.min.z, bounds.max.z]) this.framePoints.push(new THREE.Vector3(x, y, z));
     });
+    this.applyExplode();
     this.updateCamera();
     this.needsRender = true;
   }
@@ -825,10 +1003,24 @@ export class DiffractionScene {
     this.dynamic.add(label);
   }
 
-  animate() {
-    requestAnimationFrame(() => this.animate());
+  animate(time = performance.now()) {
+    requestAnimationFrame(timestamp => this.animate(timestamp));
+    const dt = Math.min(0.05, Math.max(0, (time - (this.lastFrameTime ?? time)) / 1000));
+    this.lastFrameTime = time;
+    if (this.container.clientWidth === 0 || document.hidden) return;
+    if (Math.abs(this.explodeTarget - this.explodeAmount) > 0.0001) {
+      this.explodeAmount += (this.explodeTarget - this.explodeAmount) * (1 - Math.exp(-dt * 7));
+      if (Math.abs(this.explodeTarget - this.explodeAmount) < 0.0001) this.explodeAmount = this.explodeTarget;
+      this.applyExplode();
+      this.updateCamera();
+    }
+    if (this.autoRotate && !this.drag.active) {
+      this.cameraState.azimuth += dt * 0.16;
+      this.updateCamera();
+    }
     if (this.needsRender) {
       this.renderer.render(this.scene, this.activeCamera);
+      this.positionStudioLabels();
       this.needsRender = false;
     }
   }
